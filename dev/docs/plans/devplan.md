@@ -8,7 +8,7 @@ Estimated timeline for a single developer building the prototype phase:
 
 * **Phase 0:  HumandAI team (the human and AI team) construct foundation**  
   * **Decide on first screenplay**    
-    Decided:  Survey the surveyor joke. See below.   
+    Decided:  Survey the surveyGuy joke. See below.   
   * **“Manually”** (AI built) first time component descriptors and meta instructions  
   * While building the descriptors we construct the translators and metadata
 
@@ -62,7 +62,7 @@ Estimated timeline for a single developer building the prototype phase:
   * Implement the required sample scenarios using the new naming convention.  
   * Add UI controls (Play, Pause, Scrub timeline) and wrap up documentation.
 
-**Movie:  Stick figure \- Survey the surveyor** 
+**Movie:  Stick figure \- Survey the surveyGuy** 
 
 BRG:   
 A young man (JMP) caucasian black-hair age 30 with a long sleeved blue shirt and tie  is standing on a bridge threatning (action only: climbing) to jump off.  
@@ -84,7 +84,7 @@ WM:
 yells: think about your future. 
 
 BRG:   
-what future?\!  I have no future. I’m a surveyor.   
+what future?\!  I have no future. I’m a surveyGuy.   
 (pause) everybody hates surveys. They hear me talk and want to commit Sue inside\!  
 
 WM  

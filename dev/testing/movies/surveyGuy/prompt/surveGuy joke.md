@@ -18,7 +18,7 @@ WM:
 yells: think about your future. 
 
 BRG:   
-what future?\!  I have no future. I’m a surveyor.   
+what future?\!  I have no future. I’m a surveyGuy.   
 (pause) everybody hates surveys. They hear me talk and want to commit Sue inside\!  
 
 WM  

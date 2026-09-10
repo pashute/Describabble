@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Guy - Animated Screenplay v1.7</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="max-w-4xl w-full bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl flex flex-col items-center">
+        <!-- Header -->
+        <div class="w-full flex justify-between items-center mb-4">
+            <div>
+                <h1 class="text-xl font-bold tracking-wider text-amber-400">SURVEY GUY v1.7</h1>
+                <p class="text-xs text-slate-400">Written and directed by Moussa Yashir</p>
+            </div>
+            <div id="status-badge" class="px-3 py-1 bg-slate-800 text-xs font-mono rounded-full text-slate-300">Ready</div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div class="relative w-full aspect-video bg-black rounded-lg overflow-hidden border border-slate-700 shadow-inner flex items-center justify-center">
+            <canvas id="animCanvas" width="960" height="540" class="w-full h-full object-contain"></canvas>
+            
+            <!-- Lyrics / Subtitle Overlay -->
+            <div id="subtitle-box" class="absolute bottom-6 w-full text-center px-8 transition-opacity duration-200 opacity-0 pointer-events-none">
+                <p id="subtitle-text" class="text-xl font-medium text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] bg-black/70 py-2 px-6 rounded-lg inline-block max-w-2xl border border-slate-700"></p>
+            </div>
+        </div>
+
+        <!-- Timeline & Controls -->
+        <div class="w-full mt-6 flex flex-col gap-3">
+            <div class="flex items-center justify-between">
+                <div class="flex gap-2">
+                    <button id="playBtn" onclick="togglePlay()" class="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold rounded-lg text-sm transition shadow-lg flex items-center gap-2">
+                        ▶ Play Film
+                    </button>
+                    <button id="resetBtn" onclick="resetFilm()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm rounded-lg transition">
+                        ↺ Restart
+                    </button>
+                </div>
+                <div class="text-xs font-mono text-slate-400">
+                    Time: <span id="timeDisplay">0.0</span>s / <span id="durationDisplay">53.0</span>s
+                </div>
+            </div>
+
+            <!-- Scrub Bar -->
+            <input type="range" id="timelineSlider" min="0" max="53" step="0.1" value="0" oninput="scrubTimeline(this.value)" class="w-full accent-amber-500 cursor-pointer bg-slate-800 rounded-lg h-2">
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('animCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let isPlaying = false;
+        let currentTime = 0;
+        const totalDuration = 53.0;
+        let lastFrameTime = performance.now();
+
+        // Web Audio & Speech Synthesis
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        let cachedVoices = [];
+        function loadVoices() {
+            if (!('speechSynthesis' in window)) return;
+            cachedVoices = window.speechSynthesis.getVoices();
+        }
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = loadVoices;
+            loadVoices();
+        }
+
+        function speakText(text, speaker) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.0;
+            
+            if (cachedVoices.length > 0) {
+                const maleVoice = cachedVoices.find(v => v.name.includes('Male') || v.name.includes('David') || v.name.includes('George') || v.name.includes('Daniel') || v.lang.includes('en'));
+                if (maleVoice) utterance.voice = maleVoice;
+            }
+
+            utterance.pitch = (speaker === 'Survey Guy') ? 0.75 : 0.95;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            try {
+                const now = audioCtx.currentTime;
+                if (type === 'traffic') {
+                    const bufferSize = audioCtx.sampleRate * 2.0;
+                    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                    const data = buffer.getChannelData(0);
+                    for (let i = 0; i < bufferSize; i++) {
+                        data[i] = (Math.random() * 2 - 1) * 0.3;
+                    }
+                    const noise = audioCtx.createBufferSource();
+                    noise.buffer = buffer;
+                    const filter = audioCtx.createBiquadFilter();
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(300, now);
+                    const gain = audioCtx.createGain();
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 2.0);
+                    noise.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    noise.start(now);
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        // Script Timeline Events (v1.7 with extended timing for final lines)
+        const scriptEvents = [
+            { start: 0.0, end: 4.0, speaker: "Narrator", text: "EXT. SUSPENSION BRIDGE - DAY (fast-moving traffic sounds heard in distance)", pov: "riverside_climb", action: "traffic" },
+            { start: 4.0, end: 9.0, speaker: "Narrator", text: "Survey Guy climbs hesitantly over the bridge fence.", pov: "riverside_climb", action: "climb" },
+            { start: 9.0, end: 14.0, speaker: "Worried Man", text: "Think about your wife! Think about your children!", pov: "bridge", action: "shout_wm" },
+            { start: 14.0, end: 19.0, speaker: "Survey Guy", text: "I don't have a wife! I don't have kids!", pov: "riverside", action: "shout_surveyGuy" },
+            { start: 19.0, end: 23.0, speaker: "Worried Man", text: "Think about your parents!", pov: "bridge", action: "shout_wm" },
+            { start: 23.0, end: 26.0, speaker: "Survey Guy", text: "I don't have parents!", pov: "riverside", action: "shout_surveyGuy" },
+            { start: 26.0, end: 30.0, speaker: "Worried Man", text: "Think about your future!", pov: "bridge", action: "shout_wm" },
+            { start: 30.0, end: 35.0, speaker: "Survey Guy", text: "What future?! I have no future. I'm a phone rep survey guy!", pov: "riverside", action: "shout_surveyGuy" },
+            { start: 35.0, end: 40.0, speaker: "Survey Guy", text: "Everybody hates surveys. They hear me talk and want to die!", pov: "riverside", action: "shout_surveyGuy" },
+            { start: 40.0, end: 46.0, speaker: "Worried Man", text: "So change your job. You're not that stupid that you can't do anything else, right?", pov: "bridge", action: "shout_wm" },
+            { start: 46.0, end: 51.0, speaker: "Worried Man", text: "Before you step down, would you be willing to reply to a short survey?", pov: "bridge", action: "survey" },
+            { start: 51.0, end: 53.0, speaker: "Narrator", text: "SPLASH!", pov: "black", action: "splash" }
+        ];
+
+        let triggeredEvents = {};
+
+        function togglePlay() {
+            initAudio();
+            isPlaying = !isPlaying;
+            document.getElementById('playBtn').textContent = isPlaying ? '❚❚ Pause' : '▶ Play Film';
+            document.getElementById('status-badge').textContent = isPlaying ? 'Playing' : 'Paused';
+            lastFrameTime = performance.now();
+        }
+
+        function resetFilm() {
+            isPlaying = false;
+            currentTime = 0;
+            triggeredEvents = {};
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            document.getElementById('playBtn').textContent = '▶ Play Film';
+            document.getElementById('status-badge').textContent = 'Ready';
+            document.getElementById('timelineSlider').value = 0;
+            updateSubtitles();
+            renderFrame();
+        }
+
+        function scrubTimeline(val) {
+            currentTime = parseFloat(val);
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            updateSubtitles();
+            renderFrame();
+        }
+
+        function drawStickman(x, y, scale, angleLean, isWorried, hasBentTie) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(scale, scale);
+            ctx.rotate(angleLean);
+
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            // Head
+            ctx.beginPath();
+            if (isWorried) {
+                ctx.ellipse(0, -35, 12, 18, 0, 0, Math.PI * 2);
+            } else {
+                ctx.arc(0, -35, 12, 0, Math.PI * 2);
+            }
+            ctx.stroke();
+
+            // Bent Tie (Survey Guy)
+            if (hasBentTie) {
+                ctx.strokeStyle = '#facc15';
+                ctx.beginPath();
+                ctx.moveTo(0, -23);
+                ctx.lineTo(8, -10);
+                ctx.lineTo(2, 5);
+                ctx.stroke();
+                ctx.strokeStyle = '#ffffff';
+            }
+
+            // Body (Torso)
+            ctx.beginPath();
+            ctx.moveTo(0, -23);
+            ctx.lineTo(0, 15);
+            ctx.stroke();
+
+            // Arms
+            ctx.beginPath();
+            ctx.moveTo(0, -10);
+            ctx.lineTo(-20, isWorried ? -20 : 0);
+            ctx.moveTo(0, -10);
+            ctx.lineTo(20, isWorried ? -20 : -5);
+            ctx.stroke();
+
+            // Legs
+            ctx.beginPath();
+            ctx.moveTo(0, 15);
+            ctx.lineTo(-12, 45);
+            ctx.moveTo(0, 15);
+            ctx.lineTo(12, 45);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        function renderFrame() {
+            ctx.fillStyle = '#050b14';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            let currentEvent = scriptEvents.find(e => currentTime >= e.start && currentTime <= e.end);
+            let pov = currentEvent ? currentEvent.pov : 'riverside_climb';
+
+            if (currentTime >= 53.0) {
+                pov = 'black';
+            }
+
+            if (pov === 'black') {
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '32px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('SPLASH!', canvas.width / 2, canvas.height / 2);
+                return;
+            }
+
+            // Sky gradient
+            let skyGrad = ctx.createLinearGradient(0, 0, 0, 300);
+            skyGrad.addColorStop(0, '#1e293b');
+            skyGrad.addColorStop(1, '#0f172a');
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, canvas.width, 300);
+
+            // River below
+            ctx.fillStyle = '#0369a1';
+            ctx.fillRect(0, 420, canvas.width, 120);
+
+            if (pov === 'riverside_climb') {
+                // Opening scene: Looking up from riverside at the bridge structure showing climbing Survey Guy
+                ctx.strokeStyle = '#475569';
+                ctx.lineWidth = 3;
+                
+                // Road level bridge deck
+                ctx.beginPath();
+                ctx.moveTo(0, 220);
+                ctx.lineTo(canvas.width, 220);
+                ctx.stroke();
+
+                // Top fence rail
+                ctx.beginPath();
+                ctx.moveTo(0, 140);
+                ctx.lineTo(canvas.width, 140);
+                ctx.stroke();
+
+                // Main Suspension Catenary Cable curve overhead
+                ctx.beginPath();
+                ctx.moveTo(0, 60);
+                ctx.quadraticCurveTo(canvas.width / 2, 160, canvas.width, 60);
+                ctx.stroke();
+
+                // Vertical suspender ropes / hangers
+                for (let px = 80; px < canvas.width; px += 100) {
+                    ctx.beginPath();
+                    let normX = px / canvas.width;
+                    let cableY = 60 + 100 * Math.pow(normX - 0.5, 2) * 4;
+                    ctx.moveTo(px, cableY);
+                    ctx.lineTo(px, 140);
+                    ctx.stroke();
+                }
+
+                // Vertical posts
+                for (let px = 100; px < canvas.width; px += 150) {
+                    ctx.beginPath();
+                    ctx.moveTo(px, 140);
+                    ctx.lineTo(px, 220);
+                    ctx.stroke();
+                }
+
+                let climbX = 400 + Math.min(200, (currentTime / 9.0) * 200);
+                let climbY = 180 - Math.min(65, (currentTime / 9.0) * 65);
+                drawStickman(climbX, climbY, 0.8, 0.2, false, true);
+
+            } else if (pov === 'bridge') {
+                // BRIDGE POV: Looking down at the Worried Man on riverside (No bridge visible)
+                drawStickman(480, 370, 0.9, -0.1, true, false);
+
+            } else if (pov === 'riverside') {
+                // RIVERSIDE POV: Looking up at the Survey Guy on bridge fence (No Worried Man visible)
+                ctx.strokeStyle = '#475569';
+                ctx.lineWidth = 3;
+                
+                ctx.beginPath();
+                ctx.moveTo(0, 220);
+                ctx.lineTo(canvas.width, 220);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(0, 140);
+                ctx.lineTo(canvas.width, 140);
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(0, 60);
+                ctx.quadraticCurveTo(canvas.width / 2, 160, canvas.width, 60);
+                ctx.stroke();
+
+                for (let px = 80; px < canvas.width; px += 100) {
+                    ctx.beginPath();
+                    let normX = px / canvas.width;
+                    let cableY = 60 + 100 * Math.pow(normX - 0.5, 2) * 4;
+                    ctx.moveTo(px, cableY);
+                    ctx.lineTo(px, 140);
+                    ctx.stroke();
+                }
+
+                drawStickman(600, 115, 0.8, 0.2, false, true);
+            }
+        }
+
+        function updateSubtitles() {
+            let currentEvent = scriptEvents.find(e => currentTime >= e.start && currentTime <= e.end);
+            const subBox = document.getElementById('subtitle-box');
+            const subText = document.getElementById('subtitle-text');
+
+            if (currentEvent) {
+                subBox.style.opacity = '1';
+                subText.textContent = currentEvent.text;
+                
+                // Requirement: Move subtitle box up when looking at Worried Man from bridge POV
+                if (currentEvent.pov === 'bridge') {
+                    subBox.classList.remove('bottom-6');
+                    subBox.classList.add('top-6');
+                } else {
+                    subBox.classList.remove('top-6');
+                    subBox.classList.add('bottom-6');
+                }
+            } else {
+                subBox.style.opacity = '0';
+            }
+
+            scriptEvents.forEach((ev, idx) => {
+                if (currentTime >= ev.start && currentTime < ev.start + 0.2 && !triggeredEvents[idx]) {
+                    triggeredEvents[idx] = true;
+                    if (ev.speaker !== "Narrator") {
+                        speakText(ev.text, ev.speaker);
+                    } else if (ev.action === 'splash') {
+                        speakText("SPLASH!", "Narrator");
+                    } else if (ev.action === 'traffic') {
+                        playSound('traffic');
+                    }
+                }
+            });
+
+            Object.keys(triggeredEvents).forEach(idx => {
+                if (currentTime < scriptEvents[idx].start) {
+                    delete triggeredEvents[idx];
+                }
+            });
+
+            document.getElementById('timelineSlider').value = currentTime;
+            document.getElementById('timeDisplay').textContent = currentTime.toFixed(1);
+        }
+
+        function animate(timestamp) {
+            if (isPlaying) {
+                let dt = (timestamp - lastFrameTime) / 1000;
+                currentTime += dt;
+                if (currentTime >= totalDuration) {
+                    currentTime = totalDuration;
+                    isPlaying = false;
+                    document.getElementById('playBtn').textContent = '▶ Play Film';
+                    document.getElementById('status-badge').textContent = 'Finished';
+                }
+                updateSubtitles();
+                renderFrame();
+            }
+            lastFrameTime = timestamp;
+            requestAnimationFrame(animate);
+        }
+
+        renderFrame();
+        requestAnimationFrame(animate);
+    </script>
+</body>
+</html>

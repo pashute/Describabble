@@ -187,7 +187,7 @@ The pipeline separates AI-driven analysis and text authoring entirely from clien
 - `src/analyze`
 - `src/data`
   - `data/general` (`desc`, `meta`, `trans`)
-  - `data/movies/surveyor` (`desc`, `meta`, `trans`)
+  - `data/movies/surveyGuy` (`desc`, `meta`, `trans`)
 - `src/render`
 - `dev/docs/` (`plans`, `progress`)
 - `dev/testing` with per-section testing folders:

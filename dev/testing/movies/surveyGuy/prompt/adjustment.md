@@ -1,4 +1,4 @@
-# THE SURVEYOR v 1.0
+# THE surveyGuy v 1.0
 
 ## A Short Film
 
@@ -7,7 +7,7 @@
 **Music and sound effects:** Moussa Yashir  
 
 **Cast**  
-Harold Purpleman as **The Surveyor**  
+Harold Purpleman as **The surveyGuy**  
 Juan Herstick as **The Worried Man**
 
 ---
@@ -20,7 +20,7 @@ Juan Herstick as **The Worried Man**
 
 Fast-moving traffic is heard in the distance, almost silent. No horns.
 
-The **SURVEYOR**, thirty-nine-year-old man with black hair, climbs
+The **surveyGuy**, thirty-nine-year-old man with black hair, climbs
 hesitantly over the bridge fence. He wears a disheveled blue shirt and tie.
 His panting is audible.
 
@@ -28,16 +28,16 @@ The camera moves in from behind him, holding the same angle as the bridge.
 
 Below, on the riverside, the **WORRIED MAN**, twenty-four, looks up. His long face is tense with concern.
 
-The camera closes in from the Surveyor to the Worried Man.
+The camera closes in from the surveyGuy to the Worried Man.
 
 **WORRIED MAN**  
 (calling up)
 Think about your wife! Think about your children!
 
 
-RIVERSIDE POV: Close on the Surveyor looking down at the camera from the Worried Man's riverside angle; two suspension cables frame the background.
+RIVERSIDE POV: Close on the surveyGuy looking down at the camera from the Worried Man's riverside angle; two suspension cables frame the background.
 
-**THE SURVEYOR**  
+**THE surveyGuy**  
 (calling back)  
 I don't have a wife! I don't have kids!
 
@@ -49,7 +49,7 @@ I don't have a wife! I don't have kids!
 
 
 RIVERSIDE POV
-**THE SURVEYOR**  
+**THE surveyGuy**  
 (Shouts back)  I don't have parents!
 
 
@@ -58,12 +58,12 @@ BRIDGE POV
 (Shouts) Think about your future!
 
 RIVERSIDE POV
-**THE SURVEYOR**  
-(Shouts back) What future?! I have no future. I'm a surveyor.
+**THE surveyGuy**  
+(Shouts back) What future?! I have no future. I'm a surveyGuy.
 
 A pause. 
 
-**THE SURVEYOR (CONT'D)**  
+**THE surveyGuy (CONT'D)**  
 (Shouts) Everybody hates surveys. They hear me talk and want to commit suicide!
 
 RIVERSIDE POV
@@ -72,9 +72,9 @@ RIVERSIDE POV
 So change your job. You're not *that* stupid that you can't do anything else,
 right?
 
-Close on the Surveyor's face. His expression changes. He considers this.
+Close on the surveyGuy's face. His expression changes. He considers this.
 
-The Surveyor begins to accept the idea. He thinks.
+The surveyGuy begins to accept the idea. He thinks.
 
 
 BRIDGE POV

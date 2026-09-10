@@ -80,7 +80,7 @@ Example 1.  General characters `.trans` file:
     aware (currently knows whats happening), mistaken (false thoughts), unaware  
 - looks:  attire, body looks (general specifics)
 
-mv = m.surveyor  
+mv = m.surveyGuy  
 scn = mv.scene1  
 mv.character.JMP: profession, looks [gender, age, hair, expression, attire], mood, voice  
 scn.settings.BRG: elements (e.g. cable), ambient, background, cam (angle, distance, width,foucs)  
@@ -90,7 +90,7 @@ scn.*.interaction.dialog,mood,tone
 
 **sceneN.seq.n** - Narrative play sequence holds links to the parts that constitute the sequence. part
 
-**Example** for The Surveyor scene one shot 2: (there’s only one scene in the whole movie)
+**Example** for The surveyGuy scene one shot 2: (there’s only one scene in the whole movie)
 
 Original texts: 
 
@@ -102,8 +102,8 @@ WM yells:  think about your wife!  think about your children!
   = cam on sidewalk looking to bridge  
   WM looking up from far. 
 
-  m.surveyor.scene1.shot2.seq.1.desc  
-       this.cam.sidewalk.to.bridge // = m.surveyor.scene1.cam.sidwalk.to.bridge.trans  
+  m.surveyGuy.scene1.shot2.seq.1.desc  
+       this.cam.sidewalk.to.bridge // = m.surveyGuy.scene1.cam.sidwalk.to.bridge.trans  
          
       
 
@@ -137,7 +137,7 @@ WM yells:  think about your wife!  think about your children!
    1. Audbabble (Voices, accents, speech synthesis)  
    2. Musociopath (Music, phrases, sync points)
 
-## Example: Surveyor Joke Stickman Movie
+## Example: surveyGuy Joke Stickman Movie
 
 We are taking the general movie directives and the first four short shots of the single scene short movie. 
 
@@ -189,7 +189,7 @@ If a descriptor is causing the reconstruction to fail an attempt should be made 
 
    1. movie.genre.desc: Comedy   
    2. movie.tone.desc: Dry “factual”  
-   3. movie.pJoke: Turns out worried man is a surveyor himself. 
+   3. movie.pJoke: Turns out worried man is a surveyGuy himself. 
 
 8. **Translators (.trans)**:
 
