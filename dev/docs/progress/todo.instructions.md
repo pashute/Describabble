@@ -1,0 +1,63 @@
+# Instructions for the AI to use Todo.md
+
+## Filename todo.instructions.md  v0.1.1
+
+
+## Purpose
+
+The todo.md file for planing and tracking tasks and progress.
+
+= Useful for AI after a crash
+= Useful for Developer to instruct the AI and follow. 
+
+
+## Strict Terse Instructions
+
+### 1. The Todo Header
+
+- The 13 line Todo header should not be touched.
+- The version number there denotes the header version, not the file version. 
+- If by some mistake the header was changed or removed, it should be restored from the following (with the header on the first line)
+
+```
+# AI\'s Todo Tracker
+
+## Filename: todo.md v0.1.1
+
+- [ ] planned, [[ ]] planned critical - stop batch if fails
+- [>] single in progress item. 
+- [V] previously completed, [v] done.
+- [!] problem so skipped, `[?]` reached here and needs user attention
+
+Do not touch this file before re-reading the todo.instructions.md,  
+and follow those instructions to the tee. 
+
+--- text may begin 2 lines below this line ---
+```
+
+- **TERSE:** All todo items must be terse headlines without details. NO VERBOSITY ANYWHERE. 
+
+- **Batches:** AI writes the plan first in batches and sections 
+  - Batch header: eg. # bSept3 morning
+  - Section header: eg. ## bSept3.sec1 
+  - batches may be mentioned in the commit messages but not in the code files or documentation. 
+
+- ***Sounds:***
+- the following user-permitted .ps1 files should be listed as a bullet without a checkbox, to remind the AI to alert the user. 
+- Avoid non permitted file invoking, which will bring up an Allow button and the alert won't be heard. 
+- Avoid chaining terminal commands together in one line if it will cause permissions to be requested. i.e. `cd` is permitted for the project folder only. Chaining an action after it will cause the ALLOW button to pop up, pausing the automation. 
+
+- beep.ps1 - listed before each step! 
+- callme.ps1 - when done or BEFORE an action that will need the user's attention or permission. 
+
+# checkboxes
+- Every task should have a bulleted checkbox `- [ ]` to indicate its completion status.
+- A critical task that needs to stop the batch if failed will be marked with a double square bracket `- [[ ]]`.
+- Mark `- [>]` on only one task in the file before you - On completion markas follows 
+- `[V]` previously completed, `[v]` done. 
+- `[!]` problem so skipped, `[?]`  for when reached the stage that you need attention. Note for planned discussions do not mark [?] till previous tasks completed or skipped. 
+
+
+- **Problems** If a problem was encountered, a terse telegraphic headline should be added as a bullet at the location. no detailed info here. 
+
+temp.ai.md in the dev/docs/progress/ folder as a scrap file to write whatever it needs. the file should be set in gitignore. AI may user a proress/
