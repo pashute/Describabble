@@ -1,0 +1,148 @@
+{
+  "locations": [
+    {
+      "id": "bridge",
+      "name": "Suspension Bridge Over River",
+      "type": "outdoor",
+      "environment": "bridge_and_river",
+      "timeOfDay": "daytime",
+      "weather": "clear",
+      "lighting": "natural_daylight",
+      "ambience": {
+        "sound": "traffic_distant_fast_moving",
+        "volume": "low_underneath_dialogue",
+        "description": "Fast-moving traffic sounds in distance, not competing with dialogue"
+      },
+      "bridgeStructure": {
+        "roadDeck": {
+          "description": "Horizontal line at mid-frame",
+          "position": "center_horizontal",
+          "color": "black"
+        },
+        "fenceTopRail": {
+          "description": "Horizontal line above road",
+          "position": "upper_mid_frame",
+          "color": "black"
+        },
+        "fencePoles": {
+          "description": "Short vertical lines between rail and road",
+          "quantity": "multiple",
+          "spacing": "regular_intervals",
+          "color": "black"
+        },
+        "suspensionCable": {
+          "description": "Curved catenary line above rail, arcing downward at ends",
+          "position": "top_frame",
+          "shape": "catenary_curve",
+          "color": "black"
+        },
+        "hangerRopes": {
+          "description": "Vertical lines from catenary to rail",
+          "quantity": "multiple",
+          "position": "connecting_cable_to_rail",
+          "color": "black"
+        },
+        "riverGround": {
+          "description": "Horizontal line far below bridge",
+          "position": "bottom_frame",
+          "color": "black_or_blue_hint"
+        }
+      },
+      "pov": [
+        {
+          "id": "riverside_pov",
+          "name": "Riverside POV (Looking Up)",
+          "cameraPosition": "river_ground_level",
+          "lookingDirection": "upward",
+          "cameraAngle": "looking_up",
+          "cameraDistance": "medium",
+          "visible": [
+            "bridge_structure_full",
+            "road",
+            "fence_rail",
+            "poles",
+            "hangers",
+            "catenary",
+            "sky_above_bridge"
+          ],
+          "hidden": [
+            "character_from_bridge_pov"
+          ],
+          "primarySubject": "surveyGuy_on_fence",
+          "subjectScale": "large_close_perspective",
+          "focusPoint": "surveyGuy_body_and_face",
+          "subtitlePosition": "bottom_screen",
+          "subtitleReason": "does_not_block_subject_above",
+          "scenesTiming": [
+            "0-4s opening_climbing",
+            "14-19s first_response",
+            "23-26s second_response",
+            "30-40s anguished_speech"
+          ]
+        },
+        {
+          "id": "bridge_pov",
+          "name": "Bridge POV (Looking Down)",
+          "cameraPosition": "bridge_level",
+          "lookingDirection": "downward",
+          "cameraAngle": "looking_down",
+          "cameraDistance": "far",
+          "visible": [
+            "ground_river_far_below",
+            "minimal_bridge_structure",
+            "sky_space"
+          ],
+          "hidden": [
+            "character_from_riverside_pov"
+          ],
+          "primarySubject": "worriedMan_below",
+          "subjectScale": "small_distant",
+          "focusPoint": "worriedMan_head_upper_body",
+          "subtitlePosition": "top_screen",
+          "subtitleReason": "does_not_block_subject_below",
+          "scenesTiming": [
+            "4-9s narration_bridge_view",
+            "9-14s first_plea",
+            "19-23s second_plea",
+            "26-30s third_plea",
+            "40-51s job_advice_and_punchline"
+          ]
+        }
+      ],
+      "cameraSwitchingRules": {
+        "rule1": "Never both POVs active simultaneously",
+        "rule2": "Clean cut between POVs at dialogue speaker change",
+        "rule3": "POV stays with speaker until their dialogue ends",
+        "rule4": "No intermediate angles or mixed perspectives",
+        "rule5": "Narrative narration uses respective POV (opening Riverside, later Bridge)"
+      },
+      "frameComposition": {
+        "aspectRatio": "16:9",
+        "width": 960,
+        "height": 540,
+        "backgroundColor": "white_or_light_sky"
+      }
+    }
+  ],
+  "povSwitchSequence": [
+    {"time": 0.0, "pov": "riverside", "reason": "opening_narration"},
+    {"time": 4.0, "pov": "bridge", "reason": "narrator_bridge_view"},
+    {"time": 9.0, "pov": "bridge", "reason": "worried_man_speaks"},
+    {"time": 14.0, "pov": "riverside", "reason": "survey_guy_responds"},
+    {"time": 19.0, "pov": "bridge", "reason": "worried_man_second_plea"},
+    {"time": 23.0, "pov": "riverside", "reason": "survey_guy_second_response"},
+    {"time": 26.0, "pov": "bridge", "reason": "worried_man_third_plea"},
+    {"time": 30.0, "pov": "riverside", "reason": "survey_guy_anguished_speech"},
+    {"time": 40.0, "pov": "bridge", "reason": "worried_man_job_advice"},
+    {"time": 51.0, "pov": "black", "reason": "cut_to_black_splash_ending"}
+  ],
+  "sceneNotes": {
+    "note1": "Single continuous location with POV alternation (no set changes)",
+    "note2": "Dialogue timing matches swPrompt specifications exactly",
+    "note3": "POV switches on speaker changes, not mid-sentence",
+    "note4": "Subtitle positioning follows framing rules critical (Riverside = bottom, Bridge = top)",
+    "note5": "No camera movement within POVs (static camera positions)",
+    "note6": "Bridge structure visible in Riverside POV establishes scale and isolation",
+    "note7": "Distance in Bridge POV emphasizes urgency and helplessness"
+  }
+}

@@ -1,0 +1,207 @@
+{
+  "characters": [
+    {
+      "id": "surveyGuy",
+      "name": "Survey Guy",
+      "role": "protagonist",
+      "age": 30,
+      "gender": "male",
+      "appearance": {
+        "type": "stick_figure",
+        "hair": "short_horizontal_line_black",
+        "distinguishingMarks": ["bent_tie_draped_on_chest"],
+        "bodyShape": "stick",
+        "limbs": "simple_lines"
+      },
+      "voice": {
+        "gender": "male",
+        "age": "30s",
+        "quality": "slightly_nasal_phone_rep",
+        "synthesisVoice": "system_male_older"
+      },
+      "moodArc": [
+        {
+          "time": "0-4s",
+          "mood": "distressed",
+          "expression": "panting",
+          "description": "Climbing hesitantly, exhaustion audible"
+        },
+        {
+          "time": "4-14s",
+          "mood": "distressed",
+          "expression": "defensive_stance",
+          "description": "Standing on ledge, looking down"
+        },
+        {
+          "time": "14-26s",
+          "mood": "defensive_turning_raw",
+          "expression": "shouting_raw",
+          "description": "Denying family connections, voice cracks"
+        },
+        {
+          "time": "26-40s",
+          "mood": "anguished_bitter",
+          "expression": "bitter_angry",
+          "description": "Job complaint, sarcastic intensity"
+        },
+        {
+          "time": "40-46s",
+          "mood": "contemplative",
+          "expression": "thinking",
+          "description": "Silent processing of Worried Man's logic"
+        },
+        {
+          "time": "46-53s",
+          "mood": "accepting",
+          "expression": "resigned",
+          "description": "Implied acceptance, then action (splash)"
+        }
+      ],
+      "postureStates": {
+        "climbing": {
+          "time": "0-4s",
+          "angle": 45,
+          "armsRaised": true,
+          "legsPosition": "bent",
+          "headPosition": "forward_down",
+          "description": "Body angled, arms extended gripping, legs bent"
+        },
+        "standingOnLedge": {
+          "time": "4-40s",
+          "angle": 0,
+          "armsPosition": "variable",
+          "bodyStability": "upright",
+          "description": "Upright on fence, balance posture or arms for balance"
+        },
+        "thinking": {
+          "time": "40-46s",
+          "angle": 0,
+          "bodyPosition": "still",
+          "headTilt": "slight",
+          "description": "Upright, minimal movement, contemplative"
+        },
+        "afterPunchline": {
+          "time": "46-53s",
+          "angle": 0,
+          "bodyPosition": "accepting",
+          "description": "Body language shifts, then action (implied jump)"
+        }
+      },
+      "animations": {
+        "breathingPanting": {
+          "time": "0-4s",
+          "type": "respiratory",
+          "visual": "subtle_chest_movement",
+          "audio": "panting_audible"
+        },
+        "shoutingDialogue": {
+          "time": "14-40s",
+          "type": "speech_animation",
+          "mouthShape": "open_varied",
+          "intensity": "high"
+        }
+      }
+    },
+    {
+      "id": "worriedMan",
+      "name": "Worried Man",
+      "role": "support",
+      "age": 24,
+      "gender": "male",
+      "appearance": {
+        "type": "stick_figure",
+        "headShape": "elongated_vertical_oval",
+        "distinguishingMarks": ["long_face"],
+        "bodyShape": "stick",
+        "limbs": "simple_lines",
+        "attire": "minimal"
+      },
+      "voice": {
+        "gender": "male",
+        "age": "24",
+        "quality": "younger_clear_direct",
+        "synthesisVoice": "system_male_younger"
+      },
+      "moodArc": [
+        {
+          "time": "9-30s",
+          "mood": "worried_desperate",
+          "expression": "pleading",
+          "description": "Shouting emotional appeals, volume escalating"
+        },
+        {
+          "time": "30-40s",
+          "mood": "desperate_escalating",
+          "expression": "last_attempt",
+          "description": "Peak emotional plea about future"
+        },
+        {
+          "time": "40-46s",
+          "mood": "reasoning_measured",
+          "expression": "logical",
+          "description": "Strategy pivot to practical advice, tone softens"
+        },
+        {
+          "time": "46-51s",
+          "mood": "cunning_clever",
+          "expression": "punchline_delivery",
+          "description": "Punchline setup, clarity wins over volume, subtle smile implied"
+        }
+      ],
+      "postureStates": {
+        "lookingUp": {
+          "time": "9-30s",
+          "headTilt": "back",
+          "bodyPosition": "upright",
+          "armsGesture": "upward",
+          "description": "Standing firm, head back, arms may gesture up"
+        },
+        "persistent": {
+          "time": "30-46s",
+          "headTilt": "back",
+          "bodyPosition": "upright_firm",
+          "armsPosition": "varied_for_emphasis",
+          "description": "Standing firm, body language direct"
+        },
+        "punchlineDelivery": {
+          "time": "46-51s",
+          "bodyPosition": "confident",
+          "armsPosition": "controlled",
+          "faceExpression": "knowing",
+          "description": "Standing confident, directness in posture, subtle knowing expression"
+        }
+      },
+      "animations": {
+        "shoutingPleas": {
+          "time": "9-30s",
+          "type": "speech_animation",
+          "mouthShape": "open_wide",
+          "intensity": "very_high",
+          "volumeLevel": "shouting"
+        },
+        "reasoningDelivery": {
+          "time": "40-46s",
+          "type": "speech_animation",
+          "mouthShape": "moderate",
+          "intensity": "medium_high",
+          "volumeLevel": "shouting_but_reasoned"
+        },
+        "punchlineDelivery": {
+          "time": "46-51s",
+          "type": "speech_animation",
+          "mouthShape": "precise_articulation",
+          "intensity": "medium",
+          "volumeLevel": "clear_measured",
+          "note": "Lower volume for impact and clarity"
+        }
+      }
+    }
+  ],
+  "characterInteraction": {
+    "distance": "bridge_height_apart_significant",
+    "visibility": "never_simultaneous",
+    "communication": "shouting_across_distance",
+    "eyeContact": "implied_through_pov_switches",
+    "dialogue": "call_and_response_alternating"
+  }
+}

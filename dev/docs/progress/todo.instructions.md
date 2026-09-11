@@ -7,8 +7,8 @@
 
 The todo.md file for planing and tracking tasks and progress.
 
-= Useful for AI after a crash
-= Useful for Developer to instruct the AI and follow. 
+- Useful for AI after a crash
+- Useful for Developer to instruct the AI and follow. 
 
 
 ## Strict Terse Instructions
@@ -17,20 +17,21 @@ The todo.md file for planing and tracking tasks and progress.
 
 - The 13 line Todo header should not be touched.
 - The version number there denotes the header version, not the file version. 
-- If by some mistake the header was changed or removed, it should be restored from the following (with the header on the first line)
+- If by some mistake the header was changed or removed, it should be restored from the following:
 
 ```
-# AI\'s Todo Tracker
+# AI's Todo Tracker
 
-## Filename: todo.md v0.1.1
+## Filename: todo.md v0.2
+
+- don't forget to beep and to mark the tasks as you advance.
 
 - [ ] planned, [[ ]] planned critical - stop batch if fails
 - [>] single in progress item. 
 - [V] previously completed, [v] done.
 - [!] problem so skipped, `[?]` reached here and needs user attention
 
-Do not touch this file before re-reading the todo.instructions.md,  
-and follow those instructions to the tee. 
+Do not touch this file before re-reading the `todo.instructions.md`. Follow those instructions to the tee. 
 
 --- text may begin 2 lines below this line ---
 ```
@@ -40,15 +41,20 @@ and follow those instructions to the tee.
 - **Batches:** AI writes the plan first in batches and sections 
   - Batch header: eg. # bSept3 morning
   - Section header: eg. ## bSept3.sec1 
+  - Header spacing: Leave two empty lines before the header, and one empty line after it. 
   - batches may be mentioned in the commit messages but not in the code files or documentation. 
+  - code files only comment on what they do and how, not on changes made to them. 
 
-- ***Sounds:***
-- the following user-permitted .ps1 files should be listed as a bullet without a checkbox, to remind the AI to alert the user. 
+- ***Beeps:***
+- `beep.ps1` should be invoked before each step.
+- `callme.ps1` should be invoked when done or BEFORE an action that will need the user's attention or permission.
+- when planning steps, write `- beep.ps1` before each step or `- callme.ps1` when needed, as a reminder to beep. No checkbox because they are only reminders. 
+
+
+# Avoid Non-Permitted Actions
+
 - Avoid non permitted file invoking, which will bring up an Allow button and the alert won't be heard. 
 - Avoid chaining terminal commands together in one line if it will cause permissions to be requested. i.e. `cd` is permitted for the project folder only. Chaining an action after it will cause the ALLOW button to pop up, pausing the automation. 
-
-- beep.ps1 - listed before each step! 
-- callme.ps1 - when done or BEFORE an action that will need the user's attention or permission. 
 
 # checkboxes
 - Every task should have a bulleted checkbox `- [ ]` to indicate its completion status.

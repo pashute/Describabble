@@ -1,0 +1,257 @@
+{
+  "movie": "surveyGuy",
+  "totalDuration": 53.0,
+  "scenes": [
+    {
+      "id": "scene1",
+      "name": "Bridge Scene",
+      "location": "suspension_bridge",
+      "startTime": 0.0,
+      "endTime": 53.0,
+      "segments": [
+        {
+          "id": "seg_opening",
+          "startTime": 0.0,
+          "endTime": 9.0,
+          "pov": "riverside",
+          "description": "Opening narration with Survey Guy climbing hesitantly over fence, panting audible",
+          "dialogueLines": [
+            {
+              "speaker": "narrator",
+              "startTime": 0.0,
+              "endTime": 4.0,
+              "text": "EXT. SUSPENSION BRIDGE - DAY (fast-moving traffic sounds heard in distance)",
+              "tone": "calm",
+              "subtitlePosition": "bottom"
+            },
+            {
+              "speaker": "narrator",
+              "startTime": 4.0,
+              "endTime": 9.0,
+              "text": "Survey Guy climbs hesitantly over the bridge fence.",
+              "tone": "calm",
+              "subtitlePosition": "bottom"
+            }
+          ],
+          "characters": ["surveyGuy"],
+          "actions": [
+            {
+              "actor": "surveyGuy",
+              "actionType": "climbing",
+              "startTime": 0.0,
+              "endTime": 9.0,
+              "intensity": "hesitant",
+              "emotion": "distressed"
+            }
+          ]
+        },
+        {
+          "id": "seg_first_plea",
+          "startTime": 9.0,
+          "endTime": 19.0,
+          "pov": "alternating",
+          "description": "First exchange about family - Worried Man pleads, Survey Guy denies",
+          "dialogueLines": [
+            {
+              "speaker": "worriedMan",
+              "startTime": 9.0,
+              "endTime": 14.0,
+              "text": "Think about your wife! Think about your children!",
+              "tone": "urgent",
+              "volume": "shouting",
+              "subtitlePosition": "top",
+              "pov": "bridge"
+            },
+            {
+              "speaker": "surveyGuy",
+              "startTime": 14.0,
+              "endTime": 19.0,
+              "text": "I don't have a wife! I don't have kids!",
+              "tone": "defensive",
+              "volume": "shouting",
+              "subtitlePosition": "bottom",
+              "pov": "riverside"
+            }
+          ],
+          "characters": ["surveyGuy", "worriedMan"],
+          "actions": [
+            {
+              "actor": "worriedMan",
+              "actionType": "shouting",
+              "startTime": 9.0,
+              "endTime": 14.0,
+              "intensity": "high",
+              "emotion": "worried"
+            },
+            {
+              "actor": "surveyGuy",
+              "actionType": "shouting",
+              "startTime": 14.0,
+              "endTime": 19.0,
+              "intensity": "high",
+              "emotion": "defensive"
+            }
+          ]
+        },
+        {
+          "id": "seg_second_plea",
+          "startTime": 19.0,
+          "endTime": 26.0,
+          "pov": "alternating",
+          "description": "Second exchange about parents - escalation continues",
+          "dialogueLines": [
+            {
+              "speaker": "worriedMan",
+              "startTime": 19.0,
+              "endTime": 23.0,
+              "text": "Think about your parents!",
+              "tone": "desperate",
+              "volume": "shouting",
+              "subtitlePosition": "top",
+              "pov": "bridge"
+            },
+            {
+              "speaker": "surveyGuy",
+              "startTime": 23.0,
+              "endTime": 26.0,
+              "text": "I don't have parents!",
+              "tone": "raw",
+              "volume": "shouting",
+              "subtitlePosition": "bottom",
+              "pov": "riverside"
+            }
+          ],
+          "characters": ["surveyGuy", "worriedMan"],
+          "povSwitches": [
+            {"time": 9.0, "to": "bridge"},
+            {"time": 14.0, "to": "riverside"},
+            {"time": 19.0, "to": "bridge"},
+            {"time": 23.0, "to": "riverside"}
+          ]
+        },
+        {
+          "id": "seg_third_plea_and_job",
+          "startTime": 26.0,
+          "endTime": 40.0,
+          "pov": "alternating",
+          "description": "Third plea about future, then Survey Guy's extended job complaint",
+          "dialogueLines": [
+            {
+              "speaker": "worriedMan",
+              "startTime": 26.0,
+              "endTime": 30.0,
+              "text": "Think about your future!",
+              "tone": "desperate",
+              "volume": "shouting",
+              "subtitlePosition": "top",
+              "pov": "bridge"
+            },
+            {
+              "speaker": "surveyGuy",
+              "startTime": 30.0,
+              "endTime": 35.0,
+              "text": "What future?! I have no future. I'm a phone rep survey guy!",
+              "tone": "anguished",
+              "volume": "shouting",
+              "subtitlePosition": "bottom",
+              "pov": "riverside"
+            },
+            {
+              "speaker": "surveyGuy",
+              "startTime": 35.0,
+              "endTime": 40.0,
+              "text": "Everybody hates surveys. They hear me talk and want to die!",
+              "tone": "bitter",
+              "volume": "shouting",
+              "subtitlePosition": "bottom",
+              "pov": "riverside"
+            }
+          ],
+          "characters": ["surveyGuy", "worriedMan"],
+          "actions": [
+            {
+              "actor": "surveyGuy",
+              "actionType": "speaking",
+              "startTime": 30.0,
+              "endTime": 40.0,
+              "intensity": "high",
+              "emotion": "anguished",
+              "keyMoment": "job_revelation"
+            }
+          ]
+        },
+        {
+          "id": "seg_pivot_and_punchline",
+          "startTime": 40.0,
+          "endTime": 51.0,
+          "pov": "bridge",
+          "description": "Strategy pivot to reasoning, then punchline delivery",
+          "dialogueLines": [
+            {
+              "speaker": "worriedMan",
+              "startTime": 40.0,
+              "endTime": 46.0,
+              "text": "So change your job. You're not that stupid that you can't do anything else, right?",
+              "tone": "reasoning",
+              "volume": "shouting",
+              "subtitlePosition": "top",
+              "pov": "bridge"
+            },
+            {
+              "speaker": "worriedMan",
+              "startTime": 46.0,
+              "endTime": 51.0,
+              "text": "Before you step down from the bridge, would you be willing to reply to a short survey?",
+              "tone": "cunning",
+              "volume": "clear",
+              "subtitlePosition": "top",
+              "pov": "bridge",
+              "keyMoment": "punchline"
+            }
+          ],
+          "characters": ["worriedMan"],
+          "actions": [
+            {
+              "actor": "surveyGuy",
+              "actionType": "thinking",
+              "startTime": 40.0,
+              "endTime": 46.0,
+              "intensity": "internal",
+              "emotion": "contemplative",
+              "note": "implied silent moment after reasoning"
+            }
+          ]
+        },
+        {
+          "id": "seg_ending",
+          "startTime": 51.0,
+          "endTime": 53.0,
+          "pov": "black",
+          "description": "Cut to black with splash sound effect",
+          "dialogueLines": [
+            {
+              "speaker": "narrator",
+              "startTime": 51.0,
+              "endTime": 53.0,
+              "text": "SPLASH!",
+              "tone": "sound_effect",
+              "subtitlePosition": "none",
+              "soundEffect": "splash",
+              "volume": "loud"
+            }
+          ],
+          "characters": [],
+          "soundEffects": [
+            {
+              "type": "splash",
+              "startTime": 51.0,
+              "endTime": 53.0,
+              "description": "Large splash into water, substantial impact",
+              "volume": "loud"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
