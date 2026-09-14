@@ -1,221 +1,237 @@
-# Describabble Descriptive Parsing and Constructing Architecture
+# Describabble Describ Files Architecture
 
-The Describabble Describ files are defined as a structured, declarative representation of video and screenplay components, allowing modular script descriptors, metadata, and lexical translations to be parsed into full production scenes.
+`Filename: describ.md v0.1.7`
 
-## **1.  System Architecture**: 
+Core file format system for screenplay description and animation data.
 
-Descibabble Describ types: 
+---
 
-1. `.desk` - Modular script descriptor files
-2.  `.meta` - Metababble metadata and default parameter rules)  
-3. `.trans` - Translation lexicon files creating a parametric schema for descriptions)
+## Three File Types
 
-##  2.  Architecture Details 
+### 1. `.meta` files - Parameter Schema & Defaults
+Generic, reusable rules. Defines:
+- **Parameter names** (what CAN be varied)
+- **Default options** (what COULD be chosen)
+- **Rendering rules** (how to draw/animate each parameter)
 
-**2.1 Movie Metadata**:
-
-Movie metadata includes information not present in the descriptors and parameters that are could be missing from the translation lexicon schemas. 
-
-Movie and scene metadata is usually given as rules in Tarzan English, or as lists, with easily understood headlines. They fill in for typical states like a genre, an accent, or a mood. 
-
-**Sample fields covered by .metadata**
-
-1. Genre & Tone (Global stylistic frameworks)  
-2. Global Logline & Premise  
-3. Mood & Visual Palette  
-
-
+**Example: `meta.stick.fig.male`**
 ```
-markdown
-
-**Example**:  genre.comedy `.meta`  
-   usually has surprise punchline at end.      
-    overone:  sly and dry or slapstic (sequence of absurdities or puns)  
-     comic scenes or shots  
-      comic buildup  
-     humorous style:  irony, cynicism, parody, sarcasm, absurd, satirical
+head:
+  size: [GIANT, LARGE, LONG, SMALL, TINY, NONE]  # Options available
+  shape: [circle, oval, triangle]
+  variants: [none, hair-line, hair-full]
+body:
+  angle: [upright, leaning-left, leaning-right, twisted]
+arms:
+  length: [short, normal, long]
+  position: [up, down, bent, gesture-left, gesture-right]
+legs:
+  stance: [together, apart, bent-walking, bent-kneeling]
+face:
+  mouth: [line, smile-up, smile-down, O-shape, grimace]
+  eyebrows: [line, up, down, angled-happy, angled-worried]
 ```
 
+**Example: `meta.stick.fig.female`**
 ```
-markdown
-
-example1: attire.office `.meta`  
-	men usually wear suits,   
-	women dress elegantly  
-	often shown preparing hurriedly for work   
-(brushing teeth. men: shaving. women: makeup)  
-back from work in work attire.   
-afterwork:  change of clothes depends on destination  
-default: men to sports or tee shirts, women to more attractive attire  
-night at home: casual assortment, or pygamas. 
+Similar to male, with options for:
+  head: [oval, contoured, feminine] variants
+  body: [curves, straight] rendering hints
 ```
 
-**2.2 Lexicon Schemata .trans**
+### 2. `.desc` files - Specific Implementation
+Movie or scene-specific. Contains:
+- **Only chosen parameters** (no alternatives listed)
+- **Specific values** (what IS, not what COULD be)
+- **No rendering options** (implementation detail, not description)
 
-The lexicons in the `.trans` files are lists of terms and their related terms that should be looked for by the ai   
-as parameters to categorize the text in the scene. 
+**Example: `desc.surveyGuy.char.jmp` (Survey Guy - Jumper)**
+```
+name: Survey Guy (JMP)
+base: meta.stick.fig.male
+head:
+  size: LARGE           # Chosen from meta options
+  shape: oval
+  variants: hair-line
+body:
+  angle: twisted        # Leaning/climbing
+arms:
+  position: up          # Reaching/climbing
+legs:
+  stance: bent-walking  # Mid-climb
+attire:
+  shirt: blue-long-sleeve
+  tie: dishevelled      # Specific detail for this character
+```
 
-General `.trans` files are called by their field name.   
-Scene specific `.trans` files created specifically for this movie or scene have a prefix of m for movie or s for scene, and the scene number prefix to the translation file’s main topic. 
+**Example: `desc.surveyGuy.char.wm` (Worried Man)**
+```
+name: Worried Man (WM)
+base: meta.stick.fig.male
+head:
+  size: LARGE
+  shape: circle
+  variants: hair-line
+body:
+  angle: upright
+arms:
+  position: down
+legs:
+  stance: together       # Standing still
+attire:
+  shirt: casual
+  tie: none
+emotion-arc:           # Movie-specific, not generic
+  default: worried
+```
 
-Example 1.  General characters `.trans` file:
+### 3. `.trans` files - Natural Language → Parameters
+Mapping schemas. Bridge between:
+- **Human description** (natural language)
+- **Structured parameters** (animation data)
 
-**characters.trans**  
+**Example: `trans.stick.fig.male.clothed`**
+```
+Maps human descriptions like:
+  "A businessman with a tie"
+  → base: meta.stick.fig.male
+  → attire.shirt: "long-sleeve"
+  → attire.tie: "formal"
+  → emotion: "neutral or authoritative"
 
-- character
--- participation:
----lead (protagonist,high importance), 
-----support (mid importance), 
-----or extras (low importance).
--- profile (age, name, gender, actor details, stage name), 
+  "A distressed man"
+  → base: meta.stick.fig.male
+  → face.eyebrows: "angled-worried"
+  → body.angle: "leaning" or "twisted"
+  → face.mouth: "line" or "grimace"
+```
 
-- profession, role (parent)
-- gender see gender.typical  and gender.active
-- mood: overall
-    positive: (inventive, creative, happy, smart, interesting, wishful, powerful, 
-               calm, protective, funny, charismatic, leader, attentive, caring),
-    or negative (depressed, sleepy, aggressive, 
-                  toxic, sick, psychopath, indifferent)  
-- awareness :
-    aware (currently knows whats happening), mistaken (false thoughts), unaware  
-- looks:  attire, body looks (general specifics)
+---
 
-mv = m.surveyGuy  
-scn = mv.scene1  
-mv.character.JMP: profession, looks [gender, age, hair, expression, attire], mood, voice  
-scn.settings.BRG: elements (e.g. cable), ambient, background, cam (angle, distance, width,foucs)  
-scn.*.interaction.dialog,mood,tone
+## Head Size System
 
-**2.3 Descriptor Sequence Referencing**:
+| Size | Appearance | Use Case |
+|------|-----------|----------|
+| **GIANT** | Head = 50% of body height | Exaggerated, comedic, emphasis on thoughts |
+| **LARGE** | Round head, oversized but proportional | Typical adult, emphasizes expressions |
+| **LONG** | Elongated vertical head | Thin face, intellectual characters |
+| **SMALL** | Regular small proportional head | Normal stick figure |
+| **TINY** | Very small head | Childlike, alien, unusual proportions |
+| **NONE** | No head | Special effect (headless stickman) |
 
-**sceneN.seq.n** - Narrative play sequence holds links to the parts that constitute the sequence. part
+---
 
-**Example** for The surveyGuy scene one shot 2: (there’s only one scene in the whole movie)
+## Emotion → Rendering Mapping
 
-Original texts: 
+**Happiness**
+- mouth: smile-up (curved ⌣)
+- eyebrows: up or angled-happy (⌢)
+- posture: upright, relaxed
 
-WM:   
-Cut to closeup worried man (WM) age 24 looking up.   
-WM yells:  think about your wife!  think about your children!
+**Sadness**
+- mouth: smile-down (curved ⌢ inverted)
+- eyebrows: angled-down (∨)
+- posture: lean-down, slumped
 
-  bridge seen from reverside sidewalk.   
-  = cam on sidewalk looking to bridge  
-  WM looking up from far. 
+**Worry/Anxiety**
+- mouth: line or grimace
+- eyebrows: angled-worried (∧ inward)
+- posture: lean-forward, tense
 
-  m.surveyGuy.scene1.shot2.seq.1.desc  
-       this.cam.sidewalk.to.bridge // = m.surveyGuy.scene1.cam.sidwalk.to.bridge.trans  
-         
-      
+**Anger**
+- mouth: grimace or line
+- eyebrows: angled-angry (sharp ∧)
+- posture: twisted, arms gesture
 
-**seq.shooting** - Production shooting sequence of each scene, points to a play sequence. 
+**Distressed**
+- mouth: O-shape
+- eyes: wide (enlarged)
+- posture: lean-back, falling gesture
 
-1. **Screenplay Structure**:
+**Neutral**
+- mouth: line or dot
+- eyebrows: line
+- posture: upright
 
-   1. Chapters, Plot segments & Plot Points  
-   2. Action lines, Beats & Pacing  
-   3. Transitions  
-   4. Dialogs & Parenthetical directions  
-   5. Shots (Camera movements, framing, scale)
+---
 
-   6.   
-2. **Scene Building Blocks**:  
-   1. Characters (, finite state machines, Archetypes, Motivation, Flaw)  
-      1. Looks: gender, age, hair shape and color, facial hair, skin tone, dress, eye color, and detailed physical/non-standard descriptors (e.g., character.clothes.tie.dishevelled, character.face.interaction)  
-      2. Profiles and archtypes with Motivations strenths and flaws
+## Movement & Posture
 
-   2. Objects   
-      1. Looks: shape, color, texture  
-      2. Interactive props, collision/physics logic
+**Standing** - Upright, legs together, arms natural
+**Walking** - Legs bent alternating, arms swing, body forward-lean
+**Climbing** - Body angled up, arms raised, legs bent
+**Falling** - Body tilted/inverted, arms out, legs splayed
+**Sitting** - Upper body upright, legs bent, lower torso reduced
+**Gesturing** - Arms in direction of emphasis, body may twist
 
-   3. Scenery / Background   
-      1. Environment, Lighting,   
-      2. Ambient elements
+---
 
-   4. Action / Movement (Temporal timing, velocity, spatial cues)
+## surveyGuy Example Breakdown
 
-3. **Audio & Music Layers**:  
-   1. Audbabble (Voices, accents, speech synthesis)  
-   2. Musociopath (Music, phrases, sync points)
+**[EXAMPLE - surveyGuy specific, not generic]**
 
-## Example: surveyGuy Joke Stickman Movie
+### Characters
 
-We are taking the general movie directives and the first four short shots of the single scene short movie. 
+`desc.surveyGuy.char.jmp`:
+- Head: LARGE, oval, hair-line
+- Body: twisted (climbing), blue-shirt, dishevelled-tie
+- Emotion: distressed (mouth O, eyes wide, lean-back when realized)
 
-### Original prompt
+`desc.surveyGuy.char.wm`:
+- Head: LARGE, circle, hair-line
+- Body: upright, casual-shirt, no-tie
+- Emotion: worried throughout (eyebrows angled-worried, mouth line)
 
-BRG:   
-A young man (JMP) caucasian black-hair age 30 with a long sleeved blue shirt and tie  is standing on a bridge threatning (action only: climbing) to jump off.  
+### Locations
 
-WM:   
-Cut to closeup worried man (WM) age 24 looking up.   
-WM yells:  think about your wife!  think about your children!
+`desc.surveyGuy.loc.bridge`:
+- Camera angle: from riverside sidewalk looking up at bridge
+- Elements: cables, hangers, road deck
+- Lighting: daytime, overcast
 
-BRG:   
-JMP yells back: i don’t have a wife!  I don’t have kids!
+### Dialogue & Emotion Timeline
 
-WM: (cam from above at jumper’s POV but a closer: a bit less than halfway from bridge to WM).   
-WM yells:  think about your parents
+```
+0-4s: JMP climbing, panting (aggressive sound)
+4s: WM yells "think about your wife!"
+     → Emotion: worried, eyebrows down, mouth line
+9s: JMP responds "I don't have a wife!"
+     → Emotion: distressed, lean-back
+14s: WM yells "think about your parents"
+     → Emotion: worried maintained
+```
 
-### Adjustments with Chat
+**[END EXAMPLE]**
 
-Movie genre: comedy,  plot: a joke with a subtle puchline and an ending comic effect.   
-Single scene (river bridge and sidewalk) 
+---
 
-Shot 1 BRG    
-  - bridge element (ropes) in background   
-   cam from bridge road.   
-   man climbing withback to camera, facing away, unaware of it.   
-   Panting aggravated sound. 
+## Translation Example
 
-Shot 2 WM   
-  bridge seen from reverside sidewalk.   
-  = cam on sidewalk looking to bridge  
-  WM looking up from far.   
-Shot3 BRG -   
-  cam looking down from behind JMP,   
-  cam direction towards reverside sidewalk.   
-  diagonal angle from JMP to WM   
-  camera distance ¾ of way from bridge to WM.   
-  WM face not clear. Head looking up. 
+**Human input:** "A young businessman, frustrated, climbing the bridge"
 
-**Reconstruction Test**
+**AI translation process:**
+1. Base template: `meta.stick.fig.male`
+2. Emotion: frustrated → eyebrows angled-angry, mouth grimace
+3. Action: climbing → body angle twisted, arms raised, legs bent
+4. Attire: businessman → shirt long-sleeve, tie formal
+5. Output: Structured desc parameters ready for rendering
 
-The following text descriptors, translators and metadata should be enoug to  recreate the first and second scene of the movie. To test it AI should reconstruct the general section and the first and second scenes of the screenplay,  from these descriptors. 
+---
 
-If the test fails and something is missing The AI should complete it, and try again.   
-If a descriptor is causing the reconstruction to fail an attempt should be made to modify the translator lexicons or the metadata so it will succeed. Otherwise the descriptor should be marked as unused  but kept in the example. 
+## Meta vs Desc vs Trans - Key Distinction
 
-7. **Global Descriptors**:
+| Aspect | `.meta` | `.desc` | `.trans` |
+|--------|---------|---------|----------|
+| **Purpose** | Schema + options | Specific values | Human language mapping |
+| **Content** | "What COULD be" | "What IS" | "How to interpret" |
+| **Reusable?** | Yes (generic) | No (movie-specific) | Yes (pattern-based) |
+| **Who uses?** | AI/rendering engine | Player/animator | AI translator |
+| **Change with movie?** | No | Yes | No |
 
-   1. movie.genre.desc: Comedy   
-   2. movie.tone.desc: Dry “factual”  
-   3. movie.pJoke: Turns out worried man is a surveyGuy himself. 
+---
 
-8. **Translators (.trans)**:
+## References
 
-   1. stickman.bodyparts:   
-      1. leg --thigh (top above knee), shin (below knee), foot (on floor)  
-      2. face   
-         1. eyes : shape, color direction,   
-         2. mouth : shape, color, direction,   
-         3. facial hair:  mustache, beared: shape and color  
-         4. hair: shape, color  
-   2. Localization keys for stickman archetypes and   
-   3. environmental.bridge:  
-
-9. **Scene Breakdown**:
-
-   1. **Scene 1**: Man climbing/threatening to jump  
-        
-        
-      1. Sequence Reference: seq.play: 01 | seq.shoot: 004  
-      2. Character State: Distressed jumper on ledge, high emotional intensity state  
-   2. **Scene 2**: Cut to worried man begging  
-      1. Sequence Reference: seq.play: 02 | seq.shoot: 005  
-      2. Character Descriptors:  
-         1. character.clothes.tie.dishevelled: 'tie folded over on shirt or over shoulder contemplating'  
-         2. character.bodyparts.face.interaction:  
-            1. smile  
-            2. cry  
-            3. contemplate 'a smile that quivers and gets bigger while eyes slightly crossed'
-
+- Implementation: See [stickTech.md](stickTech.md) for full system architecture
+- UI Specs: See [stickchat.specs.md](stickchat.specs.md) for editor interface
+- Code: `src/stickSetup/stickSetup.js` v0.1.7 loads meta/trans files from CDN cache

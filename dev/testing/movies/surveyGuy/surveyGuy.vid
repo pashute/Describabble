@@ -1,0 +1,84 @@
+# surveyGuy.vid v0.1.4
+# Single movie manifest - Nested YAML format
+# Describabble Video Manifest - Links all components of a stick figure movie
+
+## Movie Metadata
+movie:
+  name: The SurveyGuy
+  version: 0.1.4
+  created: 2025-09-14
+  description: A dark comedy stick figure short film about a phone survey guy contemplating a bridge jump
+  describs:
+    - desc.surveyGuy.characters.md
+
+## Duration & Technical Specs
+specs:
+  totalDuration: 53.0
+  fps: 60
+  canvasWidth: 960
+  canvasHeight: 540
+  aspectRatio: 16:9
+  describs:
+    - desc.surveyGuy.scene1.md
+
+## Description Files (Screenplay & Scene Structure)
+descriptions:
+  characters: desc.surveyGuy.characters.md
+  locations: desc.surveyGuy.locations.md
+  scene1: desc.surveyGuy.scene1.md
+  dialogue: desc.surveyGuy.dialogue.map.md
+  bridge: desc.surveyGuy.component.bridge.md
+  audio: desc.surveyGuy.audio.s.desc.md
+  describs:
+    - desc.surveyGuy.characters.md
+    - desc.surveyGuy.locations.md
+    - desc.surveyGuy.scene1.md
+    - desc.surveyGuy.dialogue.map.md
+
+## Translation Schemas (Parameter & Field Mapping)
+translations:
+  characters: trans.surveyGuy.characters.md
+  locations: trans.surveyGuy.locations.md
+  dialogue: trans.surveyGuy.dialogue.md
+  emotions: trans.surveyGuy.emotions.md
+  describs:
+    - trans.surveyGuy.characters.md
+    - trans.surveyGuy.dialogue.md
+    - trans.surveyGuy.emotions.md
+
+## Generic Metadata (Reusable Rules for Any Stick Movie)
+metadata:
+  emotions: meta.gen.emotions.md
+  emotions_stick: meta.gen.stick.emotions.md
+  movement: meta.gen.stick.movement.md
+  bridge_general: meta.gen.component.bridge.md
+  bridge_stick: meta.gen.stick.component.bridge.md
+  describs:
+    - meta.gen.emotions.md
+    - meta.gen.stick.emotions.md
+    - meta.gen.stick.movement.md
+
+## VidData Files (Compiled Animation Data)
+viddata:
+  scenes: vidData/scenes.json
+  characters: vidData/characters.json
+  locations: vidData/locations.json
+
+## File Paths
+file_paths:
+  basePath: ./describ/
+
+## Status & Build Info
+status:
+  ready: true
+  lastBuilt: 2025-09-14
+  buildTool: stickmake v0.1.4
+  player: stickvid v0.1.4
+
+## License & Attribution
+license: Unlicense (Free and Open Source)
+creator: Moussa Yashir
+production: Describabble
+characters:
+  - Survey Guy (Harold Purpleman)
+  - Worried Man (Juan Herstick)

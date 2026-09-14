@@ -22,7 +22,7 @@ The todo.md file for planing and tracking tasks and progress.
 ```
 # AI's Todo Tracker
 
-## Filename: todo.md v0.2
+## Filename: todo.md v0.2.2
 
 - don't forget to beep and to mark the tasks as you advance.
 
@@ -31,7 +31,7 @@ The todo.md file for planing and tracking tasks and progress.
 - [V] previously completed, [v] done.
 - [!] problem so skipped, `[?]` reached here and needs user attention
 
-Do not touch this file before re-reading the `todo.instructions.md`. Follow those instructions to the tee. 
+Do not touch this file before re-reading the `todo.instructions.md`. Follow those instructions to the tee. Don't forget the beeps, version report and callme. 
 
 --- text may begin 2 lines below this line ---
 ```
@@ -47,8 +47,9 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
 
 - ***Beeps:***
 - `beep.ps1` should be invoked before each step.
-- `callme.ps1` should be invoked when done or BEFORE an action that will need the user's attention or permission.
+- `callme.ps1` should be invoked when batch is done or BEFORE an action that will need the user's attention or permission.
 - when planning steps, write `- beep.ps1` before each step or `- callme.ps1` when needed, as a reminder to beep. No checkbox because they are only reminders. 
+- Tell the version of software being written, in the last line of the chat, after a batch is done.
 
 
 # Avoid Non-Permitted Actions

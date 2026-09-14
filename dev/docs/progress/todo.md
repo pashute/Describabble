@@ -1,6 +1,6 @@
 # AI's Todo Tracker
 
-## Filename: todo.md v0.2
+## Filename: todo.md v0.3
 
 - don't forget to beep and to mark the tasks as you advance.
 
@@ -9,71 +9,74 @@
 - [V] previously completed, [v] done.
 - [!] problem so skipped, `[?]` reached here and needs user attention
 
-Do not touch this file before re-reading the `todo.instructions.md`. Follow those instructions to the tee. 
+Do not touch this file before re-reading the `todo.instructions.md`. Follow those instructions to the tee. Don't forget the beeps, version report and callme. 
 
 --- text may begin 2 lines below this line ---
 
-# bSept11 Major Restructuring - Describ Files & Prompts
 
-## bSept11.R1 Create Generic Metadata Files (meta.gen.*.md) - Reusable for ALL movies/styles
+# Batch Sept15 - Stick Project: Documentation & stickchat Implementation
 
-- beep.ps1
-- [V] meta.gen.emotions.md - emotion types in screenplay (not stick-specific)
-- [V] meta.gen.stick.emotions.md - how stick figures express emotions
-- [V] meta.gen.stick.movement.md - stick figure movement conventions
-- [V] meta.gen.component.bridge.md - bridge types, views, components (general)
-- [V] meta.gen.stick.component.bridge.md - stick figure bridge drawing rules
+## B.Sept15.1 Documentation Foundation - Consolidate stickTech
 
-## bSept11.R2 Create SurveyGuy-Specific Description Files (desc.surveyGuy.*.md)
+- [>] Review stickchat README vs stickTech.md for gaps
+- [ ] Add missing items from README to stickTech.md (OAuth, IndexedDB, editing types, asset caching, setup)
+- [ ] Rewrite stickTech.md: complete, consistent, ordered, nothing missing
+- [ ] Fix naming: .gen.* (all movies), .stick.* (stick genre) - NO .gen.stick (oxymoron)
+- [ ] Document asset naming: desc.gen.*, meta.*, trans.* patterns
+- [ ] Document pashute.describ// CDN URL pattern
+- [ ] Version: stickTech.md v0.1.7
 
-- beep.ps1
-- [V] desc.surveyGuy.characters.md - Survey Guy, Worried Man
-- [V] desc.surveyGuy.component.bridge.md - specific bridge setup
-- [V] desc.surveyGuy.locations.md - scene location, POV definitions
-- [V] desc.surveyGuy.scene1.md - full 0-53s timeline, segments, actions
-- [V] desc.surveyGuy.dialogue.map.md - dialogue mapping with timing
+## B.Sept15.2 Create stickchat.specs.md from stickTech
 
-## bSept11.R3 Create SurveyGuy-Specific Translation Files (trans.surveyGuy.*.md)
+- [ ] Extract stickchat requirements from stickTech.md
+- [ ] Document UI structure: OAuth → screenplay → scene/shot selection → editing
+- [ ] Document sidebar with unit boxes (character, stage, dialogue, location, emotion, audio)
+- [ ] Document state machine phases (DRAFTING, BRANCHING_OPTIONS, CONSOLIDATING, COMPILING, READY_TO_RENDER)
+- [ ] Document IndexedDB schema
+- [ ] Document asset integration
+- [ ] Save as dev/docs/plans/stick/stickchat.specs.md v0.1.7
 
-- beep.ps1
-- [V] trans.surveyGuy.characters.md - character field schema with meta references
-- [V] trans.surveyGuy.emotions.md - emotion mappings to meta.gen.stick.emotions
-- [V] trans.surveyGuy.locations.md - location/POV parameter schema
-- [V] trans.surveyGuy.dialogue.md - dialogue parameter schema
+## B.Sept15.3 Create stickSetup Infrastructure
 
-## bSept11.R4 Update vidData JSON Files (check/refresh with new structure)
+- [ ] Create src/stickSetup/ folder
+- [ ] Create stickSetup.js v0.1.7: IndexedDB schema init + CDN asset caching
+- [ ] Fetch assets from pashute.describ// on startup
+- [ ] Cache locally for offline use
+- [ ] Add error handling for missing/corrupt cache
 
-- beep.ps1
-- [V] Verify scenes.json matches new desc.surveyGuy.scene1.md structure
-- [V] Verify characters.json matches new desc.surveyGuy.characters.md structure
-- [V] Verify locations.json matches new desc.surveyGuy.locations.md structure
-- Note: No changes needed - JSON files already align with describ files
+## B.Sept15.4 Update stickchat Setup & README
 
-## bSept11.R5 Move & Update Prompts to ../sw folder
+- [ ] Update src/stickchat/README.md v0.1.7: add setup instructions
+- [ ] Reference stickTech.md for full spec
+- [ ] Document npm run dev: auto-runs stickSetup on startup
+- [ ] Document how IndexedDB initializes on first load
 
-- beep.ps1
-- [V] stickPlayer.prompt.md in ../sw (updated with v0.1.2, new file references)
-- [V] stickTrans.prompt.md in ../sw (updated with v0.1.2, new references, "optional" removed)
-- [V] Both prompts reference new meta.gen.*.md, desc.surveyGuy.*.md, trans.surveyGuy.*.md files
+## B.Sept15.5 CRITICAL REVIEW - Stop if Issues
 
-## bSept11.R6 Cleanup - Delete/Archive Old Files
+- [ ] Review stickchat.specs.md theoretically (no testing)
+- [ ] Verify it matches stickTech.md
+- [ ] Check for contradictions, missing pieces, feasibility
+- [ ] [?] CALLME if issues found - need user approval before proceeding
 
-- beep.ps1
-- [V] Delete old .g.meta files (replaced by meta.gen.*.md)
-- [V] Delete old .s.desc.md files (replaced by desc.surveyGuy.*.md)
-- [V] Delete old .trans files (replaced by trans.surveyGuy.*.md)
+## B.Sept15.6 Implementation - Proceed if Approved
+
+- [ ] Implement stickchat OAuth login/logout
+- [ ] Create IndexedDB schema and storage
+- [ ] Build chat interface with screenplay loading
+- [ ] Implement scene/shot sidebar with editing
+- [ ] Add character, stage, dialogue, location, emotion, audio editors
+- [ ] Implement state machine (XState)
+- [ ] Output describ markdown files
+- [ ] Version: stickchat v0.1.7
 
 ---
 
-## ✓ ALL BATCHES COMPLETE
+## Batch Status
+- Plan created based on stickTech.md
+- Ready for execution with beeps and version reports
+- Test case: surveyGuy movie (real data, no mocks)
+- End goal: Functional stickchat + stickmake pipeline
 
-**Summary of Restructuring:**
-- **R1 (5 files):** Generic metadata files (meta.gen.*.md) - reusable for all movies
-- **R2 (5 files):** SurveyGuy description files (desc.surveyGuy.*.md) - parametrized movie content
-- **R3 (4 files):** SurveyGuy translation files (trans.surveyGuy.*.md) - parameter schemas
-- **R4 (3 verified):** VidData JSON files (scenes.json, characters.json, locations.json) - already aligned
-- **R5 (2 updated):** Prompts (stickPlayer, stickTrans) - moved to ../sw, updated v0.1.2
-- **R6 (12 deleted):** Old format files removed (obsolete .g.meta, .s.desc.md, .trans)
-
-**Total new structure:** 22 describ files + 3 JSON + 2 prompts = 27 files (reusable, parameterized, versioned v0.1.2)
-
+--- End of batch
+- tell developer the sw version
+- call `callme.ps1` in `dev/testing/utils`

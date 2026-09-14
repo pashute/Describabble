@@ -1,9 +1,5 @@
-param(
-    [string]$Message = "Waiting for your approval..."
-)
+$quarterNoteMs = 500
 
-Write-Host ""
-Write-Host "══════════════════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host $Message -ForegroundColor Yellow
-Write-Host "══════════════════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host ""
+[Console]::Beep(262, 3 * $quarterNoteMs) # do
+[Console]::Beep(349, 3 * $quarterNoteMs) # fa
+[Console]::Beep(262, 2 * $quarterNoteMs) # do
