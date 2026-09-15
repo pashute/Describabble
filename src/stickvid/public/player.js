@@ -723,21 +723,6 @@ class StickVidPlayer {
             this.ctx.lineTo(x + 12 * scale, kneeY);
             this.ctx.lineTo(x + 15 * scale, kneeY + 12 * scale);
             this.ctx.stroke();
-        } else if (charData.id === 'char1') {
-            const legBend = Math.sin(this.currentTime * 4) * 10 * scale;
-            const kneeY = y + headSize + bodyHeight + 15 * scale;
-
-            this.ctx.beginPath();
-            this.ctx.moveTo(x, y + headSize + bodyHeight);
-            this.ctx.lineTo(x - 12 * scale + legBend, kneeY);
-            this.ctx.lineTo(x - 15 * scale + legBend, kneeY + 12 * scale);
-            this.ctx.stroke();
-
-            this.ctx.beginPath();
-            this.ctx.moveTo(x, y + headSize + bodyHeight);
-            this.ctx.lineTo(x + 12 * scale - legBend, kneeY);
-            this.ctx.lineTo(x + 15 * scale - legBend, kneeY + 12 * scale);
-            this.ctx.stroke();
         } else {
             this.ctx.beginPath();
             this.ctx.moveTo(x, y + headSize + bodyHeight);
