@@ -1,4 +1,4 @@
-// Filename: player.js v0.1.50
+// Filename: player.js v0.1.51
 // stickvid - Stick figure animation player with full control set
 // Renders complex animations from standardized YAML .vid manifest files
 
@@ -517,9 +517,11 @@ class StickVidPlayer {
         const isClimbing = charData.posture === 'climbing';
 
         const isWM = charData.id === 'char2';
-        this.ctx.strokeStyle = isWM ? '#FFFFFF' : '#333';
-        this.ctx.fillStyle = isWM ? '#FFFFFF' : '#333';
-        this.ctx.lineWidth = isWM ? 3.5 * scale : 2 * scale;
+        const renderStyle = charData.renderStyle || {};
+
+        this.ctx.strokeStyle = renderStyle.color || (isWM ? '#FFFFFF' : '#333');
+        this.ctx.fillStyle = renderStyle.color || (isWM ? '#FFFFFF' : '#333');
+        this.ctx.lineWidth = renderStyle.lineWidth ? renderStyle.lineWidth * scale : (isWM ? 3.5 * scale : 2 * scale);
 
         if (isClimbing) {
             this.drawClimbingFigure(x, y, headSize, charData, progress, scale);
@@ -529,11 +531,13 @@ class StickVidPlayer {
     }
 
     drawStandingFigure(x, y, headSize, charData, scale = 1, shot = null) {
-        const bodyHeight = 40 * scale;
-        const armLength = 20 * scale;
-        const isFromAbove = charData.pov === 'from-bridge';
+        const renderStyle = charData.renderStyle || {};
+        const bodyHeight = renderStyle.bodyHeight === 'short' ? 15 * scale : 40 * scale;
+        const handLength = renderStyle.handLength || 20 * scale;
+        const armLength = handLength;
+        const isFromAbove = charData.pov === 'from-above' || charData.pov === 'from-bridge';
         const legLength = isFromAbove ? 5 * scale : 30 * scale;
-        const isWaving = charData.isWaving || false;
+        const isWaving = charData.isWaving || renderStyle.armAnimation === 'flailing-extended';
 
         this.ctx.beginPath();
         this.ctx.arc(x, y, headSize, 0, Math.PI * 2);
@@ -965,7 +969,7 @@ class StickVidPlayer {
         let lines = preserveEmpty ? allLines : allLines.filter(line => line.trim());
 
         const numLines = lineCount !== null ? lineCount : lines.length;
-        const bgHeight = numLines * 18 + 4;
+        const bgHeight = numLines * 16 + 2;
         const bgY = startY;
 
         this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
@@ -973,9 +977,9 @@ class StickVidPlayer {
 
         this.ctx.fillStyle = '#fff';
         this.ctx.font = '12px monospace';
-        this.ctx.lineHeight = 18;
+        this.ctx.lineHeight = 16;
 
-        let y = bgY + 14;
+        let y = bgY + 12;
         for (let i = 0; i < numLines && i < lines.length; i++) {
             const line = lines[i] || '';
             if (align === 'left') {
@@ -985,7 +989,7 @@ class StickVidPlayer {
                 this.ctx.textAlign = 'center';
                 this.ctx.fillText(line.trim(), this.canvas.width / 2, y);
             }
-            y += 18;
+            y += 16;
         }
 
         return bgY + bgHeight;

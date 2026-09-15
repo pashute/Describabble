@@ -43,28 +43,22 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
     Shot1 narration updated to array with two items: "The Survey Guy" (0-1s) and "(Heavy traffic heard)" (2-3s with 1s pause)
     Updated renderNarration in player.js to handle array narration items and display captions for active items
   
-- [ ] 4. new WM pov definitions (each point should be in .vid before player implementing)
-   - [ ] 4.1 fix: ridge completely covered with caption black bg. Make caption bg thinner to fit text row.  
+- [>] 4. new WM pov definitions (each point should be in .vid before player implementing)
+   - [v] 4.1 fix: ridge completely covered with caption black bg. Make caption bg thinner to fit text row.
+     Reduced caption bg height: 18*lines+4 → 16*lines+2, y-offset 14→12 (player.js:968-993)
    - Note: . Captions repositioned ok 
     - v1.41: Captions yOffset 60→300, visible above buttons (player.js:841)
     - v1.42: Bridge ridge y 480, lineWidth=4, darker #333 (player.js:327-336)
 
-   - [ ] 4.2 fix: light colored (white?), thick-lined WM (worried man) 
-       - [ ] 4.2.1 should be described `From Above`:
-       - [ ]  a. thick line 
-       - [ ]  b. color contrasted to road. 
-           - (list here in todo the contrast color)
-       - [ ]  c. with very short body
-       - [ ]  d. larger head double of the current v1.47 size. 
-           - (list here in todo the old and new size)
-       - [ ]  e. long hands extending from head sides. 
-            - each hand the length of the diameter of the head. 
-            - change from current definition: list here the change
-       - [ ]  f. hands should be flailing while talking. 
-           - no need for elbows. 
-           - should not move symmetricly.
-           - current is static.
-          - probably because there's another WM (black thin and small) in shots. 
+   - [v] 4.2 fix: light colored (white?), thick-lined WM (worried man) 
+       - [v] 4.2.1 should be described `From Above`:
+       - [v]  a. thick line → lineWidth: 6 (was 2-3.5)
+       - [v]  b. color contrasted to road → #FFFFFF white (contrast with #A9A9A9 gray road)
+       - [v]  c. with very short body → bodyHeight: 15 (was 40)
+       - [v]  d. larger head double of the current v1.47 size → headSize: 20 (was 10 LONG)
+       - [v]  e. long hands extending from head sides → handLength: 20
+       - [v]  f. hands should be flailing while talking → armAnimation: flailing-extended
+       All properties added to char2 renderStyle in shots 3,5,7,9,10,11. Player updated to read and apply renderStyle. 
 
 
    - [ ]  4.4 fix: black thin WM who is with animated feet. 
