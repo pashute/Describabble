@@ -155,7 +155,11 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
   - Now: Uses standard straight leg rendering like other characters
   - Reason: Not appropriate for the scenes. SG hangs from fence (not standing), WM seen from above (legs irrelevant). 
 
-  - [ ] 15. Bright blue sky behind bridge with a single small white cloud moves from left to right between bridge scenes: Shot 2 (climbing, on left), shot 4 (no wife, on center left), shot 6 (no parents, on center right), shot 8 (no future, on right), shot 10 (contemplate: clear sky no cloud)
+  - [v] 15. Bright blue sky behind bridge with a single small white cloud moves from left to right between bridge scenes: Shot 2 (climbing, on left), shot 4 (no wife, on center left), shot 6 (no parents, on center right), shot 8 (no future, on right), shot 10 (contemplate: clear sky no cloud)
+    - Added sky.color (#87CEEB) and sky.cloud.position to shots 2,4,6,8 in .vid
+    - Shot 10: sky.cloud set to null for clear sky
+    - Implemented renderCloud in player.js with position mapping
+    - Cloud rendered as 3 overlapping white circles at positions 150/320/640/810px
 
   - [ ] 16. WM fixes
     - [ ]  16.1 remove dark green square (near the tree foliage) from all WM scenes. (remnant of mistaken tree shape): Shot 3 (wife), Shot 5 (parents), Shot 7 (future),  Shot 9 (change), Shot 11 (survey)
