@@ -326,7 +326,7 @@ scenes:
         characters:
           - id: "char1"
             location: "continued"
-            position: "standing-on-bridge-floor"
+            position: "hanging-from-fence"
             emotion: "defensive"
             posture: "standing"
           - id: "char2"
@@ -386,6 +386,7 @@ scenes:
               leanDegrees: 30
               extended: "out"
               legBent: "left"
+              clamping: "left"
         dialogue:
           - speaker: "char1"
             voice: "voice1"
@@ -493,6 +494,7 @@ scenes:
               leanDegrees: 30
               extended: "out"
               legBent: "right"
+              clamping: "right"
         dialogue:
           - speaker: "char1"
             voice: "voice1"
@@ -599,6 +601,7 @@ scenes:
               leanDegrees: 30
               extended: "in"
               legBent: "left"
+              clamping: "right"
         dialogue:
           - speaker: "char1"
             voice: "voice1"
@@ -705,6 +708,7 @@ scenes:
               leanDegrees: 30
               extended: "in"
               legBent: "right"
+              clamping: "left"
         dialogue: []
         captions:
           position: "bottom"
