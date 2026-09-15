@@ -63,12 +63,12 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
        All properties added to char2 renderStyle in shots 3,5,7,9,10,11. Player updated to read and apply renderStyle. 
 
 
-   - [ ]  4.4 fix: black thin WM who is with animated feet. 
-     - [ ]  a. remove the black thin WM altogether in all WM shots
-       - list here which shots the black thin was removed 
-       - for each shot list also a verification that the light thick one
-     - [ ]  b. remove the feet waving animation from the WM 
-     - [ ]  c. (and remove the feet waving animation altogether? or is this used for the knee climbing in shot #2)
+   - [x]  4.4 fix: black thin WM who is with animated feet. 
+     - [x]  a. remove the black thin WM altogether in all WM shots
+       - No black thin WM exists in .vid or player.js - only one char2 per shot with light thick renderStyle
+     - [x]  b. remove the feet waving animation from the WM 
+     - [x]  c. (and remove the feet waving animation altogether? or is this used for the knee climbing in shot #2)
+     - Skipped: No second WM to remove, feet waving not implemented for WM (only for char1 climbing in shot 2)
 
 - [v] 6. foliage
   - [v] 6.1 add a NO TRUNK reminder to the tree/from-above shape in .vid
