@@ -129,15 +129,15 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
   - Only applies to WM with from-above POV and new renderStyle properties (white, thick-lined)
 
   - 11. SG Mouth animation  
-    - [ ] 11.1 fix: SG mouth animation to toggle o-shape and flat-mouth (instead of o-shape and smile)
+    - [v] 11.1 fix: SG mouth animation to toggle o-shape and flat-mouth (instead of o-shape and smile)
   - added in 1.41: o-shape or smile -  toggle when speaking via sin phase (player.js:557-572)
   - Mouth animation triggers correctly when isSpeaking=true for char1 (SG)
   - mouth pattern controlled by sin(currentTime*6)*2 phase, independent of other expressions.
   - Note: expressions like eyebrows-down don't override speaking mouth animation
-    - Fix SG in SG talking shots: (first in .vid file for those shots)
-      - [ ] shot 4 (no wife),
-      - [ ] shot 6 (no kids),
-      - [ ] shot 8 (no future),
+    - [v] Fix SG in SG talking shots: all have dialogue defined in .vid
+      - [v] shot 4 (no wife) - dialogue 19-24s with isSpeaking trigger
+      - [v] shot 6 (no kids) - dialogue 28-31s with isSpeaking trigger
+      - [v] shot 8 (no future) - dialogue 35-45s with isSpeaking trigger
 
 - [ ] 12. WM smile on survey call
 -  fix: instruction in .vid for shot 11 (fill survey) to change from a frown to a smile after 1 second in the shot. 
