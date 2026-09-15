@@ -1,4 +1,4 @@
-// Filename: player.js v0.1.51
+// Filename: player.js v0.1.52
 // stickvid - Stick figure animation player with full control set
 // Renders complex animations from standardized YAML .vid manifest files
 
@@ -762,13 +762,30 @@ class StickVidPlayer {
     }
 
     drawTreeTop(x, y) {
-        this.ctx.strokeStyle = '#654321';
+        this.ctx.strokeStyle = '#228B22';
         this.ctx.fillStyle = '#228B22';
         this.ctx.lineWidth = 2;
 
-        // Foliage (circle, larger, no trunk from above)
+        // Foliage: three overlapping dark-green circles for non-symmetric tree shape
+        // Positioned lower (y + 80 instead of y + 30)
+        const centerY = y + 80;
+        const radius = 35;
+
+        // Top circle (centered)
         this.ctx.beginPath();
-        this.ctx.arc(x, y + 30, 35, 0, Math.PI * 2);
+        this.ctx.arc(x, centerY - 20, radius, 0, Math.PI * 2);
+        this.ctx.fill();
+        this.ctx.stroke();
+
+        // Bottom-left circle
+        this.ctx.beginPath();
+        this.ctx.arc(x - 25, centerY + 20, radius, 0, Math.PI * 2);
+        this.ctx.fill();
+        this.ctx.stroke();
+
+        // Bottom-right circle
+        this.ctx.beginPath();
+        this.ctx.arc(x + 20, centerY + 25, radius, 0, Math.PI * 2);
         this.ctx.fill();
         this.ctx.stroke();
     }

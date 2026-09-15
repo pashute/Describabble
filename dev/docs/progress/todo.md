@@ -43,7 +43,7 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
     Shot1 narration updated to array with two items: "The Survey Guy" (0-1s) and "(Heavy traffic heard)" (2-3s with 1s pause)
     Updated renderNarration in player.js to handle array narration items and display captions for active items
   
-- [>] 4. new WM pov definitions (each point should be in .vid before player implementing)
+- [ ] 4. new WM pov definitions (each point should be in .vid before player implementing)
    - [v] 4.1 fix: ridge completely covered with caption black bg. Make caption bg thinner to fit text row.
      Reduced caption bg height: 18*lines+4 → 16*lines+2, y-offset 14→12 (player.js:968-993)
    - Note: . Captions repositioned ok 
@@ -71,9 +71,11 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
 - [v] 6. foliage
   - [v] 6.1 add a NO TRUNK reminder to the tree/from-above shape in .vid
     Added note: "NO TRUNK - foliage circle only" to all tree elements in .vid
-  - [ ] 6.2 new: foliage made from three non-symmetric triangle overlapping dark-green circles for foliage representation. 
-  - [ ] 6.3 fix: move tree center way down currently too much up and almost outside. 
-  - v1.47 Fix: removed trunk from drawTreeTop, only foliage circle (player.js:730-736)
+  - [v] 6.2 new: foliage made from three non-symmetric triangle overlapping dark-green circles for foliage representation.
+    Three circles: top-center, bottom-left, bottom-right with radius 35, creating overlapping tree shape
+  - [v] 6.3 fix: move tree center way down currently too much up and almost outside.
+    Repositioned from y+30 to y+80, moving tree from near top to lower/more visible area
+  - v1.47 Fix: removed trunk from drawTreeTop, only foliage circle (player.js:764-790)
 
   
 - 7
