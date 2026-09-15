@@ -149,11 +149,11 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
   - player.js renderBackground handles cut-to-black correctly (lines 263-267)
   - Narration displays on black screen, captions skipped for cut-to-black
 
-- [ ] 14. fix: remove fidgeting leg. not useful here. 
-  - Added in 1.41: sin wave legBend for SG standing legs (player.js:662-676)
-  - Purpose: Meant to add subtle natural movement to standing figure (weight shifting, fidgeting)
-  - Separate from climbing leg animation (isBent flag) - different sine curve and amplitude
-  - Not appropriate for any of the scenes. SG is not standing, but hanging from fence rail. WM is seen from above. Legs are irrelevant. Fidgeting looks unnatural. 
+- [v] 14. fix: remove fidgeting leg. not useful here. 
+  - Removed: sin wave legBend for SG standing legs (was in player.js:726-740)
+  - Was: 14 lines of legBend=sin(currentTime*4)*10*scale with animated knees
+  - Now: Uses standard straight leg rendering like other characters
+  - Reason: Not appropriate for the scenes. SG hangs from fence (not standing), WM seen from above (legs irrelevant). 
 
   - [ ] 15. Bright blue sky behind bridge with a single small white cloud moves from left to right between bridge scenes: Shot 2 (climbing, on left), shot 4 (no wife, on center left), shot 6 (no parents, on center right), shot 8 (no future, on right), shot 10 (contemplate: clear sky no cloud)
 
