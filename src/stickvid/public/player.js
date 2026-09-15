@@ -1,4 +1,4 @@
-// Filename: player.js v0.1.49
+// Filename: player.js v0.1.50
 // stickvid - Stick figure animation player with full control set
 // Renders complex animations from standardized YAML .vid manifest files
 
@@ -859,26 +859,41 @@ class StickVidPlayer {
     renderNarration(shot) {
         if (!shot.narration) return;
 
-        const narration = shot.narration;
-        const text = narration.text || narration.caption || '';
-        const voiceId = narration.voice || 'voice1';
+        const narration = Array.isArray(shot.narration) ? shot.narration : [shot.narration];
+
+        let activeNarration = null;
+        for (const n of narration) {
+            if (this.currentTime >= n.startTime && this.currentTime < n.endTime) {
+                activeNarration = n;
+                break;
+            }
+        }
+
+        if (!activeNarration) return;
+
+        const text = activeNarration.text || activeNarration.caption || '';
+        const voiceId = activeNarration.voice || 'voice1';
+        const caption = activeNarration.caption || text;
 
         if (!text) return;
 
         const pov = shot.camera?.pov || 'from-below';
-        if (pov !== 'cut-to-black') {
+        if (pov !== 'cut-to-black' && caption) {
             this.ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
             this.ctx.fillRect(0, 401, this.canvas.width, 40);
 
             this.ctx.fillStyle = '#fff';
             this.ctx.font = '14px sans-serif';
             this.ctx.textAlign = 'center';
-            this.ctx.fillText(text, this.canvas.width / 2, 423);
+            this.ctx.fillText(caption, this.canvas.width / 2, 423);
         }
 
-        if (this.isPlaying && shot.id !== this.lastShotId) {
-            this.lastShotId = shot.id;
-            this.speak(text, voiceId);
+        if (this.isPlaying) {
+            const narrationId = shot.id + '_' + narration.indexOf(activeNarration);
+            if (narrationId !== this.lastShotId) {
+                this.lastShotId = narrationId;
+                this.speak(text, voiceId);
+            }
         }
     }
 

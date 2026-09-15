@@ -1,4 +1,4 @@
-# surveyGuy.vid v0.1.49
+# surveyGuy.vid v0.1.50
 # Standardized YAML format for Describabble stick figure animation
 # Machine-readable and human-friendly structure
 
@@ -51,6 +51,13 @@ voices:
     volume: 1.0
     narration: false
     description: "Clear, medium-pitched male voice for Worried Man"
+  voice3:
+    id: "Male3"
+    name: "Deep Narrator"
+    pitch: "low"
+    volume: 1.0
+    narration: true
+    description: "Deep, resonant male voice for narrator and sound effects"
 
 characters:
   - id: "char1"
@@ -131,6 +138,19 @@ characters:
         posture: "standing"
         details: "punchline delivery with clarity"
 
+  - id: "char3"
+    name: "Narrator"
+    aka: "NARRATOR"
+    role: "narrator"
+    importance: 0
+    backstage: true
+    headSize: "NONE"
+    voice:
+      gender: "male"
+      age: "50s"
+      quality: "deep, resonant, authoritative"
+    description: "Off-screen narrator for sound effects and scene descriptions"
+
 locations:
   - id: "loc_bridge_below"
     name: "River Below Bridge"
@@ -208,9 +228,19 @@ scenes:
 
               Released Unlicensed Sept 2026
         narration:
-          voice: "voice1"
-          caption: "(Heavy traffic heard)"
-          text: "(Heavy traffic heard)"
+          - speaker: "char3"
+            voice: "voice3"
+            text: "The Survey Guy"
+            startTime: 0.0
+            endTime: 1.0
+            delivery: "title-reading"
+          - speaker: "char3"
+            voice: "voice3"
+            text: "(Heavy traffic heard)"
+            startTime: 2.0
+            endTime: 3.0
+            delivery: "sound-effect"
+            caption: "(Heavy traffic heard)"
 
       - id: "shot2"
         number: 2

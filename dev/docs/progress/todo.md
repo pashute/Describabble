@@ -21,6 +21,8 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
   - No numbers in .vid only descriptions.
   - Follow the todo. fill in where you are 
   - and as you do it mark it done with short remarks on how.
+  - Every batch run causes a synchronized increment in the version's patch of both the .vid and the index.html.
+  - Any other file touched increments that file's version to the synchronized version as well. 
 
 - [v] 1. fix splash screen pushed down too little.
   yOffset 20→5 for credits-screen (player.js:910)
@@ -34,10 +36,13 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
 - [v] 2.3 restore last shot: cut to dark and splash sound (narrated).
   Shot 12 added (59-60s) cut-to-black with splash narration restored
 
-- [?] 3. new splash caption: add to splash screen caption (and read it): 
-  Needs narration to display as caption simultaneously - complex
-  Defer for user clarification on implementation approach
-
+- [v] 3. new splash caption: add to splash screen caption (and read it): 
+  - [v] 3.1 add a character in characters called Narrator. always backstage. deepest male voice.
+    Added char3 (Narrator) with voice3 (Deep Narrator) configuration
+  - [v] 3.2 add a dialog for this shot:  
+    Shot1 narration updated to array with two items: "The Survey Guy" (0-1s) and "(Heavy traffic heard)" (2-3s with 1s pause)
+    Updated renderNarration in player.js to handle array narration items and display captions for active items
+  
 - [ ] 4. new WM pov definitions (each point should be in .vid before player implementing)
    - [ ] 4.1 fix: ridge completely covered with caption black bg. Make caption bg thinner to fit text row.  
    - Note: . Captions repositioned ok 
