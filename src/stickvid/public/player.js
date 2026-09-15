@@ -1,6 +1,6 @@
 // Filename: player.js v0.1.9
 // stickvid - Stick figure animation player with full control set
-// Renders from standardized YAML .vid manifest files
+// Renders complex animations from standardized YAML .vid manifest files
 
 class StickVidPlayer {
     constructor(canvasId) {
@@ -9,12 +9,10 @@ class StickVidPlayer {
         this.isPlaying = false;
         this.currentTime = 0;
         this.duration = 0;
-        this.vidData = null;
         this.manifest = null;
         this.vidLoader = null;
         this.animationFrameId = null;
         this.lastFrameTime = 0;
-        this.currentShotIndex = 0;
 
         this.setupEventListeners();
         this.disableControls();
@@ -36,21 +34,15 @@ class StickVidPlayer {
     }
 
     disableControls() {
-        document.getElementById('firstBtn').disabled = true;
-        document.getElementById('prevBtn').disabled = true;
-        document.getElementById('stopBtn').disabled = true;
-        document.getElementById('playPauseBtn').disabled = true;
-        document.getElementById('nextBtn').disabled = true;
-        document.getElementById('lastBtn').disabled = true;
+        ['firstBtn', 'prevBtn', 'stopBtn', 'playPauseBtn', 'nextBtn', 'lastBtn'].forEach(id => {
+            document.getElementById(id).disabled = true;
+        });
     }
 
     enableControls() {
-        document.getElementById('firstBtn').disabled = false;
-        document.getElementById('prevBtn').disabled = false;
-        document.getElementById('stopBtn').disabled = false;
-        document.getElementById('playPauseBtn').disabled = false;
-        document.getElementById('nextBtn').disabled = false;
-        document.getElementById('lastBtn').disabled = false;
+        ['firstBtn', 'prevBtn', 'stopBtn', 'playPauseBtn', 'nextBtn', 'lastBtn'].forEach(id => {
+            document.getElementById(id).disabled = false;
+        });
     }
 
     loadFile() {
@@ -90,26 +82,18 @@ class StickVidPlayer {
 
     pause() {
         this.isPlaying = false;
-        if (this.animationFrameId) {
-            cancelAnimationFrame(this.animationFrameId);
-        }
+        if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
         this.updatePlayPauseButton();
     }
 
     togglePlayPause() {
-        if (this.isPlaying) {
-            this.pause();
-        } else {
-            this.play();
-        }
+        this.isPlaying ? this.pause() : this.play();
     }
 
     stop() {
         this.isPlaying = false;
         this.currentTime = 0;
-        if (this.animationFrameId) {
-            cancelAnimationFrame(this.animationFrameId);
-        }
+        if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
         this.render();
     }
 
@@ -136,9 +120,7 @@ class StickVidPlayer {
 
     goToLast() {
         this.currentTime = this.duration;
-        if (this.isPlaying) {
-            this.pause();
-        }
+        if (this.isPlaying) this.pause();
         this.render();
     }
 
@@ -186,7 +168,6 @@ class StickVidPlayer {
         }
 
         this.render();
-
         if (this.isPlaying) {
             this.animationFrameId = requestAnimationFrame(() => this.animate());
         }
@@ -219,6 +200,7 @@ class StickVidPlayer {
 
         this.renderBackground(currentShot);
         this.renderCharacters(currentShot);
+        this.renderDialogue(currentShot);
         this.renderCaptions(currentShot);
     }
 
@@ -247,22 +229,25 @@ class StickVidPlayer {
             return;
         }
 
+        if (shot.camera.pov === 'credits-screen') {
+            return;
+        }
+
         this.drawBridge(shot);
     }
 
     drawBridge(shot) {
         const pov = shot.camera.pov;
-        const centerX = this.canvas.width / 2;
-        const centerY = this.canvas.height / 2;
+        const cx = this.canvas.width / 2;
+        const cy = this.canvas.height / 2;
 
         this.ctx.strokeStyle = '#333';
         this.ctx.lineWidth = 3;
-        this.ctx.fillStyle = '#fff';
 
         if (pov === 'from-below') {
-            this.drawBridgeFromBelow(centerX, centerY);
+            this.drawBridgeFromBelow(cx, cy);
         } else if (pov === 'from-bridge') {
-            this.drawBridgeFromAbove(centerX, centerY);
+            this.drawBridgeFromAbove(cx, cy);
         }
     }
 
@@ -329,6 +314,7 @@ class StickVidPlayer {
         if (!shot.characters || shot.characters.length === 0) return;
 
         const pov = shot.camera.pov;
+        const progress = (this.currentTime - shot.timeRange.start) / (shot.timeRange.end - shot.timeRange.start);
 
         shot.characters.forEach((charData, idx) => {
             const charDef = this.manifest.characters.find(c => c.id === charData.id);
@@ -346,30 +332,26 @@ class StickVidPlayer {
                 y = this.canvas.height / 2;
             }
 
-            this.drawStickFigure(x, y, charDef, charData);
+            this.drawStickFigure(x, y, charDef, charData, progress, shot);
         });
     }
 
-    drawStickFigure(x, y, charDef, charData) {
+    drawStickFigure(x, y, charDef, charData, progress, shot) {
         const headSize = this.getHeadSize(charDef.headSize);
-        const bodyHeight = 40;
         const isClimbing = charData.posture === 'climbing';
-
-        const bodyStartY = y + headSize;
-        const bodyEndY = bodyStartY + bodyHeight;
 
         this.ctx.strokeStyle = '#333';
         this.ctx.fillStyle = '#333';
         this.ctx.lineWidth = 2;
 
         if (isClimbing) {
-            this.drawClimbingFigure(x, y, headSize, bodyHeight, charData);
+            this.drawClimbingFigure(x, y, headSize, charData, progress);
         } else {
-            this.drawStandingFigure(x, y, headSize, bodyHeight, bodyStartY, bodyEndY, charData);
+            this.drawStandingFigure(x, y, headSize, charData);
         }
     }
 
-    drawStandingFigure(x, y, headSize, bodyHeight, bodyStartY, bodyEndY, charData) {
+    drawStandingFigure(x, y, headSize, charData) {
         this.ctx.beginPath();
         this.ctx.arc(x, y, headSize, 0, Math.PI * 2);
         this.ctx.stroke();
@@ -435,34 +417,37 @@ class StickVidPlayer {
         this.ctx.stroke();
     }
 
-    drawClimbingFigure(x, y, headSize, bodyHeight, charData) {
+    drawClimbingFigure(x, y, headSize, charData, progress) {
+        const climbHeight = progress * 50;
+        const adjY = y - climbHeight;
+
         this.ctx.beginPath();
-        this.ctx.arc(x, y, headSize, 0, Math.PI * 2);
+        this.ctx.arc(x, adjY, headSize, 0, Math.PI * 2);
         this.ctx.stroke();
 
         this.ctx.beginPath();
-        this.ctx.moveTo(x, y + headSize);
-        this.ctx.lineTo(x + 15, y + headSize + 35);
+        this.ctx.moveTo(x, adjY + headSize);
+        this.ctx.lineTo(x + 15, adjY + headSize + 35);
         this.ctx.stroke();
 
         this.ctx.beginPath();
-        this.ctx.moveTo(x + 15, y + headSize + 10);
-        this.ctx.lineTo(x + 35, y + headSize - 15);
+        this.ctx.moveTo(x + 15, adjY + headSize + 10);
+        this.ctx.lineTo(x + 35, adjY + headSize - 15);
         this.ctx.stroke();
 
         this.ctx.beginPath();
-        this.ctx.moveTo(x + 15, y + headSize + 10);
-        this.ctx.lineTo(x + 30, y + headSize + 20);
+        this.ctx.moveTo(x + 15, adjY + headSize + 10);
+        this.ctx.lineTo(x + 30, adjY + headSize + 20);
         this.ctx.stroke();
 
         this.ctx.beginPath();
-        this.ctx.moveTo(x + 15, y + headSize + 35);
-        this.ctx.lineTo(x + 25, y + headSize + 65);
+        this.ctx.moveTo(x + 15, adjY + headSize + 35);
+        this.ctx.lineTo(x + 25, adjY + headSize + 65);
         this.ctx.stroke();
 
         this.ctx.beginPath();
-        this.ctx.moveTo(x + 15, y + headSize + 35);
-        this.ctx.lineTo(x + 10, y + headSize + 70);
+        this.ctx.moveTo(x + 15, adjY + headSize + 35);
+        this.ctx.lineTo(x + 10, adjY + headSize + 70);
         this.ctx.stroke();
     }
 
@@ -476,6 +461,43 @@ class StickVidPlayer {
             'NONE': 0
         };
         return sizes[sizeType] || 15;
+    }
+
+    renderDialogue(shot) {
+        if (!shot.dialogue || shot.dialogue.length === 0) return;
+
+        const activeDialogue = shot.dialogue.find(d =>
+            this.currentTime >= d.startTime && this.currentTime < d.endTime
+        );
+
+        if (activeDialogue) {
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+            this.ctx.fillRect(0, this.canvas.height - 80, this.canvas.width, 80);
+
+            this.ctx.fillStyle = '#fff';
+            this.ctx.font = 'bold 14px sans-serif';
+            this.ctx.textAlign = 'center';
+            this.ctx.fillText(`${activeDialogue.speaker}:`, this.canvas.width / 2, this.canvas.height - 55);
+
+            this.ctx.font = '12px sans-serif';
+            const words = activeDialogue.text.split(' ');
+            let line = '';
+            let y = this.canvas.height - 35;
+
+            words.forEach(word => {
+                const testLine = line + word + ' ';
+                if (this.ctx.measureText(testLine).width > this.canvas.width - 40) {
+                    this.ctx.fillText(line, this.canvas.width / 2, y);
+                    line = word + ' ';
+                    y += 20;
+                } else {
+                    line = testLine;
+                }
+            });
+            if (line) {
+                this.ctx.fillText(line, this.canvas.width / 2, y);
+            }
+        }
     }
 
     renderCaptions(shot) {
@@ -506,13 +528,8 @@ class StickVidPlayer {
 
     updatePlayPauseButton() {
         const btn = document.getElementById('playPauseBtn');
-        if (this.isPlaying) {
-            btn.textContent = '⏸';
-            btn.title = 'Pause';
-        } else {
-            btn.textContent = '▶';
-            btn.title = 'Play';
-        }
+        btn.textContent = this.isPlaying ? '⏸' : '▶';
+        btn.title = this.isPlaying ? 'Pause' : 'Play';
     }
 }
 
