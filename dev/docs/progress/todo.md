@@ -84,29 +84,24 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
 - New climbing parameters: 
 - 7.1 bending knees. 
   - Fixed in 1.41: SG climbing action  with isBent flag (player.js:485-489)
--  [ ] 7.2 New:  animated body angle change. 
-        during climbing animation steps, 
-        body toggles between two slight angles defined as Lean: [left or right]. 
+-  [v] 7.2 New:  animated body angle change.
+        Added to shot2 character: animation.bodyLean='toggle' with left/right 15-degree angles
+        Body toggles between two slight angles during climbing 
             
-  - [ ] 7.3 New: SG climbed position 
-    - [ ] - has location
-    - [ ] - has body lean direction (left or right) 
-        - [ ] player translate to one of two angles 30 deg left or 30 deg right. 
-    - [ ] - has extended (arm position) [in or out], 
-    - [ ] - has bent (leg) [right or left] 
+  - [>] 7.3 New: SG climbed position 
+    - [v] - has location: "climbed"
+    - [v] - has body lean direction: left or right at 30 degrees
+    - [v] - has extended (arm position): in or out
+    - [v] - has bent (leg): right or left
   
-    - [ ] 7.4 SG should be located in climbed position: (location, lean, extended, bent) in SG shots, after the climbing shot (shot #2, one after the titles)
-    - v1.51 mistake: Added to shot3: position "standing-on-fence-top" with postClimb flag to indicate SG just finished climbing
-    remove the unnecessary flag. 
-  - Note: SG is NOT "Standing ON fence TOP" but rather has reached some position on the fence during shot 2. whatever that position is, will be preserved during the rest of the SG shots: 
-      - updated location in shot number:
-      - [ ] shot 4 (no wife),
-      - [ ] shot 6 (no kids),
-      - [ ] shot 8 (no future),
-      - [ ] shot 10 (contemplating)
-    - [ ] 7.5 SG in shot 3 should start standing on bridge "floor" 
-    - [ ] 7.6 shot 3 has narrator dialog:
-        `(Man climbing and panting, his desperation clearly visible)`
+    - [>] 7.4 SG should be located in climbed position in SG shots after climbing
+    - Fixed shot 3: changed from "standing-on-fence-top" to "standing-on-bridge-floor" (removed postClimb flag)
+    - Updated shot 4: Added climbedPosition with bodyLean right, extended out, legBent left
+    - Still need to update: shot 6, shot 8, shot 10
+    - [v] 7.5 SG in shot 3 should start standing on bridge "floor"
+      Changed position from "standing-on-fence-top" to "standing-on-bridge-floor"
+    - [v] 7.6 shot 3 has narrator dialog:
+        Added narration: "(Man climbing and panting, his desperation clearly visible)"
   
 - [ ] 10. fix: WM arms (don't forget to start with description in .vid)
   - [ ] 10.1 make arms a bit longer in all WM shots. (fix to: a bit longer than head diameter each)

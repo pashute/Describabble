@@ -258,10 +258,18 @@ scenes:
             emotion: "distressed"
             posture: "climbing"
             details: "panting, hesitant motion"
+            animation:
+              bodyLean: "toggle"
+              leanAngles:
+                - direction: "left"
+                  degrees: 15
+                - direction: "right"
+                  degrees: 15
+              leanCycle: 0.5
         movement:
           character: "char1"
           type: "climbing"
-          description: "climbing up fence from bridge, hands gripping, legs bent"
+          description: "climbing up fence from bridge, hands gripping, legs bent, body toggling left-right lean"
           keyframes:
             - time: 0.0
               position: "fence-bottom"
@@ -318,10 +326,9 @@ scenes:
         characters:
           - id: "char1"
             location: "continued"
-            position: "standing-on-fence-top"
+            position: "standing-on-bridge-floor"
             emotion: "defensive"
             posture: "standing"
-            postClimb: true
           - id: "char2"
             position: "standing-on-road"
             headSize: "XLARGE"
@@ -348,6 +355,14 @@ scenes:
         captions:
           position: "bottom"
           text: "(shouts) Think about your wife! Think about your children!"
+        narration:
+          - speaker: "char3"
+            voice: "voice3"
+            text: "(Man climbing and panting, his desperation clearly visible)"
+            startTime: 13.0
+            endTime: 19.0
+            delivery: "description"
+            caption: "(Man climbing and panting, his desperation clearly visible)"
 
       - id: "shot4"
         number: 4
@@ -361,17 +376,22 @@ scenes:
           perspective: "looking-up-at-char1-on-fence"
         characters:
           - id: "char1"
-            location: "continued"
+            location: "climbed"
             position: "standing-on-fence"
             emotion: "defensive"
             posture: "standing"
             expression: "eyebrows-down"
+            climbedPosition:
+              bodyLean: "right"
+              leanDegrees: 30
+              extended: "out"
+              legBent: "left"
         dialogue:
           - speaker: "char1"
             voice: "voice1"
             text: "I don't have a wife! I don't have kids!"
-            startTime: 18.0
-            endTime: 23.0
+            startTime: 19.0
+            endTime: 24.0
             delivery: "shouting-defensive"
             tone: "emphatic"
             voiceCue: "(shouts back)"
