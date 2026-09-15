@@ -483,11 +483,16 @@ scenes:
           perspective: "looking-up-at-char1-on-fence"
         characters:
           - id: "char1"
-            location: "continued"
+            location: "climbed"
             position: "hanging-from-fence"
             emotion: "anguished"
             posture: "standing"
             expression: "mouth-open"
+            climbedPosition:
+              bodyLean: "left"
+              leanDegrees: 30
+              extended: "out"
+              legBent: "right"
         dialogue:
           - speaker: "char1"
             voice: "voice1"
@@ -584,11 +589,16 @@ scenes:
           perspective: "looking-up-at-char1-on-fence"
         characters:
           - id: "char1"
-            location: "continued"
+            location: "climbed"
             position: "hanging-from-fence"
             emotion: "anguished"
             posture: "standing"
             expression: "eyebrows-down"
+            climbedPosition:
+              bodyLean: "right"
+              leanDegrees: 30
+              extended: "in"
+              legBent: "left"
         dialogue:
           - speaker: "char1"
             voice: "voice1"
@@ -684,12 +694,17 @@ scenes:
           perspective: "looking-up-at-char1-on-fence"
         characters:
           - id: "char1"
-            location: "continued"
+            location: "climbed"
             position: "hanging-from-fence"
             emotion: "contemplative"
             posture: "standing"
             expression: "mouth-tilde"
             eyebrows: "slanting"
+            climbedPosition:
+              bodyLean: "left"
+              leanDegrees: 30
+              extended: "in"
+              legBent: "right"
         dialogue: []
         captions:
           position: "bottom"

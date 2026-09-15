@@ -25,10 +25,11 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
   - Any other file touched increments that file's version to the synchronized version as well. 
   - If there's a time change or global movement or change that affects more than one shot at once, hesitate to make it, and report first here in the todo the current numbers and to what it will be changed. so that we can easily roll back. 
 
-- [v] 1. I fixed the splash screen pushed down too little. I also fixed the ascii art which now looks better. 
+- [v] 1. I, Pashute, the human developer, fixed the splash screen which was pushed down too little. I also fixed the ascii art which now looks better. 
   yOffset 20→50 for credits-screen (player.js) // was wrongly changed to 5
+  do not touch it.
 
-- [v] 2.1 bring back the shot with the pause of SG after hearing he's not that stupid.  He should be contemplating, described in the .vid as having a ~ shaped mouth and slanting eyebrows.
+- [v] 2.1 you brought back the shot with the pause of SG after hearing he's not that stupid.  He should be contemplating, described in the .vid as having a ~ shaped mouth and slanting eyebrows.
   Shot 10 added (51-53s) with mouth-tilde and eyebrows-slanting expressions to .vid, player.js renders both
 
 - [v] 2.2 (next shot is back to WM who offers survey). In this one the mouth should change from line to smile. or just smile. As i remind you any requested change should start in the .vid and only then reflected in the player.
@@ -79,27 +80,42 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
   - v1.47 Fix: removed trunk from drawTreeTop, only foliage circle (player.js:764-790)
 
   
-- 7
-
-- New climbing parameters: 
+- 7 New climbing parameters: 
 - 7.1 bending knees. 
   - Fixed in 1.41: SG climbing action  with isBent flag (player.js:485-489)
 -  [v] 7.2 New:  animated body angle change.
         Added to shot2 character: animation.bodyLean='toggle' with left/right 15-degree angles
         Body toggles between two slight angles during climbing 
+- [ ] 7.2.1  fix in shot 2 (climbing) SG should begin the climb standing on the bridge floor. meaning feet end on bridge floor and body above it. 
+  - Note bridge-floor is the bottom horiz line of the three lines: 
+    - top: the concave suspension rope
+    - mid: the fence top-rail
+    - bot: the bridge floor,  shown somewhat above the bottom of the frame
+- [ ] 7.2.2  fix in shot 2 (climbing) during climb body (central stick) should sway this way and that with every "step" upwards. The lean-direction should be recorded.  You (the ai) need to fix it. i, the developer, don't see the body swaying. Is it because you previously understood it differently?  or because of some error? please not here:
+  - reason wasn't working: ai please fill this
+  - what was done: ai please fill this. 
+- [ ] 7.2.2  fix in shot 2 (climbing) once reaches end of climb, one of the arms goes 30 degrees down from its side (so 90+30  or 180-30) clamping the fence.
+- [ ] 7.2.3 This position can now be defined as hanging from fence. it is called the Climbed-position. 
+
+- [ ] 7.2.4  The bridge in following SG scenes will be further away, with more of it in the view.  Blue sky fills in between all lines except single cloud and SG. (as we'll see further down) SG will be shown very slightly smaller. 
+
             
-  - [>] 7.3 New: SG climbed position 
-    - [v] - has location: "climbed"
+  - [>] 7.3 New: SG climbed position (hanging from the fence) is the start point for the rest of the shots. 
+    - [v] - has location: "climbed" in .vid, which is translated to coordinates in the player. 
     - [v] - has body lean direction: left or right at 30 degrees
     - [v] - has extended (arm position): in or out
+    - [ ] - NEW!!  has clamping (arm): right or left
     - [v] - has bent (leg): right or left
   
-    - [>] 7.4 SG should be located in climbed position in SG shots after climbing
-    - Fixed shot 3: changed from "standing-on-fence-top" to "standing-on-bridge-floor" (removed postClimb flag)
-    - Updated shot 4: Added climbedPosition with bodyLean right, extended out, legBent left
-    - Still need to update: shot 6, shot 8, shot 10
+    - [ ] 7.4 SG should be located in climbed position in SG shots after climbing
+    - [ ] Fix shot 3: change shot 3 endpoint from "standing-on-bridge-floor" to "hanging-from-fence"
+    - Shot 4: stays static hanging-from-fence, bodyLean right, extended out, legBent left, clamping left
+    - Shot 6: stays static hanging-from-fence, bodyLean left, extended out, legBent right, clamping right
+    - Shot 8: stays static hanging-from-fence, bodyLean right, extended in, legBent left, clamping right
+    - Shot 10: stays static hanging-from-fence, bodyLean left, extended in, legBent right, clamping left
     - [v] 7.5 SG in shot 3 should start standing on bridge "floor"
       Changed position from "standing-on-fence-top" to "standing-on-bridge-floor"
+      [ ]  Check if that is the STARTING POINT.  IF NOT fix your narrative to the correct one:  shot 3 starts on bridge floor climbs up to hanging on fence (head passed the top rail.)
     - [v] 7.6 shot 3 has narrator dialog:
         Added narration: "(Man climbing and panting, his desperation clearly visible)"
   
