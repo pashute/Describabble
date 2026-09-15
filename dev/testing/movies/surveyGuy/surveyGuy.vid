@@ -1,4 +1,4 @@
-# surveyGuy.vid v0.1.51
+# surveyGuy.vid v0.1.52
 # Standardized YAML format for Describabble stick figure animation
 # Machine-readable and human-friendly structure
 
@@ -208,11 +208,11 @@ scenes:
 
 
 
-              TTTTT H   H EEEEE   SSSS  U   U RRRRR V   V EEEEE Y   Y  GGGGG U   U Y   Y
-                T   H   H E      S     U   U R   R V   V E      Y Y   G     U   U  Y Y
-                T   HHHHH EEEEE   SSS  U   U RRRRR V   V EEEEE   Y    G  GG U   U   Y
-                T   H   H E           S U   U R   R  V V  E       Y    G   G U   U   Y
-                T   H   H EEEEE  SSSS  UUUUU R   R   V   EEEEE   Y    GGGGG UUUUU   Y
+              TTTTT H   H EEEEE     SSSs   U   U  RRRr   V     V EEEEE Y   Y     GGGGg  U   U  Y   Y
+                T   H   H E     :: S       U   U  R   R  V     V E      Y Y   :: G      U   U   Y Y
+                T   HHHHH EEEEE     SSS    U   U  RRRR    V   V  EEE     Y       G gGG  U   U    Y
+                T   H   H E     ::      S  U   U  R  R     V V   E       Y    :: G   G  U   U    Y
+                T   H   H EEEEE     Ssss   UUUUU  R    R    V    EEEEE   Y        GGG    UuU     Y
           text2:
             align: "center"
             lines: 9

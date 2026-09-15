@@ -1,4 +1,4 @@
-// Filename: player.js v0.1.51
+// Filename: player.js v0.1.52
 // stickvid - Stick figure animation player with full control set
 // Renders complex animations from standardized YAML .vid manifest files
 
@@ -962,7 +962,8 @@ class StickVidPlayer {
     }
 
     renderMultiTextCaptions(captions, pov = 'from-below') {
-        let yOffset = pov === 'credits-screen' ? 5 : 300;
+        let yOffset = pov === 'credits-screen' ? 50 : 300; // 
+        // was 5 changing to 10. had two bottom lines of ascii art
 
         if (captions.text1) {
             const align = captions.text1.align || 'center';

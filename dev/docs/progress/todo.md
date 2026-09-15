@@ -15,7 +15,7 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
 
 ## B.0141.1 Animation & Rendering Enhancements (v0.1.40→0.1.41)
 
-# Batch 1.47 fixes
+# Batch 1.53 fixes from 1.52 (Not the developer added a version)
 - reminders: 
   - all fixes start with .vid. nothing hardcoded in player. 
   - No numbers in .vid only descriptions.
@@ -23,9 +23,10 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
   - and as you do it mark it done with short remarks on how.
   - Every batch run causes a synchronized increment in the version's patch of both the .vid and the index.html.
   - Any other file touched increments that file's version to the synchronized version as well. 
+  - If there's a time change or global movement or change that affects more than one shot at once, hesitate to make it, and report first here in the todo the current numbers and to what it will be changed. so that we can easily roll back. 
 
-- [v] 1. fix splash screen pushed down too little.
-  yOffset 20→5 for credits-screen (player.js:910)
+- [v] 1. I fixed the splash screen pushed down too little. I also fixed the ascii art which now looks better. 
+  yOffset 20→50 for credits-screen (player.js) // was wrongly changed to 5
 
 - [v] 2.1 bring back the shot with the pause of SG after hearing he's not that stupid.  He should be contemplating, described in the .vid as having a ~ shaped mouth and slanting eyebrows.
   Shot 10 added (51-53s) with mouth-tilde and eyebrows-slanting expressions to .vid, player.js renders both
@@ -80,27 +81,71 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
   
 - 7
 
-- New bending knees. 
+- New climbing parameters: 
+- 7.1 bending knees. 
   - Fixed in 1.41: SG climbing action  with isBent flag (player.js:485-489)
-  - [v] 7. New: SG climbed position - needed for setting location, angle, arms and legs in SG shots, after the climbing shot (shot #2, one after the titles)
-    Added to shot3: position "standing-on-fence-top" with postClimb flag to indicate SG just finished climbing
+-  [ ] 7.2 New:  animated body angle change. 
+        during climbing animation steps, 
+        body toggles between two slight angles defined as Lean: [left or right]. 
+            
+  - [ ] 7.3 New: SG climbed position 
+    - [ ] - has location
+    - [ ] - has body lean direction (left or right) 
+        - [ ] player translate to one of two angles 30 deg left or 30 deg right. 
+    - [ ] - has extended (arm position) [in or out], 
+    - [ ] - has bent (leg) [right or left] 
   
-- [v] 10. fix: WM dual arm-waving
-  - supposedly Fixed in 1.41: left arm cos(), right arm -cos() for opposite flail (player.js:576-587)
+    - [ ] 7.4 SG should be located in climbed position: (location, lean, extended, bent) in SG shots, after the climbing shot (shot #2, one after the titles)
+    - v1.51 mistake: Added to shot3: position "standing-on-fence-top" with postClimb flag to indicate SG just finished climbing
+    remove the unnecessary flag. 
+  - Note: SG is NOT "Standing ON fence TOP" but rather has reached some position on the fence during shot 2. whatever that position is, will be preserved during the rest of the SG shots: 
+      - updated location in shot number:
+      - [ ] shot 4 (no wife),
+      - [ ] shot 6 (no kids),
+      - [ ] shot 8 (no future),
+      - [ ] shot 10 (contemplating)
+    - [ ] 7.5 SG in shot 3 should start standing on bridge "floor" 
+    - [ ] 7.6 shot 3 has narrator dialog:
+        `(Man climbing and panting, his desperation clearly visible)`
+  
+- [ ] 10. fix: WM arms (don't forget to start with description in .vid)
+  - [ ] 10.1 make arms a bit longer in all WM shots. (fix to: a bit longer than head diameter each)
+  - [ ] 10.2 and make them at a non symmetric angle one higher arm while the other to the side. (fix to: one arm raised and one arm extended out) 
+  - [ ] 10.3 keep the dual arm-waving, but not on the symmetric axis of the body.
+  - supposedly Fixed in 1.41: left arm cos(), right arm -cos() for opposite flail (player.js:576-587) but didn't work. 
   - Fixed: renderStyle.armAnimation='flailing-extended' now triggers isWaving=true for new from-above WM
   - Only applies to WM with from-above POV and new renderStyle properties (white, thick-lined)
 
-- [v] 11. fix: SG mouth animation
-  - Fixed in 1.41: o/_/- toggle when speaking via sin phase (player.js:557-572)
+  - 11. SG Mouth animation  
+    - [ ] 11.1 fix: SG mouth animation to toggle o-shape and flat-mouth (instead of o-shape and smile)
+  - added in 1.41: o-shape or smile -  toggle when speaking via sin phase (player.js:557-572)
   - Mouth animation triggers correctly when isSpeaking=true for char1 (SG)
-  - o/_/- pattern controlled by sin(currentTime*6)*2 phase, independent of other expressions
+  - mouth pattern controlled by sin(currentTime*6)*2 phase, independent of other expressions.
   - Note: expressions like eyebrows-down don't override speaking mouth animation
+    - Fix SG in SG talking shots: (first in .vid file for those shots)
+      - [ ] shot 4 (no wife),
+      - [ ] shot 6 (no kids),
+      - [ ] shot 8 (no future),
 
-- [v] 12. explain why you made SG leg animation, and if it is not part of climb, remove
+- [ ] 12. WM smile on survey call
+-  fix: instruction in .vid for shot 11 (fill survey) to change from a frown to a smile after 1 second in the shot. 
+
+- [ ] 13. Still no last shot: cut to dark, sound effect (narrated): Splash!! [pause]
+  - explain what happened and why not showing. Perhaps movie time too short and must be extended?
+
+- [ ] 14. fix: remove fidgeting leg. not useful here. 
   - Added in 1.41: sin wave legBend for SG standing legs (player.js:662-676)
-  - Purpose: Adds subtle natural movement to standing figure (weight shifting, fidgeting)
+  - Purpose: Meant to add subtle natural movement to standing figure (weight shifting, fidgeting)
   - Separate from climbing leg animation (isBent flag) - different sine curve and amplitude
-  - Not essential - could be removed if found too distracting. Kept for naturalism.
+  - Not appropriate for any of the scenes. SG is not standing, but hanging from fence rail. WM is seen from above. Legs are irrelevant. Fidgeting looks unnatural. 
+
+  - [ ] 15. Bright blue sky behind bridge with a single small white cloud moves from left to right between bridge scenes: Shot 2 (climbing, on left), shot 4 (no wife, on center left), shot 6 (no parents, on center right), shot 8 (no future, on right), shot 10 (contemplate: clear sky no cloud)
+
+  - [ ] 16. WM fixes
+    - [ ]  16.1 remove dark green square (near the tree foliage) from all WM scenes. (remnant of mistaken tree shape): Shot 3 (wife), Shot 5 (parents), Shot 7 (future),  Shot 9 (change), Shot 11 (survey)
+    - [ ]  16.2  in Shot 11: change the current dialog to: WM:  
+    `Before you step down, would you mind taking a short survey? [pause]`
+         - Make sure the shot has the time for that extra pause. 
   
 
 --- End of batch
