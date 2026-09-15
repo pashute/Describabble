@@ -1,4 +1,4 @@
-// Filename: player.js v0.1.47
+// Filename: player.js v0.1.49
 // stickvid - Stick figure animation player with full control set
 // Renders complex animations from standardized YAML .vid manifest files
 
@@ -557,6 +557,15 @@ class StickVidPlayer {
             this.ctx.moveTo(x + 8 * scale, y - 5 * scale);
             this.ctx.lineTo(x + 5 * scale, y - 3 * scale);
             this.ctx.stroke();
+        } else if (charData.eyebrows === 'slanting') {
+            this.ctx.beginPath();
+            this.ctx.moveTo(x - 8 * scale, y - 2 * scale);
+            this.ctx.lineTo(x - 4 * scale, y - 5 * scale);
+            this.ctx.stroke();
+            this.ctx.beginPath();
+            this.ctx.moveTo(x + 8 * scale, y - 2 * scale);
+            this.ctx.lineTo(x + 4 * scale, y - 5 * scale);
+            this.ctx.stroke();
         }
 
         const isSpeaking = charData.isWaving || (shot?.dialogue?.some(d => d.speaker === charData.id && this.currentTime >= d.startTime && this.currentTime < d.endTime));
@@ -582,9 +591,19 @@ class StickVidPlayer {
             this.ctx.beginPath();
             this.ctx.arc(x, y + 5 * scale, 4 * scale, 0, Math.PI);
             this.ctx.stroke();
-        } else if (charData.expression === 'subtle-smile') {
+        } else if (charData.expression === 'subtle-smile' || charData.expression === 'mouth-smile') {
             this.ctx.beginPath();
             this.ctx.arc(x, y + 5 * scale, 3 * scale, 0, Math.PI);
+            this.ctx.stroke();
+        } else if (charData.expression === 'mouth-tilde') {
+            this.ctx.beginPath();
+            const waveHeight = 2 * scale;
+            for (let i = 0; i <= 4; i++) {
+                const px = x - 5 * scale + (i / 4) * 10 * scale;
+                const py = y + 5 * scale + (Math.sin(i * Math.PI / 2) * waveHeight);
+                if (i === 0) this.ctx.moveTo(px, py);
+                else this.ctx.lineTo(px, py);
+            }
             this.ctx.stroke();
         } else {
             this.ctx.beginPath();
@@ -907,7 +926,7 @@ class StickVidPlayer {
     }
 
     renderMultiTextCaptions(captions, pov = 'from-below') {
-        let yOffset = pov === 'credits-screen' ? 20 : 300;
+        let yOffset = pov === 'credits-screen' ? 5 : 300;
 
         if (captions.text1) {
             const align = captions.text1.align || 'center';

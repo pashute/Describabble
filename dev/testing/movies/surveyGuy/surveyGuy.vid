@@ -1,4 +1,4 @@
-# surveyGuy.vid v0.1.47
+# surveyGuy.vid v0.1.49
 # Standardized YAML format for Describabble stick figure animation
 # Machine-readable and human-friendly structure
 
@@ -12,7 +12,7 @@ movie:
   production: "Describabble with Anthropic Claude and Gemini Flash lite"
 
 specs:
-  totalDuration: 53.0
+  totalDuration: 60.0
   fps: 60
   canvasWidth: 960
   canvasHeight: 540
@@ -284,6 +284,7 @@ scenes:
                 position: "grass-right-top"
                 coverage: "partial-over-road"
                 color: "dark-green"
+                note: "NO TRUNK - foliage circle only"
         characters:
           - id: "char1"
             location: "continued"
@@ -313,8 +314,8 @@ scenes:
         number: 4
         name: "SG1_NoWife"
         timeRange:
-          start: 18.0
-          end: 23.0
+          start: 19.0
+          end: 24.0
         camera:
           pov: "from-below"
           location: "loc_bridge_below"
@@ -343,8 +344,8 @@ scenes:
         number: 5
         name: "WM2_Parents"
         timeRange:
-          start: 23.0
-          end: 27.0
+          start: 24.0
+          end: 28.0
         camera:
           pov: "from-bridge"
           location: "loc_bridge_top"
@@ -377,6 +378,7 @@ scenes:
                 position: "grass-right-top"
                 coverage: "partial-over-road"
                 color: "dark-green"
+                note: "NO TRUNK - foliage circle only"
         characters:
           - id: "char1"
             location: "continued"
@@ -393,8 +395,8 @@ scenes:
           - speaker: "char2"
             voice: "voice2"
             text: "Think about your parents!"
-            startTime: 23.0
-            endTime: 27.0
+            startTime: 24.0
+            endTime: 28.0
             delivery: "shouting-desperate"
             tone: "escalating"
             voiceCue: "(shouts)"
@@ -406,8 +408,8 @@ scenes:
         number: 6
         name: "SG2_NoParents"
         timeRange:
-          start: 27.0
-          end: 30.0
+          start: 28.0
+          end: 31.0
         camera:
           pov: "from-below"
           location: "loc_bridge_below"
@@ -423,8 +425,8 @@ scenes:
           - speaker: "char1"
             voice: "voice1"
             text: "I don't have parents!"
-            startTime: 27.0
-            endTime: 30.0
+            startTime: 28.0
+            endTime: 31.0
             delivery: "shouting-raw"
             tone: "emotional"
             voiceCue: "(shouts back)"
@@ -436,8 +438,8 @@ scenes:
         number: 7
         name: "WM3_Future"
         timeRange:
-          start: 30.0
-          end: 34.0
+          start: 31.0
+          end: 35.0
         camera:
           pov: "from-bridge"
           location: "loc_bridge_top"
@@ -470,6 +472,7 @@ scenes:
                 position: "grass-right-top"
                 coverage: "partial-over-road"
                 color: "dark-green"
+                note: "NO TRUNK - foliage circle only"
         characters:
           - id: "char1"
             location: "continued"
@@ -485,8 +488,8 @@ scenes:
           - speaker: "char2"
             voice: "voice2"
             text: "Think about your future!"
-            startTime: 30.0
-            endTime: 34.0
+            startTime: 31.0
+            endTime: 35.0
             delivery: "shouting-peak"
             tone: "maximum-intensity"
             voiceCue: "(shouts)"
@@ -498,8 +501,8 @@ scenes:
         number: 8
         name: "SG3_NoFuture"
         timeRange:
-          start: 34.0
-          end: 44.0
+          start: 35.0
+          end: 45.0
         camera:
           pov: "from-below"
           location: "loc_bridge_below"
@@ -515,8 +518,8 @@ scenes:
           - speaker: "char1"
             voice: "voice1"
             text: "What future?! I have no future. I'm a phone rep survey guy! Everybody hates surveys. They hear me talk and want to die!"
-            startTime: 34.0
-            endTime: 44.0
+            startTime: 35.0
+            endTime: 45.0
             delivery: "shouting-bitter"
             tone: "anguished-bitter"
             voiceCue: "(shouts back)"
@@ -528,8 +531,8 @@ scenes:
         number: 9
         name: "WM4_LogicPivot"
         timeRange:
-          start: 44.0
-          end: 50.0
+          start: 45.0
+          end: 51.0
         camera:
           pov: "from-bridge"
           location: "loc_bridge_top"
@@ -562,6 +565,7 @@ scenes:
                 position: "grass-right-top"
                 coverage: "partial-over-road"
                 color: "dark-green"
+                note: "NO TRUNK - foliage circle only"
         characters:
           - id: "char1"
             location: "continued"
@@ -577,8 +581,8 @@ scenes:
         dialogue:
           - speaker: "char2"
             text: "So change your job. You're not that stupid that you can't do anything else, right?"
-            startTime: 44.0
-            endTime: 50.0
+            startTime: 45.0
+            endTime: 51.0
             delivery: "shouting-measured"
             tone: "logical"
         captions:
@@ -587,10 +591,33 @@ scenes:
 
       - id: "shot10"
         number: 10
-        name: "Punchline"
+        name: "SG_Contemplating"
         timeRange:
-          start: 50.0
-          end: 56.0
+          start: 51.0
+          end: 53.0
+        camera:
+          pov: "from-below"
+          location: "loc_bridge_below"
+          perspective: "looking-up-at-char1-on-fence"
+        characters:
+          - id: "char1"
+            location: "continued"
+            position: "standing-on-fence"
+            emotion: "contemplative"
+            posture: "standing"
+            expression: "mouth-tilde"
+            eyebrows: "slanting"
+        dialogue: []
+        captions:
+          position: "bottom"
+          text: ""
+
+      - id: "shot11"
+        number: 11
+        name: "WM_OffersSurvey"
+        timeRange:
+          start: 53.0
+          end: 59.0
         camera:
           pov: "from-bridge"
           location: "loc_bridge_top"
@@ -623,6 +650,7 @@ scenes:
                 position: "grass-right-top"
                 coverage: "partial-over-road"
                 color: "dark-green"
+                note: "NO TRUNK - foliage circle only"
         characters:
           - id: "char1"
             location: "continued"
@@ -634,24 +662,24 @@ scenes:
             headSize: "LONG"
             emotion: "cunning"
             posture: "standing"
-            expression: "subtle-smile"
+            expression: "mouth-smile"
         dialogue:
           - speaker: "char2"
             text: "Before you step down, would you reply to a short survey?"
-            startTime: 50.0
-            endTime: 52.5
+            startTime: 53.0
+            endTime: 58.5
             delivery: "clear-measured"
             tone: "dark-humor"
         captions:
           position: "bottom"
           text: "Before you step down, would you reply to a short survey?"
 
-      - id: "shot11"
-        number: 11
+      - id: "shot12"
+        number: 12
         name: "Resolution"
         timeRange:
-          start: 56.0
-          end: 57.0
+          start: 59.0
+          end: 60.0
         camera:
           pov: "cut-to-black"
         characters: []
