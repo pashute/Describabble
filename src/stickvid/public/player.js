@@ -1,4 +1,4 @@
-// Filename: player.js v0.1.53
+// Filename: player.js v0.1.51
 // stickvid - Stick figure animation player with full control set
 // Renders complex animations from standardized YAML .vid manifest files
 

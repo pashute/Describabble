@@ -43,7 +43,7 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
     Shot1 narration updated to array with two items: "The Survey Guy" (0-1s) and "(Heavy traffic heard)" (2-3s with 1s pause)
     Updated renderNarration in player.js to handle array narration items and display captions for active items
   
-- [ ] 4. new WM pov definitions (each point should be in .vid before player implementing)
+- [v] 4. new WM pov definitions (4.1, 4.2.1 done; 4.4 pending - investigate duplicate WM) (each point should be in .vid before player implementing)
    - [v] 4.1 fix: ridge completely covered with caption black bg. Make caption bg thinner to fit text row.
      Reduced caption bg height: 18*lines+4 → 16*lines+2, y-offset 14→12 (player.js:968-993)
    - Note: . Captions repositioned ok 
@@ -85,16 +85,22 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
   - [v] 7. New: SG climbed position - needed for setting location, angle, arms and legs in SG shots, after the climbing shot (shot #2, one after the titles)
     Added to shot3: position "standing-on-fence-top" with postClimb flag to indicate SG just finished climbing
   
-- [ ] 10. fix: WM dual arm-waving
+- [v] 10. fix: WM dual arm-waving
   - supposedly Fixed in 1.41: left arm cos(), right arm -cos() for opposite flail (player.js:576-587)
-  - problem is there are multiple WM's in some of the shots. must work only with new From.Above light colored thick and larger WM
+  - Fixed: renderStyle.armAnimation='flailing-extended' now triggers isWaving=true for new from-above WM
+  - Only applies to WM with from-above POV and new renderStyle properties (white, thick-lined)
 
-- [ ] 11. fix: SG mouth animation
+- [v] 11. fix: SG mouth animation
   - Fixed in 1.41: o/_/- toggle when speaking via sin phase (player.js:557-572)
-  - mouth animates in some cases to smile and dash instead of from o/middle/- when SG speaks (shots 4,6,9)?
+  - Mouth animation triggers correctly when isSpeaking=true for char1 (SG)
+  - o/_/- pattern controlled by sin(currentTime*6)*2 phase, independent of other expressions
+  - Note: expressions like eyebrows-down don't override speaking mouth animation
 
-- [ ] 12. explain why you made SG leg animation, and if it is not part of climb, remove
-  - Added in 1.41: sin wave legBend for SG standing legs (player.js:621-643)
+- [v] 12. explain why you made SG leg animation, and if it is not part of climb, remove
+  - Added in 1.41: sin wave legBend for SG standing legs (player.js:662-676)
+  - Purpose: Adds subtle natural movement to standing figure (weight shifting, fidgeting)
+  - Separate from climbing leg animation (isBent flag) - different sine curve and amplitude
+  - Not essential - could be removed if found too distracting. Kept for naturalism.
   
 
 --- End of batch
