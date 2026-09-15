@@ -531,6 +531,19 @@ class StickVidPlayer {
     }
 
     drawStandingFigure(x, y, headSize, charData, scale = 1, shot = null) {
+        // Handle timed expression changes
+        if (charData.animation?.expressionChange === 'timed' && charData.animation?.changes) {
+            let currentExpression = charData.expression;
+            const changes = charData.animation.changes;
+            for (let i = changes.length - 1; i >= 0; i--) {
+                if (this.currentTime >= changes[i].time) {
+                    currentExpression = changes[i].expression;
+                    break;
+                }
+            }
+            charData = { ...charData, expression: currentExpression };
+        }
+
         const renderStyle = charData.renderStyle || {};
         const bodyHeight = renderStyle.bodyHeight === 'short' ? 15 * scale : 40 * scale;
         const handLength = renderStyle.handLength || 20 * scale;

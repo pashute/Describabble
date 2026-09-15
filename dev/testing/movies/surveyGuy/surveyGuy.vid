@@ -764,8 +764,15 @@ scenes:
             headSize: "XLARGE"
             emotion: "cunning"
             posture: "standing"
-            expression: "mouth-smile"
+            expression: "eyebrows-down"
             pov: "from-above"
+            animation:
+              expressionChange: "timed"
+              changes:
+                - time: 0.0
+                  expression: "eyebrows-down"
+                - time: 1.0
+                  expression: "mouth-smile"
             renderStyle:
               lineWidth: 6
               color: "#FFFFFF"
