@@ -144,8 +144,10 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
    - Added animation.expressionChange: timed with changes at 0s (eyebrows-down) and 1s (mouth-smile)
    - Implemented timed expression logic in player.js drawStandingFigure 
 
-- [ ] 13. Still no last shot: cut to dark, sound effect (narrated): Splash!! [pause]
-  - explain what happened and why not showing. Perhaps movie time too short and must be extended?
+- [v] 13. Last shot: cut to dark, sound effect (narrated): Splash!!
+  - Shot 12 exists in .vid: 59-60s with cut-to-black POV and splash narration
+  - player.js renderBackground handles cut-to-black correctly (lines 263-267)
+  - Narration displays on black screen, captions skipped for cut-to-black
 
 - [ ] 14. fix: remove fidgeting leg. not useful here. 
   - Added in 1.41: sin wave legBend for SG standing legs (player.js:662-676)
