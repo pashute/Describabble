@@ -14,7 +14,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3003;
-const VERSION = '0.1.52';
+const VERSION = '0.1.53';
 
 app.use(cors());
 app.use(express.json());

@@ -1,4 +1,4 @@
-# surveyGuy.vid v0.1.52
+# surveyGuy.vid v0.1.53
 # Standardized YAML format for Describabble stick figure animation
 # Machine-readable and human-friendly structure
 
@@ -318,9 +318,10 @@ scenes:
         characters:
           - id: "char1"
             location: "continued"
-            position: "standing-on-fence"
+            position: "standing-on-fence-top"
             emotion: "defensive"
             posture: "standing"
+            postClimb: true
           - id: "char2"
             position: "standing-on-road"
             headSize: "XLARGE"

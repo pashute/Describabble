@@ -82,7 +82,8 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
 
 - New bending knees. 
   - Fixed in 1.41: SG climbing action  with isBent flag (player.js:485-489)
-  - [ ] New: SG climbed position - needed for setting location, angle, arms and legs in SG shots, after the climbing shot (shot #2, one after the titles)
+  - [v] 7. New: SG climbed position - needed for setting location, angle, arms and legs in SG shots, after the climbing shot (shot #2, one after the titles)
+    Added to shot3: position "standing-on-fence-top" with postClimb flag to indicate SG just finished climbing
   
 - [ ] 10. fix: WM dual arm-waving
   - supposedly Fixed in 1.41: left arm cos(), right arm -cos() for opposite flail (player.js:576-587)
