@@ -1,4 +1,4 @@
-# surveyGuy.vid v0.1.41
+# surveyGuy.vid v0.1.47
 # Standardized YAML format for Describabble stick figure animation
 # Machine-readable and human-friendly structure
 
@@ -181,9 +181,10 @@ scenes:
         captions:
           text1:
             align: "left"
-            lines: 9
+            lines: 10
             emptyRowMode: "keep"
             content: |
+              The Survey Guy
 
 
 

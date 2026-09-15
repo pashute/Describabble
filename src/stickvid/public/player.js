@@ -1,4 +1,4 @@
-// Filename: player.js v0.1.41
+// Filename: player.js v0.1.47
 // stickvid - Stick figure animation player with full control set
 // Renders complex animations from standardized YAML .vid manifest files
 
@@ -87,9 +87,13 @@ class StickVidPlayer {
             }
 
             const movieInfo = this.vidLoader.getMovieInfo();
-            document.getElementById('status').textContent = `Loaded: ${movieInfo.title}`;
+            const vidHeader = content.split('\n')[0] || '';
+            const versionMatch = vidHeader.match(/v(\d+\.\d+\.\d+)/);
+            const vidVersion = versionMatch ? versionMatch[1] : 'unknown';
+            document.getElementById('status').textContent = `Loaded: ${movieInfo.title} (v${vidVersion})`;
 
             this.duration = movieInfo.duration;
+            console.log('Loaded .vid. Duration from specs:', movieInfo.duration, 'MovieInfo:', movieInfo);
             document.getElementById('totalTimeInput').value = this.formatTime(this.duration);
 
             this.enableControls();
@@ -196,6 +200,7 @@ class StickVidPlayer {
         if (this.currentTime >= this.duration) {
             this.currentTime = this.duration;
             this.isPlaying = false;
+            console.log('Animation stopped. Duration:', this.duration, 'CurrentTime:', this.currentTime);
         }
 
         this.render();
@@ -323,12 +328,12 @@ class StickVidPlayer {
         // Draw bridge at bottom
         layout.forEach(item => {
             if (item.element === 'bridge') {
-                const yPos = this.canvas.height - 80;
+                const yPos = this.canvas.height - 60;
                 this.ctx.fillStyle = colorMap[item.color] || item.color;
                 this.ctx.fillRect(0, yPos, this.canvas.width, 40);
 
-                this.ctx.strokeStyle = '#666';
-                this.ctx.lineWidth = 3;
+                this.ctx.strokeStyle = '#333';
+                this.ctx.lineWidth = 4;
                 this.ctx.beginPath();
                 this.ctx.moveTo(0, yPos);
                 this.ctx.lineTo(this.canvas.width, yPos);
@@ -519,11 +524,11 @@ class StickVidPlayer {
         if (isClimbing) {
             this.drawClimbingFigure(x, y, headSize, charData, progress, scale);
         } else {
-            this.drawStandingFigure(x, y, headSize, charData, scale);
+            this.drawStandingFigure(x, y, headSize, charData, scale, shot);
         }
     }
 
-    drawStandingFigure(x, y, headSize, charData, scale = 1) {
+    drawStandingFigure(x, y, headSize, charData, scale = 1, shot = null) {
         const bodyHeight = 40 * scale;
         const armLength = 20 * scale;
         const isFromAbove = charData.pov === 'from-bridge';
@@ -692,14 +697,17 @@ class StickVidPlayer {
             this.ctx.lineTo(bodyX - 20 * scale, adjY + headSize + 15 * scale);
             this.ctx.stroke();
 
-            // Right leg down, left leg up
+            // Right leg down (with bent knee), left leg up (with bent knee)
+            const kneeY = bodyEndY + 15 * scale;
             this.ctx.beginPath();
             this.ctx.moveTo(bodyEndX, bodyEndY);
+            this.ctx.lineTo(bodyEndX + 15 * scale, kneeY);
             this.ctx.lineTo(bodyEndX + 25 * scale, bodyEndY + 30 * scale);
             this.ctx.stroke();
 
             this.ctx.beginPath();
             this.ctx.moveTo(bodyEndX, bodyEndY);
+            this.ctx.lineTo(bodyEndX - 10 * scale, kneeY - 10 * scale);
             this.ctx.lineTo(bodyEndX - 15 * scale, bodyEndY - 15 * scale);
             this.ctx.stroke();
         } else {
@@ -714,14 +722,17 @@ class StickVidPlayer {
             this.ctx.lineTo(bodyX + 20 * scale, adjY + headSize + 15 * scale);
             this.ctx.stroke();
 
-            // Left leg down, right leg up
+            // Left leg down (with bent knee), right leg up (with bent knee)
+            const kneeY2 = bodyEndY + 15 * scale;
             this.ctx.beginPath();
             this.ctx.moveTo(bodyEndX, bodyEndY);
+            this.ctx.lineTo(bodyEndX - 15 * scale, kneeY2);
             this.ctx.lineTo(bodyEndX - 25 * scale, bodyEndY + 30 * scale);
             this.ctx.stroke();
 
             this.ctx.beginPath();
             this.ctx.moveTo(bodyEndX, bodyEndY);
+            this.ctx.lineTo(bodyEndX + 10 * scale, kneeY2 - 10 * scale);
             this.ctx.lineTo(bodyEndX + 15 * scale, bodyEndY - 15 * scale);
             this.ctx.stroke();
         }
@@ -732,13 +743,7 @@ class StickVidPlayer {
         this.ctx.fillStyle = '#228B22';
         this.ctx.lineWidth = 2;
 
-        // Trunk
-        this.ctx.beginPath();
-        this.ctx.moveTo(x, y + 40);
-        this.ctx.lineTo(x, y + 80);
-        this.ctx.stroke();
-
-        // Foliage (circle, larger)
+        // Foliage (circle, larger, no trunk from above)
         this.ctx.beginPath();
         this.ctx.arc(x, y + 30, 35, 0, Math.PI * 2);
         this.ctx.fill();
@@ -882,7 +887,7 @@ class StickVidPlayer {
         if (pov === 'cut-to-black') return;
 
         if (shot.captions.text1 || shot.captions.text2) {
-            this.renderMultiTextCaptions(shot.captions);
+            this.renderMultiTextCaptions(shot.captions, pov);
         } else if (shot.captions.text) {
             const position = shot.captions.position || 'top';
             const text = shot.captions.text;
@@ -901,8 +906,8 @@ class StickVidPlayer {
         }
     }
 
-    renderMultiTextCaptions(captions) {
-        let yOffset = 300;
+    renderMultiTextCaptions(captions, pov = 'from-below') {
+        let yOffset = pov === 'credits-screen' ? 20 : 300;
 
         if (captions.text1) {
             const align = captions.text1.align || 'center';
