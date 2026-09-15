@@ -139,8 +139,10 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
       - [v] shot 6 (no kids) - dialogue 28-31s with isSpeaking trigger
       - [v] shot 8 (no future) - dialogue 35-45s with isSpeaking trigger
 
-- [ ] 12. WM smile on survey call
--  fix: instruction in .vid for shot 11 (fill survey) to change from a frown to a smile after 1 second in the shot. 
+- [v] 12. WM smile on survey call
+-  fix: instruction in .vid for shot 11 (fill survey) to change from a frown to a smile after 1 second in the shot.
+   - Added animation.expressionChange: timed with changes at 0s (eyebrows-down) and 1s (mouth-smile)
+   - Implemented timed expression logic in player.js drawStandingFigure 
 
 - [ ] 13. Still no last shot: cut to dark, sound effect (narrated): Splash!! [pause]
   - explain what happened and why not showing. Perhaps movie time too short and must be extended?
