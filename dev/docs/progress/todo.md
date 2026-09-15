@@ -15,163 +15,176 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
 
 ## B.0141.1 Animation & Rendering Enhancements (v0.1.40→0.1.41)
 
-# Batch 1.53 fixes from 1.52 (Note the developer added a version)
-- reminders: 
-  - all fixes start with .vid. nothing hardcoded in player. 
-  - No numbers in .vid only descriptions.
-  - Follow the todo. fill in where you are 
-  - and as you do it mark it done with short remarks on how.
-  - Every batch run causes a synchronized increment in the version's patch of both the .vid and the index.html.
-  - Any other file touched increments that file's version to the synchronized version as well. 
-  - If there's a time change or global movement or change that affects more than one shot at once, hesitate to make it, and report first here in the todo the current numbers and to what it will be changed. so that we can easily roll back. 
 
-- [v] 1. I, Pashute, the human developer, fixed the splash screen which was pushed down too little. I also fixed the ascii art which now looks better. 
-  yOffset 20→50 for credits-screen (player.js) // was wrongly changed to 5
-  do not touch it.
+# Batch sept14 1824
 
-- [v] 2.1 you brought back the shot with the pause of SG after hearing he's not that stupid.  He should be contemplating, described in the .vid as having a ~ shaped mouth and slanting eyebrows.
-  Shot 10 added (51-53s) with mouth-tilde and eyebrows-slanting expressions to .vid, player.js renders both
-
-- [v] 2.2 (next shot is back to WM who offers survey). In this one the mouth should change from line to smile. or just smile. As i remind you any requested change should start in the .vid and only then reflected in the player.
-  Shot 11 modified (53-59s) with mouth-smile expression for WM, player.js renders it
-
-- [v] 2.3 restore last shot: cut to dark and splash sound (narrated).
-  Shot 12 added (59-60s) cut-to-black with splash narration restored
-
-- [v] 3. new splash caption: add to splash screen caption (and read it): 
-  - [v] 3.1 add a character in characters called Narrator. always backstage. deepest male voice.
-    Added char3 (Narrator) with voice3 (Deep Narrator) configuration
-  - [v] 3.2 add a dialog for this shot:  
-    Shot1 narration updated to array with two items: "The Survey Guy" (0-1s) and "(Heavy traffic heard)" (2-3s with 1s pause)
-    Updated renderNarration in player.js to handle array narration items and display captions for active items
-  
-- [v] 4. new WM pov definitions (4.1, 4.2.1 done; 4.4 pending - investigate duplicate WM) (each point should be in .vid before player implementing)
-   - [v] 4.1 fix: ridge completely covered with caption black bg. Make caption bg thinner to fit text row.
-     Reduced caption bg height: 18*lines+4 → 16*lines+2, y-offset 14→12 (player.js:968-993)
-   - Note: . Captions repositioned ok 
-    - v1.41: Captions yOffset 60→300, visible above buttons (player.js:841)
-    - v1.42: Bridge ridge y 480, lineWidth=4, darker #333 (player.js:327-336)
-
-   - [v] 4.2 fix: light colored (white?), thick-lined WM (worried man) 
-       - [v] 4.2.1 should be described `From Above`:
-       - [v]  a. thick line → lineWidth: 6 (was 2-3.5)
-       - [v]  b. color contrasted to road → #FFFFFF white (contrast with #A9A9A9 gray road)
-       - [v]  c. with very short body → bodyHeight: 15 (was 40)
-       - [v]  d. larger head double of the current v1.47 size → headSize: 20 (was 10 LONG)
-       - [v]  e. long hands extending from head sides → handLength: 20
-       - [v]  f. hands should be flailing while talking → armAnimation: flailing-extended
-       All properties added to char2 renderStyle in shots 3,5,7,9,10,11. Player updated to read and apply renderStyle. 
+Reminders: 
+- Only .vid first, never hardcoded player code.
+- Player must read and implement the instructions and information from the .vid file.
+- .vid contains only descriptions not numbers.
+- AI should follow the todo and mark done w/ notes.
+- AI should update the version patch once per batch 
+- AI will not test or write test code. Only the developer. 
+- No commit before code tested. Therefore AI should remind developer 
+to test and find out how things went. 
+- SG - Survey guy. a character in our funny The Survey Guy movie.
+- WM - Worried man. the second character in our The Survey Guy movie.
+- .vid - the .vid file is in dev/testing/movies/surveyGuy.vid
+- player - the software under src/stickvid/ mainly player.js and server.js
 
 
-   - [x]  4.4 fix: black thin WM who is with animated feet. 
-     - [x]  a. remove the black thin WM altogether in all WM shots
-       - No black thin WM exists in .vid or player.js - only one char2 per shot with light thick renderStyle
-     - [x]  b. remove the feet waving animation from the WM 
-     - [x]  c. (and remove the feet waving animation altogether? or is this used for the knee climbing in shot #2)
-     - Skipped: No second WM to remove, feet waving not implemented for WM (only for char1 climbing in shot 2)
+## bSept14.shot1 (titles)
 
-- [v] 6. foliage
-  - [v] 6.1 add a NO TRUNK reminder to the tree/from-above shape in .vid
-    Added note: "NO TRUNK - foliage circle only" to all tree elements in .vid
-  - [v] 6.2 new: foliage made from three non-symmetric triangle overlapping dark-green circles for foliage representation.
-    Three circles: top-center, bottom-left, bottom-right with radius 35, creating overlapping tree shape
-  - [v] 6.3 fix: move tree center way down currently too much up and almost outside.
-    Repositioned from y+30 to y+80, moving tree from near top to lower/more visible area
-  - v1.47 Fix: removed trunk from drawTreeTop, only foliage circle (player.js:764-790)
+- [>] Shot 1: Add bridge 'stick image' left of text2 (height of 8 lines)
+- beep.ps1
 
-  
-- 7 New climbing parameters: 
-- 7.1 bending knees. 
-  - Fixed in 1.41: SG climbing action  with isBent flag (player.js:485-489)
--  [>] 7.2 New:  animated body angle change.
-        Added to shot2 character: animation.bodyLean='toggle' with left/right 15-degree angles
-        Body toggles between two slight angles during climbing 
-- [v] 7.2.1  fix in shot 2 (climbing) SG should begin the climb standing on the bridge floor. meaning feet end on bridge floor and body above it. 
-  - Note bridge-floor is the bottom horiz line of the three lines: 
-    - top: the concave suspension rope
-    - mid: the fence top-rail
-    - bot: the bridge floor,  shown somewhat above the bottom of the frame
-- [v] 7.2.2  fix in shot 2 (climbing) during climb body (central stick) should sway this way and that with every "step" upwards. The lean-direction should be recorded.
-  - reason wasn't working: body lean animation added to .vid but never rendered in player.js
-  - what was done: implemented body rotation rendering in drawClimbingFigure - toggles left/right 15° angles based on leanCycle
-- [v] 7.2.2  fix in shot 2 (climbing) once reaches end of climb, one of the arms goes 30 degrees down from its side clamping the fence.
-  - what was done: implemented clamping arm rendering in drawStandingFigure - one arm at 120° (90° side + 30° down) grips fence
-- [v] 7.2.3 This position can now be defined as hanging from fence. it is called the Climbed-position. 
 
-- [ ] 7.2.4  The bridge in following SG scenes will be further away, with more of it in the view.  Blue sky fills in between all lines except single cloud and SG. (as we'll see further down) SG will be shown very slightly smaller. 
+## bSept14.shot2 (climbing)
 
-            
-  - [v] 7.3 New: SG climbed position (hanging from the fence) is the start point for the rest of the shots. 
-    - [v] - has location: "climbed" in .vid, which is translated to coordinates in the player. 
-    - [v] - has body lean direction: left or right at 30 degrees
-    - [v] - has extended (arm position): in or out
-    - [v] - NEW!!  has clamping (arm): right or left - added to all shots
-    - [v] - has bent (leg): right or left
-  
-    - [v] 7.4 SG should be located in climbed position in SG shots after climbing
-    - [v] Fix shot 3: changed from "standing-on-bridge-floor" to "hanging-from-fence"
-    - [v] Shot 4: bodyLean right, extended out, legBent left, clamping left
-    - [v] Shot 6: bodyLean left, extended out, legBent right, clamping right
-    - [v] Shot 8: bodyLean right, extended in, legBent left, clamping right
-    - [v] Shot 10: bodyLean left, extended in, legBent right, clamping left
-    - [v] 7.5 SG in shot 3 should start standing on bridge "floor"
-      Changed position from "standing-on-fence-top" to "standing-on-bridge-floor"
-      [ ]  Check if that is the STARTING POINT.  IF NOT fix your narrative to the correct one:  shot 3 starts on bridge floor climbs up to hanging on fence (head passed the top rail.)
-    - [v] 7.6 shot 3 has narrator dialog:
-        Added narration: "(Man climbing and panting, his desperation clearly visible)"
-  
-- [ ] 10. fix: WM arms (don't forget to start with description in .vid)
-  - [ ] 10.1 make arms a bit longer in all WM shots. (fix to: a bit longer than head diameter each)
-  - [ ] 10.2 and make them at a non symmetric angle one higher arm while the other to the side. (fix to: one arm raised and one arm extended out) 
-  - [ ] 10.3 keep the dual arm-waving, but not on the symmetric axis of the body.
-  - supposedly Fixed in 1.41: left arm cos(), right arm -cos() for opposite flail (player.js:576-587) but didn't work. 
-  - Fixed: renderStyle.armAnimation='flailing-extended' now triggers isWaving=true for new from-above WM
-  - Only applies to WM with from-above POV and new renderStyle properties (white, thick-lined)
+- shot2 is where we first meet SG the Survey Guy who is jumping
 
-  - 11. SG Mouth animation  
-    - [v] 11.1 fix: SG mouth animation to toggle o-shape and flat-mouth (instead of o-shape and smile)
-  - added in 1.41: o-shape or smile -  toggle when speaking via sin phase (player.js:557-572)
-  - Mouth animation triggers correctly when isSpeaking=true for char1 (SG)
-  - mouth pattern controlled by sin(currentTime*6)*2 phase, independent of other expressions.
-  - Note: expressions like eyebrows-down don't override speaking mouth animation
-    - [v] Fix SG in SG talking shots: all have dialogue defined in .vid
-      - [v] shot 4 (no wife) - dialogue 19-24s with isSpeaking trigger
-      - [v] shot 6 (no kids) - dialogue 28-31s with isSpeaking trigger
-      - [v] shot 8 (no future) - dialogue 35-45s with isSpeaking trigger
+- [ ] Add darker squares at bottom (grass/river/road, see shot 3)
+- [ ] Add cloud:  far left
+- [ ] Fix SG face with own fill color (prevent sky color fill)
+- [ ] Fix caption + TTS narration from Narrator dialog
+      `(Man climbing, panting, clearly distressed.)`
 
-- [v] 12. WM smile on survey call
--  fix: instruction in .vid for shot 11 (fill survey) to change from a frown to a smile after 1 second in the shot.
-   - Added animation.expressionChange: timed with changes at 0s (eyebrows-down) and 1s (mouth-smile)
-   - Implemented timed expression logic in player.js drawStandingFigure 
 
-- [v] 13. Last shot: cut to dark, sound effect (narrated): Splash!!
-  - Shot 12 exists in .vid: 59-60s with cut-to-black POV and splash narration
-  - player.js renderBackground handles cut-to-black correctly (lines 263-267)
-  - Narration displays on black screen, captions skipped for cut-to-black
+### Shot2 climb
 
-- [v] 14. fix: remove fidgeting leg. not useful here. 
-  - Removed: sin wave legBend for SG standing legs (was in player.js:726-740)
-  - Was: 14 lines of legBend=sin(currentTime*4)*10*scale with animated knees
-  - Now: Uses standard straight leg rendering like other characters
-  - Reason: Not appropriate for the scenes. SG hangs from fence (not standing), WM seen from above (legs irrelevant). 
+- [ ] Thicken bridge floor 5x (shots 1,3,5,7,9)
+- [ ] Fix SG climb start - feet on bridge floor
+- [ ] Arrange "Climbed-Position" formerly all wrong:
+        - climb-start: feet on bridge road. 
+        - climb-end: head fully above fence top-rail.
+        - body-sway: right/left (15 degree body tilt)
+        - knee-bend: right/left leg
+        - clamp-arm: right/left arm (clamping fence rail)
+- [ ] Fix climb animation to sway while bending knee and arms
+- [ ] Give shot #2 the time to end climb
+- [ ] On climb end:
+  - [ ] Clamp animation: 
+      - Lower arm Climbed-Position.clamp-arm
+      - Left: 130 degrees, or Right: 150 degrees.
+- beep.ps1
 
-  - [v] 15. Bright blue sky behind bridge with a single small white cloud moves from left to right between bridge scenes: Shot 2 (climbing, on left), shot 4 (no wife, on center left), shot 6 (no parents, on center right), shot 8 (no future, on right), shot 10 (contemplate: clear sky no cloud)
-    - Added sky.color (#87CEEB) and sky.cloud.position to shots 2,4,6,8 in .vid
-    - Shot 10: sky.cloud set to null for clear sky
-    - Implemented renderCloud in player.js with position mapping
-    - Cloud rendered as 3 overlapping white circles at positions 150/320/640/810px
+## bSept14.shot3 (family)
 
-  - [v] 16. WM fixes
-    - [v]  16.1 remove dark green square (near the tree foliage) from all WM scenes. (remnant of mistaken tree shape)
-      - No dark green square found in current code - tree is rendered as 3 overlapping circles (foliage only)
-      - Tree code verified: drawTreeTop uses arcs, not rectangles
-      - Already complete/verified - no square to remove
-    - [v]  16.2  in Shot 11: change the dialog to: WM: "Before you step down, would you mind taking a short survey? [pause]"
-      - Changed text from "would you reply to" to "would you mind taking"
-      - Added pause: dialogue split into 53-58s (survey question) + 58-59s (pause)
-      - Caption updated to match new text 
-  
+- WM is the Worried Man character under the bridge looking up
+and preventing the Survey Guy from Jumping.
+- Shot 3 is the first time we meet WM, always seen from the bridge, 
+  looking up at the camera, with POV.From.Above
+
+### Fix family dialog
+
+- [ ] Fix caption and [ ] TTS narration, listed as the shot's dialog: 
+  - Two lines of text. WM:
+  - `(Shouts) Think about your wife!`
+  - `Think about your children!`
+  - Was replaced by mistake with caption from shot2
+
+
+### Fix shot3 WM according to POV
+
+- [ ] WM description and implementation: 
+  - [ ] Double WM size (except line thickness)
+  - [ ] Fix WM short feet to form a sharp angle,
+        - looking like a standing person from above.
+        - current wide angle looks like a baby squatting.
+  - [ ] Fix WM eyes/mouth (upper head, looking up straining neck)
+  - [ ] Remove neck - not seen from above.
+  - [ ] Remove body - not seen from above
+    - [ ] arms extend from (under) head
+    - [ ] arms longer (a bit more than a head diameter each)
+
+- [ ] Fix WM animation (was stationary)
+  - [ ] Arms set asymmetrically: one raised, one extended to side. 
+  - [ ] Hands wave symmetrically in and out but on an asymmetric diagonal axis
+        - One hand goes up from a horizontal position, 
+        - while the other waves overhead
+
+### Other shot3 adjustments
+
+- [ ] Move WM right: to mid-road (3 arm-lengths)
+- [ ] Remove green rectangle on the right 
+  - represented a riverside tree by mistake. 
+- beep.ps1
+
+## bSept14.shot4 (no family)
+
+- [ ] Zoom out from bridge, show more of it
+- [ ] Make SG slightly smaller than in shot2
+- [ ] 
+- [ ] Lower SG to Climbed-Position.climb-end 
+  - Currently too high by 1 head
+- [ ] Add cloud mid-left
+- [ ] Fix SG face with own fill color (see step2)
+- [ ] Fix mouth animation: 
+  - Should toggle between o-shape and flat mouth
+  - Not between smile and flat mouth.
+- [ ] Fix SG position to hanging from rail (1 head down)
+- [ ] Move caption bar up to 50
+- [ ] Make caption bar thinner (single line)
+- beep.ps1
+
+
+## bSept14.shots5_7_9 (parents, future, choice)
+
+- Copy shot3 (WM: family) fixes except captions and TTS narration. 
+- [ ] Shot 5 (WM: parents): Mirror shot 3 fixes (WM, arms, animation)
+- [ ] Shot 7 (WM: future): Mirror shot 3 fixes
+- [ ] Shot 9:(WM: choice) Mirror shot 3 fixes
+- beep.ps1
+
+
+## bSept14.shot6 (SG: no family)
+
+- [ ] Mirror shot 4 fixes (SG layout)
+- [ ] Keep SG sitting on rail (good)
+- [ ] Add cloud mid-right
+- beep.ps1
+
+
+## bSept14.shot8 (SG: no future)
+
+- [ ] Shot 8: Mirror shot 6 fixes
+- [ ] Shot 8: Add cloud far-right
+- beep.ps1
+
+
+## bSept14.shot10 (SG: contemplates)
+
+- [ ] Shot 10: Mirror shot8 (no future) fixes
+- [ ] Shot 10: Remove clouds
+- [ ] Shot 10: Deep blue sky color
+- [ ] Shot 10: Add 1 extra second (no narration)
+- beep.ps1
+
+
+## bSept14.shot11 (WM: survey)
+
+- [ ] Shot 11: Mirror shot9 (choice) fixes
+- [ ] Shot 11: Face changes to smile after 1 sec
+- beep.ps1
+
+
+## bSept14.shot12 (black)
+
+- [ ] Display the black screen for 4 seconds
+- [ ] Add [ ] caption + [ ] TTS narration as shot's Narrator dialog
+  - `[pause] "Splash! [pause]" `
+  - [ ] Add .vid `[pause]` description 
+  - `[pause] read as instruction, not written nor narrated.`
+  - [ ] Add player `[pause]` implementation.
+- beep.ps1
+
+
+## bSept14.clarifications
+
+- AI to look at .vid and player code and Clarify the following:
+  - [ ]  SG position: standing-on-bridge-floor vs hanging-from-fence
+         When used and where, and are there any leftover errors, or ambiguities.
+  - [ ] Report current SG positions (shot2 start/end, shots 4/6/8/10 position)
 
 --- End of batch
-- tell developer the sw version
-- call `callme.ps1` in `dev/testing/utils`
+- callme.ps1
