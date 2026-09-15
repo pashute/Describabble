@@ -108,5 +108,27 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
 - End goal: Functional stickchat + stickmake pipeline
 
 --- End of batch
+
+---
+
+# Batch v0.1.40-0.1.41 - Animation & Rendering Fixes
+
+## B.0140.1 Player Baseline & Environment Support (v0.1.39→0.1.40)
+- [v] Captions already in .vid (shots 3,5,7), player reads dialogue
+- [v] WM position: x 440→520 (out of river onto road, player.js:482)
+- [v] WM styling: white #FFFFFF, 3.5x lineWidth (player.js:505-507)
+- [v] SG position: verified location:"continued" in .vid (surveyGuy.vid all shots)
+- [v] Cut-to-black narration: skip text render, keep audio speak() (player.js:775-796)
+
+## B.0141.1 Animation & Rendering Enhancements (v0.1.40→0.1.41)
+- [v] Captions repositioned: yOffset 60→300, visible above buttons (player.js:841)
+- [v] SG climbed-position: bent knees (isBent flag, charData.position), knees at 15px (player.js:485-489)
+- [v] Tree repositioned: x=820, y=80, larger radius=35 circle, right upper corner (player.js:349, 706-709)
+- [v] WM dual arm-waving: left arm cos(), right arm -cos() for opposite flail (player.js:576-587)
+- [v] Bridge ridge visibility: y 500→460, thicker lineWidth=3, darker #666 (player.js:326-347)
+- [v] SG mouth animation: o/_/- toggle when speaking via sin phase (player.js:557-572)
+- [v] SG leg animation: bent knees with sin wave legBend motion for all standing (player.js:621-643)
+
+--- End of batch
 - tell developer the sw version
 - call `callme.ps1` in `dev/testing/utils`

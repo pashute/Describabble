@@ -1,4 +1,4 @@
-// Filename: player.js v0.1.39
+// Filename: player.js v0.1.41
 // stickvid - Stick figure animation player with full control set
 // Renders complex animations from standardized YAML .vid manifest files
 
@@ -323,17 +323,18 @@ class StickVidPlayer {
         // Draw bridge at bottom
         layout.forEach(item => {
             if (item.element === 'bridge') {
-                const yPos = this.canvas.height - 40;
+                const yPos = this.canvas.height - 80;
                 this.ctx.fillStyle = colorMap[item.color] || item.color;
                 this.ctx.fillRect(0, yPos, this.canvas.width, 40);
 
-                this.ctx.strokeStyle = '#333';
-                this.ctx.lineWidth = 2;
+                this.ctx.strokeStyle = '#666';
+                this.ctx.lineWidth = 3;
                 this.ctx.beginPath();
                 this.ctx.moveTo(0, yPos);
                 this.ctx.lineTo(this.canvas.width, yPos);
                 this.ctx.stroke();
 
+                this.ctx.lineWidth = 1;
                 for (let i = 0; i < this.canvas.width; i += 60) {
                     this.ctx.beginPath();
                     this.ctx.moveTo(i, yPos);
@@ -346,7 +347,7 @@ class StickVidPlayer {
         // Draw tree top
         layout.forEach(item => {
             if (item.element === 'tree') {
-                this.drawTreeTop(528, 40);
+                this.drawTreeTop(820, 80);
             }
         });
     }
@@ -474,12 +475,21 @@ class StickVidPlayer {
                     y = this.canvas.height / 2 - 50;
                 }
             } else if (pov === 'from-bridge') {
-                if (charData.position === 'fence-climbing' || charData.position === 'fence-top' || charData.position === 'standing-on-fence') {
+                if (charData.position === 'fence-climbing' || charData.position === 'fence-top') {
                     x = this.canvas.width / 2;
                     y = this.canvas.height - 100;
                     scale = cameraScale * 0.7;
+                } else if (charData.position === 'standing-on-fence') {
+                    x = this.canvas.width / 2;
+                    y = this.canvas.height - 100;
+                    scale = cameraScale * 0.7;
+                } else if (charData.position === 'climbed-position') {
+                    x = this.canvas.width / 2;
+                    y = this.canvas.height - 120;
+                    scale = cameraScale * 0.7;
+                    charData.isBent = true;
                 } else if (charData.position === 'standing-on-bridge') {
-                    x = 440;
+                    x = 520;
                     y = 325;
                     scale = cameraScale * 0.9;
                 } else {
@@ -501,9 +511,10 @@ class StickVidPlayer {
         const headSize = this.getHeadSize(headSizeType) * scale;
         const isClimbing = charData.posture === 'climbing';
 
-        this.ctx.strokeStyle = '#333';
-        this.ctx.fillStyle = '#333';
-        this.ctx.lineWidth = 2 * scale;
+        const isWM = charData.id === 'char2';
+        this.ctx.strokeStyle = isWM ? '#FFFFFF' : '#333';
+        this.ctx.fillStyle = isWM ? '#FFFFFF' : '#333';
+        this.ctx.lineWidth = isWM ? 3.5 * scale : 2 * scale;
 
         if (isClimbing) {
             this.drawClimbingFigure(x, y, headSize, charData, progress, scale);
@@ -543,7 +554,26 @@ class StickVidPlayer {
             this.ctx.stroke();
         }
 
-        if (charData.expression === 'mouth-open') {
+        const isSpeaking = charData.isWaving || (shot?.dialogue?.some(d => d.speaker === charData.id && this.currentTime >= d.startTime && this.currentTime < d.endTime));
+
+        if (isSpeaking && charData.id === 'char1') {
+            const mouthPhase = Math.sin(this.currentTime * 6) * 2;
+            if (mouthPhase > 1) {
+                this.ctx.beginPath();
+                this.ctx.moveTo(x - 4 * scale, y + 5 * scale);
+                this.ctx.lineTo(x + 4 * scale, y + 5 * scale);
+                this.ctx.stroke();
+            } else if (mouthPhase < -1) {
+                this.ctx.beginPath();
+                this.ctx.arc(x, y + 5 * scale, 3 * scale, 0, Math.PI);
+                this.ctx.stroke();
+            } else {
+                this.ctx.beginPath();
+                this.ctx.moveTo(x - 3 * scale, y + 5 * scale);
+                this.ctx.lineTo(x + 3 * scale, y + 5 * scale);
+                this.ctx.stroke();
+            }
+        } else if (charData.expression === 'mouth-open') {
             this.ctx.beginPath();
             this.ctx.arc(x, y + 5 * scale, 4 * scale, 0, Math.PI);
             this.ctx.stroke();
@@ -565,15 +595,16 @@ class StickVidPlayer {
 
         if (isWaving) {
             const waveAngle = Math.sin(this.currentTime * 8) * 30 * scale;
+            const waveRad = waveAngle * Math.PI / 180;
 
             this.ctx.beginPath();
             this.ctx.moveTo(x, y + headSize + 10 * scale);
-            this.ctx.lineTo(x - armLength + Math.cos(waveAngle * Math.PI / 180) * 10, y + headSize - Math.sin(waveAngle * Math.PI / 180) * 10);
+            this.ctx.lineTo(x - armLength + Math.cos(waveRad) * 12 * scale, y + headSize + 10 * scale - Math.sin(waveRad) * 12 * scale);
             this.ctx.stroke();
 
             this.ctx.beginPath();
             this.ctx.moveTo(x, y + headSize + 10 * scale);
-            this.ctx.lineTo(x + armLength + Math.cos(-waveAngle * Math.PI / 180) * 10, y + headSize - Math.sin(-waveAngle * Math.PI / 180) * 10);
+            this.ctx.lineTo(x + armLength - Math.cos(waveRad) * 12 * scale, y + headSize + 10 * scale - Math.sin(waveRad) * 12 * scale);
             this.ctx.stroke();
         } else {
             this.ctx.beginPath();
@@ -587,15 +618,45 @@ class StickVidPlayer {
             this.ctx.stroke();
         }
 
-        this.ctx.beginPath();
-        this.ctx.moveTo(x, y + headSize + bodyHeight);
-        this.ctx.lineTo(x - 15 * scale, y + headSize + bodyHeight + legLength);
-        this.ctx.stroke();
+        if (charData.isBent) {
+            const kneeY = y + headSize + bodyHeight + 15 * scale;
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, y + headSize + bodyHeight);
+            this.ctx.lineTo(x - 12 * scale, kneeY);
+            this.ctx.lineTo(x - 15 * scale, kneeY + 12 * scale);
+            this.ctx.stroke();
 
-        this.ctx.beginPath();
-        this.ctx.moveTo(x, y + headSize + bodyHeight);
-        this.ctx.lineTo(x + 15 * scale, y + headSize + bodyHeight + legLength);
-        this.ctx.stroke();
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, y + headSize + bodyHeight);
+            this.ctx.lineTo(x + 12 * scale, kneeY);
+            this.ctx.lineTo(x + 15 * scale, kneeY + 12 * scale);
+            this.ctx.stroke();
+        } else if (charData.id === 'char1') {
+            const legBend = Math.sin(this.currentTime * 4) * 10 * scale;
+            const kneeY = y + headSize + bodyHeight + 15 * scale;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, y + headSize + bodyHeight);
+            this.ctx.lineTo(x - 12 * scale + legBend, kneeY);
+            this.ctx.lineTo(x - 15 * scale + legBend, kneeY + 12 * scale);
+            this.ctx.stroke();
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, y + headSize + bodyHeight);
+            this.ctx.lineTo(x + 12 * scale - legBend, kneeY);
+            this.ctx.lineTo(x + 15 * scale - legBend, kneeY + 12 * scale);
+            this.ctx.stroke();
+        } else {
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, y + headSize + bodyHeight);
+            this.ctx.lineTo(x - 15 * scale, y + headSize + bodyHeight + legLength);
+            this.ctx.stroke();
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, y + headSize + bodyHeight);
+            this.ctx.lineTo(x + 15 * scale, y + headSize + bodyHeight + legLength);
+            this.ctx.stroke();
+        }
     }
 
     drawClimbingFigure(x, y, headSize, charData, progress, scale = 1) {
@@ -673,13 +734,13 @@ class StickVidPlayer {
 
         // Trunk
         this.ctx.beginPath();
-        this.ctx.moveTo(x, y + 20);
-        this.ctx.lineTo(x, y + 40);
+        this.ctx.moveTo(x, y + 40);
+        this.ctx.lineTo(x, y + 80);
         this.ctx.stroke();
 
-        // Foliage (circle)
+        // Foliage (circle, larger)
         this.ctx.beginPath();
-        this.ctx.arc(x, y + 15, 18, 0, Math.PI * 2);
+        this.ctx.arc(x, y + 30, 35, 0, Math.PI * 2);
         this.ctx.fill();
         this.ctx.stroke();
     }
@@ -780,13 +841,16 @@ class StickVidPlayer {
 
         if (!text) return;
 
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-        this.ctx.fillRect(0, 401, this.canvas.width, 40);
+        const pov = shot.camera?.pov || 'from-below';
+        if (pov !== 'cut-to-black') {
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+            this.ctx.fillRect(0, 401, this.canvas.width, 40);
 
-        this.ctx.fillStyle = '#fff';
-        this.ctx.font = '14px sans-serif';
-        this.ctx.textAlign = 'center';
-        this.ctx.fillText(text, this.canvas.width / 2, 423);
+            this.ctx.fillStyle = '#fff';
+            this.ctx.font = '14px sans-serif';
+            this.ctx.textAlign = 'center';
+            this.ctx.fillText(text, this.canvas.width / 2, 423);
+        }
 
         if (this.isPlaying && shot.id !== this.lastShotId) {
             this.lastShotId = shot.id;
@@ -838,7 +902,7 @@ class StickVidPlayer {
     }
 
     renderMultiTextCaptions(captions) {
-        let yOffset = 60;
+        let yOffset = 300;
 
         if (captions.text1) {
             const align = captions.text1.align || 'center';
