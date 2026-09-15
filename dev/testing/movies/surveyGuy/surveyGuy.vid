@@ -1,84 +1,484 @@
-# surveyGuy.vid v0.1.4
-# Single movie manifest - Nested YAML format
-# Describabble Video Manifest - Links all components of a stick figure movie
+# surveyGuy.vid v0.1.9
+# Standardized YAML format for Describabble stick figure animation
+# Machine-readable and human-friendly structure
 
-## Movie Metadata
 movie:
-  name: The SurveyGuy
-  version: 0.1.4
-  created: 2025-09-14
-  description: A dark comedy stick figure short film about a phone survey guy contemplating a bridge jump
-  describs:
-    - desc.surveyGuy.characters.md
+  name: "The Survey Guy"
+  version: "0.1.9"
+  created: "2025-09-14"
+  description: "A dark comedy stick figure short film about a phone survey guy contemplating a bridge jump"
+  license: "Unlicense (Free and Open Source)"
+  creator: "Moussa Yashir"
+  production: "Describabble with Anthropic Claude and Gemini Flash lite"
 
-## Duration & Technical Specs
 specs:
   totalDuration: 53.0
   fps: 60
   canvasWidth: 960
   canvasHeight: 540
-  aspectRatio: 16:9
-  describs:
-    - desc.surveyGuy.scene1.md
+  aspectRatio: "16:9"
 
-## Description Files (Screenplay & Scene Structure)
-descriptions:
-  characters: desc.surveyGuy.characters.md
-  locations: desc.surveyGuy.locations.md
-  scene1: desc.surveyGuy.scene1.md
-  dialogue: desc.surveyGuy.dialogue.map.md
-  bridge: desc.surveyGuy.component.bridge.md
-  audio: desc.surveyGuy.audio.s.desc.md
-  describs:
-    - desc.surveyGuy.characters.md
-    - desc.surveyGuy.locations.md
-    - desc.surveyGuy.scene1.md
-    - desc.surveyGuy.dialogue.map.md
+describs:
+  characters: "desc.surveyGuy.characters.md"
+  scene1: "desc.surveyGuy.scene1.md"
+  dialogue: "desc.surveyGuy.dialogue.map.md"
+  locations: "desc.surveyGuy.locations.md"
+  emotions: "trans.surveyGuy.emotions.md"
+  component_bridge: "desc.surveyGuy.component.bridge.md"
+  meta_emotions: "meta.stick.emotions.md"
+  meta_movement: "meta.stick.movement.md"
+  meta_component_bridge: "meta.stick.component.bridge.md"
 
-## Translation Schemas (Parameter & Field Mapping)
-translations:
-  characters: trans.surveyGuy.characters.md
-  locations: trans.surveyGuy.locations.md
-  dialogue: trans.surveyGuy.dialogue.md
-  emotions: trans.surveyGuy.emotions.md
-  describs:
-    - trans.surveyGuy.characters.md
-    - trans.surveyGuy.dialogue.md
-    - trans.surveyGuy.emotions.md
+characters:
+  - id: "char1"
+    name: "Survey Guy"
+    aka: "SG"
+    role: "protagonist"
+    importance: 1
+    headSize: "LARGE"
+    headShape: "oval"
+    headVariants: "hair-line"
+    attire:
+      shirt: "blue-long-sleeve"
+      tie: "bent-diagonal"
+    voice:
+      gender: "male"
+      age: "30s"
+      quality: "slightly nasal"
+    emotionArc:
+      - timeRange: "0-4s"
+        emotion: "distressed"
+        posture: "climbing"
+        details: "climbing hesitantly, panting"
+      - timeRange: "4-14s"
+        emotion: "defensive"
+        posture: "standing-on-ledge"
+        details: "responding sharply, denying family"
+      - timeRange: "14-26s"
+        emotion: "raw"
+        posture: "standing-on-ledge"
+        details: "becoming honest, voice cracks"
+      - timeRange: "26-40s"
+        emotion: "anguished"
+        posture: "standing-on-ledge"
+        details: "bitter complaint about job"
+      - timeRange: "40-46s"
+        emotion: "contemplative"
+        posture: "standing-on-ledge"
+        details: "processing Worried Man's logic"
+      - timeRange: "46-53s"
+        emotion: "accepting"
+        posture: "standing-on-ledge"
+        details: "resigned, considers offer"
 
-## Generic Metadata (Reusable Rules for Any Stick Movie)
-metadata:
-  emotions: meta.gen.emotions.md
-  emotions_stick: meta.gen.stick.emotions.md
-  movement: meta.gen.stick.movement.md
-  bridge_general: meta.gen.component.bridge.md
-  bridge_stick: meta.gen.stick.component.bridge.md
-  describs:
-    - meta.gen.emotions.md
-    - meta.gen.stick.emotions.md
-    - meta.gen.stick.movement.md
+  - id: "char2"
+    name: "Worried Man"
+    aka: "WM"
+    role: "support"
+    importance: 1
+    headSize: "LONG"
+    headShape: "oval-elongated"
+    headVariants: "none"
+    attire:
+      shirt: "casual"
+      tie: "none"
+    voice:
+      gender: "male"
+      age: "24"
+      quality: "clear, direct, urgent"
+    emotionArc:
+      - timeRange: "9-14s"
+        emotion: "worried"
+        posture: "standing"
+        details: "first plea about wife/children"
+      - timeRange: "19-23s"
+        emotion: "desperate"
+        posture: "standing"
+        details: "escalating second plea"
+      - timeRange: "26-30s"
+        emotion: "desperate"
+        posture: "standing"
+        details: "third plea, peak desperation"
+      - timeRange: "40-46s"
+        emotion: "logical"
+        posture: "standing"
+        details: "practical advice, reasoning pivot"
+      - timeRange: "46-51s"
+        emotion: "cunning"
+        posture: "standing"
+        details: "punchline delivery with clarity"
 
-## VidData Files (Compiled Animation Data)
-viddata:
-  scenes: vidData/scenes.json
-  characters: vidData/characters.json
-  locations: vidData/locations.json
+locations:
+  - id: "loc_bridge_below"
+    name: "River Below Bridge"
+    camera:
+      position: "riverside-ground"
+      angle: "looking-up"
+      target: "bridge-and-character"
+    elements:
+      - "suspension-bridge"
+      - "fence-railing"
+      - "suspender-cables"
+    lighting: "daytime-overcast"
+    description: "Looking up at bridge from riverside, seeing character climbing on fence"
 
-## File Paths
-file_paths:
-  basePath: ./describ/
+  - id: "loc_bridge_top"
+    name: "Bridge Top View"
+    camera:
+      position: "bridge-level"
+      angle: "looking-down"
+      target: "riverside"
+    elements:
+      - "suspension-bridge"
+      - "river"
+      - "distant-character"
+    lighting: "daytime-overcast"
+    description: "Standing on bridge looking down at riverside and distant character"
 
-## Status & Build Info
+scenes:
+  - id: "scene1"
+    number: 1
+    name: "EXT. SUSPENSION BRIDGE - DAY"
+    duration:
+      start: 0.0
+      end: 53.0
+    location: "loc_bridge"
+    shots:
+      - id: "shot1"
+        number: 1
+        name: "credits"
+        timeRange:
+          start: 0.0
+          end: 2.0
+        camera:
+          pov: "credits-screen"
+          angle: "centered"
+        characters: []
+        dialogue: []
+        captions:
+          position: "center"
+          text: |
+            The Survey Guy
+
+            Starring:
+            Harold Purpleman - The Survey Guy
+            Juan Herstick - The Worried Man
+
+            Created and Edited by Moussa Yashir
+            Produced by Describabble
+            Released Unlicensed Sept 2026
+        audio:
+          - type: "ambient"
+            description: "continued traffic"
+            volume: 0.3
+
+      - id: "shot2"
+        number: 2
+        name: "climbing"
+        timeRange:
+          start: 0.0
+          end: 4.0
+        camera:
+          pov: "from-below"
+          location: "loc_bridge_below"
+        characters:
+          - id: "char1"
+            position: "fence-climbing"
+            emotion: "distressed"
+            posture: "climbing"
+            details: "panting, hesitant motion"
+        movement:
+          character: "char1"
+          type: "climbing"
+          description: "climbing up fence from bridge, hands gripping, legs bent"
+          keyframes:
+            - time: 0.0
+              position: "fence-bottom"
+            - time: 4.0
+              position: "fence-top"
+        dialogue: []
+        captions:
+          position: "bottom"
+          text: "EXT. SUSPENSION BRIDGE - DAY"
+        audio:
+          - type: "ambient"
+            description: "traffic sounds"
+            volume: 0.4
+          - type: "character"
+            description: "panting, breathing heavily"
+            volume: 0.6
+          - type: "foley"
+            description: "climbing sounds, hands gripping metal"
+            volume: 0.4
+
+      - id: "shot3"
+        number: 3
+        name: "WM1_Wife"
+        timeRange:
+          start: 9.0
+          end: 14.0
+        camera:
+          pov: "from-bridge"
+          location: "loc_bridge_top"
+        characters:
+          - id: "char2"
+            position: "standing-on-bridge"
+            emotion: "worried"
+            posture: "standing"
+            expression: "eyebrows-up"
+        dialogue:
+          - speaker: "char2"
+            text: "Think about your wife! Think about your children!"
+            startTime: 9.0
+            endTime: 14.0
+            delivery: "shouting-urgent"
+            tone: "emotional"
+        captions:
+          position: "top"
+          text: "Worried Man: Think about your wife! Think about your children!"
+        audio:
+          - type: "character"
+            description: "shouting distance clarity"
+            volume: 0.8
+
+      - id: "shot4"
+        number: 4
+        name: "SG1_NoWife"
+        timeRange:
+          start: 14.0
+          end: 19.0
+        camera:
+          pov: "from-below"
+          location: "loc_bridge_below"
+        characters:
+          - id: "char1"
+            position: "standing-on-fence"
+            emotion: "defensive"
+            posture: "standing"
+            expression: "eyes-wide"
+        dialogue:
+          - speaker: "char1"
+            text: "I don't have a wife! I don't have kids!"
+            startTime: 14.0
+            endTime: 19.0
+            delivery: "shouting-defensive"
+            tone: "emphatic"
+        captions:
+          position: "bottom"
+          text: "Survey Guy: I don't have a wife! I don't have kids!"
+        audio:
+          - type: "character"
+            description: "shouting back, defensive"
+            volume: 0.8
+
+      - id: "shot5"
+        number: 5
+        name: "WM2_Parents"
+        timeRange:
+          start: 19.0
+          end: 23.0
+        camera:
+          pov: "from-bridge"
+          location: "loc_bridge_top"
+        characters:
+          - id: "char2"
+            position: "standing-on-bridge"
+            emotion: "desperate"
+            posture: "standing"
+            expression: "eyebrows-down"
+        dialogue:
+          - speaker: "char2"
+            text: "Think about your parents!"
+            startTime: 19.0
+            endTime: 23.0
+            delivery: "shouting-desperate"
+            tone: "escalating"
+        captions:
+          position: "top"
+          text: "Worried Man: Think about your parents!"
+        audio:
+          - type: "character"
+            description: "shouting, escalating intensity"
+            volume: 0.85
+
+      - id: "shot6"
+        number: 6
+        name: "SG2_NoParents"
+        timeRange:
+          start: 23.0
+          end: 26.0
+        camera:
+          pov: "from-below"
+          location: "loc_bridge_below"
+        characters:
+          - id: "char1"
+            position: "standing-on-fence"
+            emotion: "anguished"
+            posture: "standing"
+            expression: "mouth-open"
+        dialogue:
+          - speaker: "char1"
+            text: "I don't have parents!"
+            startTime: 23.0
+            endTime: 26.0
+            delivery: "shouting-raw"
+            tone: "emotional"
+        captions:
+          position: "bottom"
+          text: "Survey Guy: I don't have parents!"
+        audio:
+          - type: "character"
+            description: "shouting, raw and honest"
+            volume: 0.8
+
+      - id: "shot7"
+        number: 7
+        name: "WM3_Future"
+        timeRange:
+          start: 26.0
+          end: 30.0
+        camera:
+          pov: "from-bridge"
+          location: "loc_bridge_top"
+        characters:
+          - id: "char2"
+            position: "standing-on-bridge"
+            emotion: "desperate"
+            posture: "standing"
+        dialogue:
+          - speaker: "char2"
+            text: "Think about your future!"
+            startTime: 26.0
+            endTime: 30.0
+            delivery: "shouting-peak"
+            tone: "maximum-intensity"
+        captions:
+          position: "top"
+          text: "Worried Man: Think about your future!"
+        audio:
+          - type: "character"
+            description: "shouting at maximum volume"
+            volume: 0.9
+
+      - id: "shot8"
+        number: 8
+        name: "SG3_NoFuture"
+        timeRange:
+          start: 30.0
+          end: 40.0
+        camera:
+          pov: "from-below"
+          location: "loc_bridge_below"
+        characters:
+          - id: "char1"
+            position: "standing-on-fence"
+            emotion: "anguished"
+            posture: "standing"
+            expression: "mouth-open"
+        dialogue:
+          - speaker: "char1"
+            text: "What future?! I have no future. I'm a phone rep survey guy! Everybody hates surveys. They hear me talk and want to die!"
+            startTime: 30.0
+            endTime: 40.0
+            delivery: "shouting-bitter"
+            tone: "anguished-bitter"
+        captions:
+          position: "bottom"
+          text: "Survey Guy: What future? I have no future..."
+        audio:
+          - type: "character"
+            description: "shouting with pain and irony"
+            volume: 0.85
+
+      - id: "shot9"
+        number: 9
+        name: "WM4_LogicPivot"
+        timeRange:
+          start: 40.0
+          end: 46.0
+        camera:
+          pov: "from-bridge"
+          location: "loc_bridge_top"
+        characters:
+          - id: "char2"
+            position: "standing-on-bridge"
+            emotion: "logical"
+            posture: "standing"
+            expression: "mouth-straight"
+        dialogue:
+          - speaker: "char2"
+            text: "So change your job. You're not that stupid that you can't do anything else, right?"
+            startTime: 40.0
+            endTime: 46.0
+            delivery: "shouting-measured"
+            tone: "logical"
+        captions:
+          position: "top"
+          text: "Worried Man: So change your job..."
+        audio:
+          - type: "character"
+            description: "shouting but with logical tone"
+            volume: 0.75
+
+      - id: "shot10"
+        number: 10
+        name: "Punchline"
+        timeRange:
+          start: 46.0
+          end: 51.0
+        camera:
+          pov: "from-bridge"
+          location: "loc_bridge_top"
+        characters:
+          - id: "char2"
+            position: "standing-on-bridge"
+            emotion: "cunning"
+            posture: "standing"
+            expression: "subtle-smile"
+        dialogue:
+          - speaker: "char2"
+            text: "Before you step down from the bridge, would you be willing to reply to a short survey?"
+            startTime: 46.0
+            endTime: 51.0
+            delivery: "clear-measured"
+            tone: "dark-humor"
+        captions:
+          position: "top"
+          text: "Worried Man: Before you step down... would you reply to a short survey?"
+        audio:
+          - type: "character"
+            description: "clarity wins over volume, measured delivery"
+            volume: 0.6
+
+      - id: "shot11"
+        number: 11
+        name: "Resolution"
+        timeRange:
+          start: 51.0
+          end: 53.0
+        camera:
+          pov: "cut-to-black"
+        characters: []
+        dialogue: []
+        captions:
+          position: "none"
+          text: ""
+        audio:
+          - type: "foley"
+            description: "loud splash sound effect"
+            volume: 1.0
+          - type: "effect"
+            description: "water hitting, splash impact"
+            volume: 0.9
+
 status:
   ready: true
-  lastBuilt: 2025-09-14
-  buildTool: stickmake v0.1.4
-  player: stickvid v0.1.4
+  lastBuilt: "2025-09-14"
+  buildTool: "stickmake v0.1.9"
+  player: "stickvid v0.1.9"
 
-## License & Attribution
-license: Unlicense (Free and Open Source)
-creator: Moussa Yashir
-production: Describabble
-characters:
-  - Survey Guy (Harold Purpleman)
-  - Worried Man (Juan Herstick)
+notes:
+  - "Credits shot not visible in current player - placeholder for future"
+  - "POV switches occur at speaker boundaries"
+  - "Character never both visible simultaneously (alternating POVs)"
+  - "Ending (splash) implies ambiguous but comedic resolution"

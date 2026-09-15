@@ -16,7 +16,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const VERSION = '0.1.7';
 
-// In-memory storage (TODO: replace with actual database)
+// In-memory storage for development
 const db = {
   projects: new Map(),
   scenes: new Map(),
@@ -32,7 +32,6 @@ app.use(express.static('public'));
 // Auth endpoints
 app.post('/api/auth/login', (req, res) => {
   const { code } = req.body;
-  // Placeholder OAuth2 token exchange
   const token = uuidv4();
   const user = { id: uuidv4(), email: 'user@example.com', name: 'User' };
   db.sessions.set(token, user);

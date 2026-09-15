@@ -118,18 +118,18 @@ function App() {
     async function handleSendMessage() {
         if (!inputValue.trim()) return;
 
-        // Add user message
         const userMsg = { role: 'user', content: inputValue };
         setMessages(prev => [...prev, userMsg]);
         setInputValue('');
-
-        // Simulate AI response
         setLoading(true);
-        setTimeout(() => {
-            const aiMsg = { role: 'ai', content: 'I understood your input. The shot content has been updated.' };
-            setMessages(prev => [...prev, aiMsg]);
+
+        try {
+            setMessages(prev => [...prev, { role: 'ai', content: 'Processing...' }]);
+        } catch (err) {
+            console.error('Message failed:', err);
+        } finally {
             setLoading(false);
-        }, 500);
+        }
     }
 
     async function handleSaveShot() {

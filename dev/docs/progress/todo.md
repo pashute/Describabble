@@ -14,6 +14,36 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
 --- text may begin 2 lines below this line ---
 
 
+# Task 0 - surveyGuy v0.1.9: Standardize .vid + Fix Animation + Align Describ
+
+## T0.1 Standardize surveyGuy.vid to clean YAML format (v0.1.9)
+- [v] Read current .vid file (surveyGuy.vid v0.1.4)
+- [v] Create proper YAML schema: movie metadata, scenes, shots, characters, locations, dialogue, audio
+- [v] Extract all data from current file into structured format
+- [v] Ensure human-readable (comments, clear nesting)
+- [v] Validate against describ.md structure
+
+## T0.2 Fix stickvid player to animate correctly
+- [v] Read current stickvid player code (v0.1.8)
+- [v] Implement hand/leg movement (climbing animation for shot 2)
+- [v] Implement camera POV switching (from.Below, from.Bridge)
+- [v] Parse and render stick figures from .vid data
+- [v] Rewrite player.js v0.1.9 to read YAML .vid format
+
+## T0.3 Align describ files with describ.md spec
+- [v] Review describ.md for file naming/structure requirements
+- [v] Rename describ files to match spec (.meta., .desc., .trans. patterns)
+- [v] Remove duplicate meta.gen.* files
+- [v] Update surveyGuy.vid to reference new file names
+
+## T0.4 Ensure backwards compatibility with stickmake
+- [v] Rewrite stickmake v0.1.9 to generate standardized YAML .vid format
+- [v] Implement manifest generation from describ data
+- [v] Add validation endpoint for .vid compliance
+- [v] Update to use js-yaml for proper YAML handling
+
+---
+
 # Batch Sept15 - Stick Project: Documentation & stickchat Implementation
 
 ## B.Sept15.1 Documentation Foundation - Consolidate stickTech

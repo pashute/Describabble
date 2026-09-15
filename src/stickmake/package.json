@@ -1,7 +1,7 @@
 {
   "name": "stickmake",
-  "version": "0.1.3",
-  "description": "Backend translator - converts describ files to vidData JSON for Describabble",
+  "version": "0.1.9",
+  "description": "Backend translator - converts describ files to .vid YAML manifests for Describabble",
   "type": "module",
   "main": "server.js",
   "scripts": {
@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "express": "^4.18.2",
-    "@google/generative-ai": "^0.1.3",
     "dotenv": "^16.0.3",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "js-yaml": "^4.1.0"
   },
   "devDependencies": {},
   "keywords": ["describabble", "translator", "describ", "viddata", "gemini", "unlicense"],
