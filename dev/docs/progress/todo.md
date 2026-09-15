@@ -15,7 +15,7 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
 
 ## B.0141.1 Animation & Rendering Enhancements (v0.1.40→0.1.41)
 
-# Batch 1.53 fixes from 1.52 (Not the developer added a version)
+# Batch 1.53 fixes from 1.52 (Note the developer added a version)
 - reminders: 
   - all fixes start with .vid. nothing hardcoded in player. 
   - No numbers in .vid only descriptions.
@@ -91,11 +91,11 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
     - top: the concave suspension rope
     - mid: the fence top-rail
     - bot: the bridge floor,  shown somewhat above the bottom of the frame
-- [>] 7.2.2  fix in shot 2 (climbing) during climb body (central stick) should sway this way and that with every "step" upwards. The lean-direction should be recorded.
+- [v] 7.2.2  fix in shot 2 (climbing) during climb body (central stick) should sway this way and that with every "step" upwards. The lean-direction should be recorded.
   - reason wasn't working: body lean animation added to .vid but never rendered in player.js
-  - what was done: need to implement body rotation rendering in drawStickFigure during climbing
-- [>] 7.2.2  fix in shot 2 (climbing) once reaches end of climb, one of the arms goes 30 degrees down from its side clamping the fence.
-  - need to implement clamping arm rendering in player.js
+  - what was done: implemented body rotation rendering in drawClimbingFigure - toggles left/right 15° angles based on leanCycle
+- [v] 7.2.2  fix in shot 2 (climbing) once reaches end of climb, one of the arms goes 30 degrees down from its side clamping the fence.
+  - what was done: implemented clamping arm rendering in drawStandingFigure - one arm at 120° (90° side + 30° down) grips fence
 - [v] 7.2.3 This position can now be defined as hanging from fence. it is called the Climbed-position. 
 
 - [ ] 7.2.4  The bridge in following SG scenes will be further away, with more of it in the view.  Blue sky fills in between all lines except single cloud and SG. (as we'll see further down) SG will be shown very slightly smaller. 
