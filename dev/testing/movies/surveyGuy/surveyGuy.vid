@@ -251,6 +251,12 @@ scenes:
         camera:
           pov: "from-below"
           location: "loc_bridge_below"
+        sky:
+          color: "#87CEEB"
+          cloud:
+            position: "left"
+            size: "small"
+            color: "white"
         characters:
           - id: "char1"
             location: "new"
@@ -374,6 +380,12 @@ scenes:
           pov: "from-below"
           location: "loc_bridge_below"
           perspective: "looking-up-at-char1-on-fence"
+        sky:
+          color: "#87CEEB"
+          cloud:
+            position: "center-left"
+            size: "small"
+            color: "white"
         characters:
           - id: "char1"
             location: "climbed"
@@ -482,6 +494,12 @@ scenes:
           pov: "from-below"
           location: "loc_bridge_below"
           perspective: "looking-up-at-char1-on-fence"
+        sky:
+          color: "#87CEEB"
+          cloud:
+            position: "center-right"
+            size: "small"
+            color: "white"
         characters:
           - id: "char1"
             location: "climbed"
@@ -589,6 +607,12 @@ scenes:
           pov: "from-below"
           location: "loc_bridge_below"
           perspective: "looking-up-at-char1-on-fence"
+        sky:
+          color: "#87CEEB"
+          cloud:
+            position: "right"
+            size: "small"
+            color: "white"
         characters:
           - id: "char1"
             location: "climbed"
@@ -695,6 +719,9 @@ scenes:
           pov: "from-below"
           location: "loc_bridge_below"
           perspective: "looking-up-at-char1-on-fence"
+        sky:
+          color: "#87CEEB"
+          cloud: null
         characters:
           - id: "char1"
             location: "climbed"

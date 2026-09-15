@@ -257,7 +257,8 @@ class StickVidPlayer {
     }
 
     renderBackground(shot) {
-        this.ctx.fillStyle = '#f5f5f5';
+        const skyColor = shot.sky?.color || '#f5f5f5';
+        this.ctx.fillStyle = skyColor;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         if (shot.camera?.pov === 'cut-to-black') {
@@ -266,9 +267,38 @@ class StickVidPlayer {
             return;
         }
 
+        if (shot.sky?.cloud) {
+            this.renderCloud(shot.sky.cloud);
+        }
+
         if (shot.camera?.pov !== 'credits-screen') {
             this.drawBridge(shot);
         }
+    }
+
+    renderCloud(cloudData) {
+        const cloudRadius = 20;
+        const cloudColor = cloudData.color || '#FFFFFF';
+        const positionMap = {
+            'left': 150,
+            'center-left': 320,
+            'center-right': 640,
+            'right': 810
+        };
+
+        const cloudX = positionMap[cloudData.position] || 400;
+        const cloudY = 80;
+
+        this.ctx.fillStyle = cloudColor;
+        this.ctx.beginPath();
+        this.ctx.arc(cloudX - 10, cloudY, cloudRadius * 0.6, 0, Math.PI * 2);
+        this.ctx.fill();
+        this.ctx.beginPath();
+        this.ctx.arc(cloudX + 10, cloudY, cloudRadius * 0.7, 0, Math.PI * 2);
+        this.ctx.fill();
+        this.ctx.beginPath();
+        this.ctx.arc(cloudX, cloudY - 8, cloudRadius * 0.65, 0, Math.PI * 2);
+        this.ctx.fill();
     }
 
     drawBridge(shot) {
