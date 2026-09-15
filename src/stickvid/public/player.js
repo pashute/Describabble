@@ -538,6 +538,8 @@ class StickVidPlayer {
         const isFromAbove = charData.pov === 'from-above' || charData.pov === 'from-bridge';
         const legLength = isFromAbove ? 5 * scale : 30 * scale;
         const isWaving = charData.isWaving || renderStyle.armAnimation === 'flailing-extended';
+        const climbedPos = charData.climbedPosition;
+        const hasBodyLean = climbedPos && (climbedPos.bodyLean === 'left' || climbedPos.bodyLean === 'right');
 
         this.ctx.beginPath();
         this.ctx.arc(x, y, headSize, 0, Math.PI * 2);
@@ -616,10 +618,33 @@ class StickVidPlayer {
             this.ctx.stroke();
         }
 
+        const bodyStartX = x;
+        const bodyStartY = y + headSize;
+        const bodyEndX = x;
+        const bodyEndY = y + headSize + bodyHeight;
+
+        let leanRad = 0;
+        let bodyMidX = (bodyStartX + bodyEndX) / 2;
+        let bodyMidY = (bodyStartY + bodyEndY) / 2;
+
+        if (hasBodyLean) {
+            const leanDegrees = climbedPos.leanDegrees || 30;
+            const leanAngle = climbedPos.bodyLean === 'left' ? -leanDegrees : leanDegrees;
+            leanRad = leanAngle * Math.PI / 180;
+
+            this.ctx.save();
+            this.ctx.translate(bodyMidX, bodyMidY);
+            this.ctx.rotate(leanRad);
+            this.ctx.translate(-bodyMidX, -bodyMidY);
+        }
+
         this.ctx.beginPath();
-        this.ctx.moveTo(x, y + headSize);
-        this.ctx.lineTo(x, y + headSize + bodyHeight);
+        this.ctx.moveTo(bodyStartX, bodyStartY);
+        this.ctx.lineTo(bodyEndX, bodyEndY);
         this.ctx.stroke();
+
+        const clampingArm = charData.climbedPosition?.clamping;
+        const hasClampingArm = clampingArm === 'left' || clampingArm === 'right';
 
         if (isWaving) {
             const waveAngle = Math.sin(this.currentTime * 8) * 30 * scale;
@@ -634,6 +659,32 @@ class StickVidPlayer {
             this.ctx.moveTo(x, y + headSize + 10 * scale);
             this.ctx.lineTo(x + armLength - Math.cos(waveRad) * 12 * scale, y + headSize + 10 * scale - Math.sin(waveRad) * 12 * scale);
             this.ctx.stroke();
+        } else if (hasClampingArm) {
+            const clampingArmLength = 25 * scale;
+            const clampingAngleDegrees = 120; // 90 degrees (side) + 30 degrees downward
+            const clampingAngleRad = clampingAngleDegrees * Math.PI / 180;
+
+            if (clampingArm === 'left') {
+                this.ctx.beginPath();
+                this.ctx.moveTo(x, y + headSize + 10 * scale);
+                this.ctx.lineTo(x - clampingArmLength * Math.cos(clampingAngleRad), y + headSize + 10 * scale + clampingArmLength * Math.sin(clampingAngleRad));
+                this.ctx.stroke();
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(x, y + headSize + 10 * scale);
+                this.ctx.lineTo(x + armLength, y + headSize);
+                this.ctx.stroke();
+            } else {
+                this.ctx.beginPath();
+                this.ctx.moveTo(x, y + headSize + 10 * scale);
+                this.ctx.lineTo(x - armLength, y + headSize);
+                this.ctx.stroke();
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(x, y + headSize + 10 * scale);
+                this.ctx.lineTo(x + clampingArmLength * Math.cos(clampingAngleRad), y + headSize + 10 * scale + clampingArmLength * Math.sin(clampingAngleRad));
+                this.ctx.stroke();
+            }
         } else {
             this.ctx.beginPath();
             this.ctx.moveTo(x, y + headSize + 10 * scale);
@@ -685,6 +736,10 @@ class StickVidPlayer {
             this.ctx.lineTo(x + 15 * scale, y + headSize + bodyHeight + legLength);
             this.ctx.stroke();
         }
+
+        if (hasBodyLean) {
+            this.ctx.restore();
+        }
     }
 
     drawClimbingFigure(x, y, headSize, charData, progress, scale = 1) {
@@ -698,8 +753,20 @@ class StickVidPlayer {
         this.ctx.arc(x, adjY, headSize, 0, Math.PI * 2);
         this.ctx.stroke();
 
-        // Diagonal body
-        const bodyX = x + 8 * scale * Math.sin(bodyAngle * Math.PI / 180);
+        // Diagonal body with body lean animation
+        let bodyLeanAngle = 0;
+        if (charData.animation?.bodyLean === 'toggle') {
+            const leanCycle = charData.animation.leanCycle || 0.5;
+            const leanPhase = Math.floor(this.currentTime / leanCycle) % 2;
+            const leanAngles = charData.animation.leanAngles || [
+                { direction: 'left', degrees: 15 },
+                { direction: 'right', degrees: 15 }
+            ];
+            const currentLeanAngle = leanPhase === 0 ? leanAngles[0] : leanAngles[1];
+            bodyLeanAngle = currentLeanAngle.direction === 'left' ? -currentLeanAngle.degrees : currentLeanAngle.degrees;
+        }
+
+        const bodyX = x + 8 * scale * Math.sin((bodyAngle + bodyLeanAngle) * Math.PI / 180);
         const bodyEndX = bodyX + 15 * scale;
         const bodyEndY = adjY + headSize + bodyHeight;
 
