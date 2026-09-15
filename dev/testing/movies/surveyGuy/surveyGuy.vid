@@ -377,7 +377,7 @@ scenes:
         characters:
           - id: "char1"
             location: "climbed"
-            position: "standing-on-fence"
+            position: "hanging-from-fence"
             emotion: "defensive"
             posture: "standing"
             expression: "eyebrows-down"
@@ -441,7 +441,7 @@ scenes:
         characters:
           - id: "char1"
             location: "continued"
-            position: "standing-on-fence"
+            position: "hanging-from-fence"
             emotion: "defensive"
             posture: "standing"
           - id: "char2"
@@ -484,7 +484,7 @@ scenes:
         characters:
           - id: "char1"
             location: "continued"
-            position: "standing-on-fence"
+            position: "hanging-from-fence"
             emotion: "anguished"
             posture: "standing"
             expression: "mouth-open"
@@ -543,7 +543,7 @@ scenes:
         characters:
           - id: "char1"
             location: "continued"
-            position: "standing-on-fence"
+            position: "hanging-from-fence"
             emotion: "anguished"
             posture: "standing"
           - id: "char2"
@@ -585,7 +585,7 @@ scenes:
         characters:
           - id: "char1"
             location: "continued"
-            position: "standing-on-fence"
+            position: "hanging-from-fence"
             emotion: "anguished"
             posture: "standing"
             expression: "eyebrows-down"
@@ -644,7 +644,7 @@ scenes:
         characters:
           - id: "char1"
             location: "continued"
-            position: "standing-on-fence"
+            position: "hanging-from-fence"
             emotion: "contemplative"
             posture: "standing"
           - id: "char2"
@@ -685,7 +685,7 @@ scenes:
         characters:
           - id: "char1"
             location: "continued"
-            position: "standing-on-fence"
+            position: "hanging-from-fence"
             emotion: "contemplative"
             posture: "standing"
             expression: "mouth-tilde"
@@ -737,7 +737,7 @@ scenes:
         characters:
           - id: "char1"
             location: "continued"
-            position: "standing-on-fence"
+            position: "hanging-from-fence"
             emotion: "accepting"
             posture: "standing"
           - id: "char2"
