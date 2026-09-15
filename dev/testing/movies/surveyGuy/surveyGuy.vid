@@ -809,14 +809,20 @@ scenes:
               armAnimation: "flailing-extended"
         dialogue:
           - speaker: "char2"
-            text: "Before you step down, would you reply to a short survey?"
+            text: "Before you step down, would you mind taking a short survey?"
             startTime: 53.0
-            endTime: 58.5
+            endTime: 58.0
             delivery: "clear-measured"
             tone: "dark-humor"
+          - speaker: "char2"
+            text: ""
+            startTime: 58.0
+            endTime: 59.0
+            delivery: "pause"
+            tone: "anticipation"
         captions:
           position: "bottom"
-          text: "Before you step down, would you reply to a short survey?"
+          text: "Before you step down, would you mind taking a short survey?"
 
       - id: "shot12"
         number: 12
