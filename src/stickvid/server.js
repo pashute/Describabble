@@ -1,6 +1,6 @@
-// Filename: server.js v0.1.7
+// Filename: server.js v0.1.25
 // stickvid - Frontend web app for HTML5 Canvas stick figure animation playback
-// Loads vidData JSON and renders animations
+// Loads vidData YAML and renders animations
 // Unlicense - Free and Open Source
 
 import express from 'express';
@@ -14,7 +14,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3003;
-const VERSION = '0.1.8';
+const VERSION = '0.1.39';
 
 app.use(cors());
 app.use(express.json());

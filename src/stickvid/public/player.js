@@ -1,4 +1,4 @@
-// Filename: player.js v0.1.9
+// Filename: player.js v0.1.39
 // stickvid - Stick figure animation player with full control set
 // Renders complex animations from standardized YAML .vid manifest files
 
@@ -13,9 +13,24 @@ class StickVidPlayer {
         this.vidLoader = null;
         this.animationFrameId = null;
         this.lastFrameTime = 0;
+        this.characterPositions = {};
+        this.captionRules = {
+            showSpeakerName: false,
+            audioFormat: 'parentheses'
+        };
+        this.voices = {};
+        this.currentNarrationUtterance = null;
+        this.lastSpokenTime = -1;
+        this.isSpeaking = false;
+        this.lastShotId = null;
 
         this.setupEventListeners();
         this.disableControls();
+        this.initSpeechSynthesis();
+    }
+
+    initSpeechSynthesis() {
+        this.synth = window.speechSynthesis;
     }
 
     setupEventListeners() {
@@ -35,13 +50,15 @@ class StickVidPlayer {
 
     disableControls() {
         ['firstBtn', 'prevBtn', 'stopBtn', 'playPauseBtn', 'nextBtn', 'lastBtn'].forEach(id => {
-            document.getElementById(id).disabled = true;
+            const btn = document.getElementById(id);
+            if (btn) btn.disabled = true;
         });
     }
 
     enableControls() {
         ['firstBtn', 'prevBtn', 'stopBtn', 'playPauseBtn', 'nextBtn', 'lastBtn'].forEach(id => {
-            document.getElementById(id).disabled = false;
+            const btn = document.getElementById(id);
+            if (btn) btn.disabled = false;
         });
     }
 
@@ -57,6 +74,17 @@ class StickVidPlayer {
             const content = await file.text();
             this.vidLoader = new VidLoader();
             this.manifest = this.vidLoader.parse(content);
+
+            if (this.manifest.meta?.gen?.captions) {
+                this.captionRules = {
+                    showSpeakerName: this.manifest.meta.gen.captions.showSpeakerName ?? false,
+                    audioFormat: this.manifest.meta.gen.captions.audioFormat ?? 'parentheses'
+                };
+            }
+
+            if (this.manifest.voices) {
+                this.voices = this.manifest.voices;
+            }
 
             const movieInfo = this.vidLoader.getMovieInfo();
             document.getElementById('status').textContent = `Loaded: ${movieInfo.title}`;
@@ -93,6 +121,9 @@ class StickVidPlayer {
     stop() {
         this.isPlaying = false;
         this.currentTime = 0;
+        this.lastSpokenTime = -1;
+        this.lastShotId = null;
+        if (this.synth) this.synth.cancel();
         if (this.animationFrameId) cancelAnimationFrame(this.animationFrameId);
         this.render();
     }
@@ -200,6 +231,7 @@ class StickVidPlayer {
 
         this.renderBackground(currentShot);
         this.renderCharacters(currentShot);
+        this.renderNarration(currentShot);
         this.renderDialogue(currentShot);
         this.renderCaptions(currentShot);
     }
@@ -223,89 +255,178 @@ class StickVidPlayer {
         this.ctx.fillStyle = '#f5f5f5';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        if (shot.camera.pov === 'cut-to-black') {
+        if (shot.camera?.pov === 'cut-to-black') {
             this.ctx.fillStyle = '#000';
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
             return;
         }
 
-        if (shot.camera.pov === 'credits-screen') {
-            return;
+        if (shot.camera?.pov !== 'credits-screen') {
+            this.drawBridge(shot);
         }
-
-        this.drawBridge(shot);
     }
 
     drawBridge(shot) {
-        const pov = shot.camera.pov;
+        const pov = shot.camera?.pov || 'from-below';
         const cx = this.canvas.width / 2;
         const cy = this.canvas.height / 2;
-
-        this.ctx.strokeStyle = '#333';
-        this.ctx.lineWidth = 3;
 
         if (pov === 'from-below') {
             this.drawBridgeFromBelow(cx, cy);
         } else if (pov === 'from-bridge') {
-            this.drawBridgeFromAbove(cx, cy);
+            this.drawBridgeFromEnvironment(shot.camera?.environment);
         }
+    }
+
+    drawBridgeFromEnvironment(environment) {
+        if (!environment || !environment.layout) {
+            this.drawBridgeFromAbove(this.canvas.width / 2, this.canvas.height / 2);
+            return;
+        }
+
+        const layout = environment.layout;
+        const colorMap = {
+            'light-green': '#90EE90',
+            'light-blue': '#ADD8E6',
+            'gray': '#A9A9A9',
+            'silver': '#C0C0C0',
+            'dark-green': '#228B22'
+        };
+
+        // Calculate positions based on descriptions
+        const getPosition = (item) => {
+            let xPos = 0, width = 0;
+
+            if (item.position === 'left-side' && item.size === 'quarter') {
+                xPos = 0; width = 240;
+            } else if (item.position === 'center' && item.size === 'quarter') {
+                xPos = 240; width = 240;
+            } else if (item.position === 'right-of-river' && item.size === 'narrow') {
+                xPos = 480; width = 96;
+            } else if (item.position === 'right-side' && item.size === 'remaining') {
+                xPos = 576; width = 384;
+            }
+
+            return { xPos, width };
+        };
+
+        // Draw vertical elements
+        layout.forEach(item => {
+            if (item.element === 'grass-left' || item.element === 'grass-right' ||
+                item.element === 'river' || item.element === 'road') {
+                const { xPos, width } = getPosition(item);
+                this.ctx.fillStyle = colorMap[item.color] || item.color;
+                this.ctx.fillRect(xPos, 0, width, this.canvas.height - 50);
+            }
+        });
+
+        // Draw bridge at bottom
+        layout.forEach(item => {
+            if (item.element === 'bridge') {
+                const yPos = this.canvas.height - 40;
+                this.ctx.fillStyle = colorMap[item.color] || item.color;
+                this.ctx.fillRect(0, yPos, this.canvas.width, 40);
+
+                this.ctx.strokeStyle = '#333';
+                this.ctx.lineWidth = 2;
+                this.ctx.beginPath();
+                this.ctx.moveTo(0, yPos);
+                this.ctx.lineTo(this.canvas.width, yPos);
+                this.ctx.stroke();
+
+                for (let i = 0; i < this.canvas.width; i += 60) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(i, yPos);
+                    this.ctx.lineTo(i, yPos + 40);
+                    this.ctx.stroke();
+                }
+            }
+        });
+
+        // Draw tree top
+        layout.forEach(item => {
+            if (item.element === 'tree') {
+                this.drawTreeTop(528, 40);
+            }
+        });
     }
 
     drawBridgeFromBelow(cx, cy) {
-        this.ctx.fillStyle = '#e8e8e8';
-        this.ctx.fillRect(0, cy - 40, this.canvas.width, 80);
+        const ropeY = 120;
+        const fenceY = 280;
+        const bridgeFloorY = this.canvas.height - 140;
 
         this.ctx.strokeStyle = '#333';
+
+        this.ctx.lineWidth = 4;
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, ropeY);
+        const ropeControlX = cx;
+        const ropeControlY = ropeY + 50;
+        this.ctx.quadraticCurveTo(ropeControlX, ropeControlY, this.canvas.width, ropeY);
+        this.ctx.stroke();
+
+        this.ctx.lineWidth = 3;
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, fenceY);
+        this.ctx.lineTo(this.canvas.width, fenceY);
+        this.ctx.stroke();
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, bridgeFloorY);
+        this.ctx.lineTo(this.canvas.width, bridgeFloorY);
+        this.ctx.stroke();
+
+        const fencePoles = [100, 300, 650, 850];
         this.ctx.lineWidth = 2;
-        this.ctx.beginPath();
-        this.ctx.moveTo(0, cy - 40);
-        this.ctx.lineTo(this.canvas.width, cy - 40);
-        this.ctx.stroke();
-
-        this.ctx.beginPath();
-        this.ctx.moveTo(0, cy + 40);
-        this.ctx.lineTo(this.canvas.width, cy + 40);
-        this.ctx.stroke();
-
-        for (let i = 0; i < this.canvas.width; i += 40) {
+        fencePoles.forEach(x => {
             this.ctx.beginPath();
-            this.ctx.moveTo(i, cy - 40);
-            this.ctx.lineTo(i, cy + 40);
+            this.ctx.moveTo(x, fenceY);
+            this.ctx.lineTo(x, bridgeFloorY);
             this.ctx.stroke();
-        }
+        });
 
-        this.ctx.strokeStyle = '#666';
-        this.ctx.lineWidth = 1;
-        for (let i = 0; i < this.canvas.width; i += 80) {
-            for (let j = cy - 40; j <= cy + 40; j += 10) {
-                this.ctx.beginPath();
-                this.ctx.moveTo(i, j);
-                this.ctx.lineTo(i + 5, j);
-                this.ctx.stroke();
-            }
-        }
+        const suspenderPositions = [80, 200, 740, 860];
+        this.ctx.lineWidth = 1.5;
+        suspenderPositions.forEach(x => {
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, ropeY);
+            this.ctx.lineTo(x, fenceY);
+            this.ctx.stroke();
+        });
     }
 
     drawBridgeFromAbove(cx, cy) {
-        this.ctx.fillStyle = '#b0e0e6';
-        this.ctx.fillRect(0, cy, this.canvas.width, this.canvas.height - cy);
+        const bridgeY = this.canvas.height - 80;
+        const roadY = this.canvas.height - 120;
+        const riverY = this.canvas.height - 40;
+
+        this.ctx.fillStyle = '#4a90e2';
+        this.ctx.fillRect(0, riverY, this.canvas.width, this.canvas.height - riverY);
+
+        this.ctx.fillStyle = '#888';
+        this.ctx.fillRect(0, roadY, this.canvas.width, 40);
+
+        this.ctx.fillStyle = '#8b7355';
+        this.ctx.fillRect(0, bridgeY, this.canvas.width, 40);
 
         this.ctx.strokeStyle = '#333';
         this.ctx.lineWidth = 2;
         this.ctx.beginPath();
-        this.ctx.moveTo(0, cy);
-        this.ctx.lineTo(this.canvas.width, cy);
+        this.ctx.moveTo(0, bridgeY);
+        this.ctx.lineTo(this.canvas.width, bridgeY);
         this.ctx.stroke();
 
-        this.ctx.fillStyle = '#8b7355';
-        this.ctx.fillRect(0, cy - 20, this.canvas.width, 20);
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, roadY);
+        this.ctx.lineTo(this.canvas.width, roadY);
+        this.ctx.stroke();
 
         for (let i = 0; i < this.canvas.width; i += 60) {
-            this.ctx.strokeStyle = '#333';
-            this.ctx.lineWidth = 3;
+            this.ctx.lineWidth = 2;
             this.ctx.beginPath();
-            this.ctx.moveTo(i, cy - 20);
-            this.ctx.lineTo(i, cy - 5);
+            this.ctx.moveTo(i, bridgeY);
+            this.ctx.lineTo(i, bridgeY + 40);
             this.ctx.stroke();
         }
     }
@@ -313,141 +434,253 @@ class StickVidPlayer {
     renderCharacters(shot) {
         if (!shot.characters || shot.characters.length === 0) return;
 
-        const pov = shot.camera.pov;
+        const pov = shot.camera?.pov || 'from-below';
         const progress = (this.currentTime - shot.timeRange.start) / (shot.timeRange.end - shot.timeRange.start);
+        const cameraScale = shot.camera?.scale || 1;
 
-        shot.characters.forEach((charData, idx) => {
+        shot.characters.forEach((charData) => {
             const charDef = this.manifest.characters.find(c => c.id === charData.id);
             if (!charDef) return;
 
-            let x, y;
+            if (charData.location === 'continued') {
+                if (!this.characterPositions[charData.id]) return;
+                charData.position = this.characterPositions[charData.id];
+            } else if (charData.location === 'new') {
+                this.characterPositions[charData.id] = charData.position;
+            }
+
+            // Check if this character is currently speaking (arm-waving only for WM/char2)
+            const activeDialogue = shot.dialogue?.find(d =>
+                d.speaker === charData.id &&
+                this.currentTime >= d.startTime &&
+                this.currentTime < d.endTime
+            );
+            charData.isWaving = (charData.id === 'char2') && !!activeDialogue;
+
+            let x, y, scale = cameraScale;
+
             if (pov === 'from-below') {
-                x = this.canvas.width / 2 + (idx === 0 ? -80 : 80);
-                y = this.canvas.height / 2 - 20;
+                if (charData.position === 'fence-bottom') {
+                    x = this.canvas.width / 2;
+                    y = this.canvas.height - 140;
+                } else if (charData.position === 'fence-climbing' || charData.position === 'fence-top') {
+                    x = this.canvas.width / 2;
+                    y = this.canvas.height - 140;
+                } else if (charData.position === 'standing-on-fence') {
+                    x = this.canvas.width / 2;
+                    y = 240;
+                } else {
+                    x = this.canvas.width / 2;
+                    y = this.canvas.height / 2 - 50;
+                }
             } else if (pov === 'from-bridge') {
-                x = this.canvas.width / 2;
-                y = this.canvas.height / 2 + 100;
+                if (charData.position === 'fence-climbing' || charData.position === 'fence-top' || charData.position === 'standing-on-fence') {
+                    x = this.canvas.width / 2;
+                    y = this.canvas.height - 100;
+                    scale = cameraScale * 0.7;
+                } else if (charData.position === 'standing-on-bridge') {
+                    x = 440;
+                    y = 325;
+                    scale = cameraScale * 0.9;
+                } else {
+                    x = this.canvas.width / 2;
+                    y = this.canvas.height / 2 - 50;
+                }
             } else {
                 x = this.canvas.width / 2;
                 y = this.canvas.height / 2;
             }
 
-            this.drawStickFigure(x, y, charDef, charData, progress, shot);
+            charData.pov = pov;
+            this.drawStickFigure(x, y, charDef, charData, progress, shot, scale);
         });
     }
 
-    drawStickFigure(x, y, charDef, charData, progress, shot) {
-        const headSize = this.getHeadSize(charDef.headSize);
+    drawStickFigure(x, y, charDef, charData, progress, shot, scale = 1) {
+        const headSizeType = charData.headSize || charDef.headSize;
+        const headSize = this.getHeadSize(headSizeType) * scale;
         const isClimbing = charData.posture === 'climbing';
 
         this.ctx.strokeStyle = '#333';
         this.ctx.fillStyle = '#333';
-        this.ctx.lineWidth = 2;
+        this.ctx.lineWidth = 2 * scale;
 
         if (isClimbing) {
-            this.drawClimbingFigure(x, y, headSize, charData, progress);
+            this.drawClimbingFigure(x, y, headSize, charData, progress, scale);
         } else {
-            this.drawStandingFigure(x, y, headSize, charData);
+            this.drawStandingFigure(x, y, headSize, charData, scale);
         }
     }
 
-    drawStandingFigure(x, y, headSize, charData) {
+    drawStandingFigure(x, y, headSize, charData, scale = 1) {
+        const bodyHeight = 40 * scale;
+        const armLength = 20 * scale;
+        const isFromAbove = charData.pov === 'from-bridge';
+        const legLength = isFromAbove ? 5 * scale : 30 * scale;
+        const isWaving = charData.isWaving || false;
+
         this.ctx.beginPath();
         this.ctx.arc(x, y, headSize, 0, Math.PI * 2);
         this.ctx.stroke();
 
         if (charData.expression === 'eyebrows-up') {
             this.ctx.beginPath();
-            this.ctx.moveTo(x - 8, y - 3);
-            this.ctx.lineTo(x - 5, y - 5);
+            this.ctx.moveTo(x - 8 * scale, y - 3 * scale);
+            this.ctx.lineTo(x - 5 * scale, y - 5 * scale);
             this.ctx.stroke();
             this.ctx.beginPath();
-            this.ctx.moveTo(x + 8, y - 3);
-            this.ctx.lineTo(x + 5, y - 5);
+            this.ctx.moveTo(x + 8 * scale, y - 3 * scale);
+            this.ctx.lineTo(x + 5 * scale, y - 5 * scale);
             this.ctx.stroke();
         } else if (charData.expression === 'eyebrows-down') {
             this.ctx.beginPath();
-            this.ctx.moveTo(x - 8, y - 5);
-            this.ctx.lineTo(x - 5, y - 3);
+            this.ctx.moveTo(x - 8 * scale, y - 5 * scale);
+            this.ctx.lineTo(x - 5 * scale, y - 3 * scale);
             this.ctx.stroke();
             this.ctx.beginPath();
-            this.ctx.moveTo(x + 8, y - 5);
-            this.ctx.lineTo(x + 5, y - 3);
+            this.ctx.moveTo(x + 8 * scale, y - 5 * scale);
+            this.ctx.lineTo(x + 5 * scale, y - 3 * scale);
             this.ctx.stroke();
         }
 
         if (charData.expression === 'mouth-open') {
             this.ctx.beginPath();
-            this.ctx.arc(x, y + 5, 4, 0, Math.PI);
+            this.ctx.arc(x, y + 5 * scale, 4 * scale, 0, Math.PI);
             this.ctx.stroke();
         } else if (charData.expression === 'subtle-smile') {
             this.ctx.beginPath();
-            this.ctx.arc(x, y + 5, 3, 0, Math.PI);
+            this.ctx.arc(x, y + 5 * scale, 3 * scale, 0, Math.PI);
             this.ctx.stroke();
         } else {
             this.ctx.beginPath();
-            this.ctx.moveTo(x - 5, y + 5);
-            this.ctx.lineTo(x + 5, y + 5);
+            this.ctx.moveTo(x - 5 * scale, y + 5 * scale);
+            this.ctx.lineTo(x + 5 * scale, y + 5 * scale);
             this.ctx.stroke();
         }
 
         this.ctx.beginPath();
         this.ctx.moveTo(x, y + headSize);
-        this.ctx.lineTo(x, y + headSize + 40);
+        this.ctx.lineTo(x, y + headSize + bodyHeight);
+        this.ctx.stroke();
+
+        if (isWaving) {
+            const waveAngle = Math.sin(this.currentTime * 8) * 30 * scale;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, y + headSize + 10 * scale);
+            this.ctx.lineTo(x - armLength + Math.cos(waveAngle * Math.PI / 180) * 10, y + headSize - Math.sin(waveAngle * Math.PI / 180) * 10);
+            this.ctx.stroke();
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, y + headSize + 10 * scale);
+            this.ctx.lineTo(x + armLength + Math.cos(-waveAngle * Math.PI / 180) * 10, y + headSize - Math.sin(-waveAngle * Math.PI / 180) * 10);
+            this.ctx.stroke();
+        } else {
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, y + headSize + 10 * scale);
+            this.ctx.lineTo(x - armLength, y + headSize);
+            this.ctx.stroke();
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, y + headSize + 10 * scale);
+            this.ctx.lineTo(x + armLength, y + headSize);
+            this.ctx.stroke();
+        }
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(x, y + headSize + bodyHeight);
+        this.ctx.lineTo(x - 15 * scale, y + headSize + bodyHeight + legLength);
         this.ctx.stroke();
 
         this.ctx.beginPath();
-        this.ctx.moveTo(x, y + headSize + 10);
-        this.ctx.lineTo(x - 20, y + headSize);
-        this.ctx.stroke();
-
-        this.ctx.beginPath();
-        this.ctx.moveTo(x, y + headSize + 10);
-        this.ctx.lineTo(x + 20, y + headSize);
-        this.ctx.stroke();
-
-        this.ctx.beginPath();
-        this.ctx.moveTo(x, y + headSize + 40);
-        this.ctx.lineTo(x - 15, y + headSize + 70);
-        this.ctx.stroke();
-
-        this.ctx.beginPath();
-        this.ctx.moveTo(x, y + headSize + 40);
-        this.ctx.lineTo(x + 15, y + headSize + 70);
+        this.ctx.moveTo(x, y + headSize + bodyHeight);
+        this.ctx.lineTo(x + 15 * scale, y + headSize + bodyHeight + legLength);
         this.ctx.stroke();
     }
 
-    drawClimbingFigure(x, y, headSize, charData, progress) {
-        const climbHeight = progress * 50;
+    drawClimbingFigure(x, y, headSize, charData, progress, scale = 1) {
+        const climbHeight = Math.min(progress * 200 * scale, 120 * scale);
         const adjY = y - climbHeight;
+        const bodyHeight = 40 * scale;
+        const bodyAngle = 25; // degrees for diagonal pose
+        const limbPhase = Math.sin(progress * Math.PI * 4) > 0; // alternates limbs
 
         this.ctx.beginPath();
         this.ctx.arc(x, adjY, headSize, 0, Math.PI * 2);
         this.ctx.stroke();
 
+        // Diagonal body
+        const bodyX = x + 8 * scale * Math.sin(bodyAngle * Math.PI / 180);
+        const bodyEndX = bodyX + 15 * scale;
+        const bodyEndY = adjY + headSize + bodyHeight;
+
         this.ctx.beginPath();
         this.ctx.moveTo(x, adjY + headSize);
-        this.ctx.lineTo(x + 15, adjY + headSize + 35);
+        this.ctx.lineTo(bodyEndX, bodyEndY);
         this.ctx.stroke();
 
+        if (limbPhase) {
+            // Right arm up, left arm down
+            this.ctx.beginPath();
+            this.ctx.moveTo(bodyX, adjY + headSize + 10 * scale);
+            this.ctx.lineTo(bodyX + 30 * scale, adjY + headSize - 20 * scale);
+            this.ctx.stroke();
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(bodyX, adjY + headSize + 10 * scale);
+            this.ctx.lineTo(bodyX - 20 * scale, adjY + headSize + 15 * scale);
+            this.ctx.stroke();
+
+            // Right leg down, left leg up
+            this.ctx.beginPath();
+            this.ctx.moveTo(bodyEndX, bodyEndY);
+            this.ctx.lineTo(bodyEndX + 25 * scale, bodyEndY + 30 * scale);
+            this.ctx.stroke();
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(bodyEndX, bodyEndY);
+            this.ctx.lineTo(bodyEndX - 15 * scale, bodyEndY - 15 * scale);
+            this.ctx.stroke();
+        } else {
+            // Left arm up, right arm down
+            this.ctx.beginPath();
+            this.ctx.moveTo(bodyX, adjY + headSize + 10 * scale);
+            this.ctx.lineTo(bodyX - 30 * scale, adjY + headSize - 20 * scale);
+            this.ctx.stroke();
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(bodyX, adjY + headSize + 10 * scale);
+            this.ctx.lineTo(bodyX + 20 * scale, adjY + headSize + 15 * scale);
+            this.ctx.stroke();
+
+            // Left leg down, right leg up
+            this.ctx.beginPath();
+            this.ctx.moveTo(bodyEndX, bodyEndY);
+            this.ctx.lineTo(bodyEndX - 25 * scale, bodyEndY + 30 * scale);
+            this.ctx.stroke();
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(bodyEndX, bodyEndY);
+            this.ctx.lineTo(bodyEndX + 15 * scale, bodyEndY - 15 * scale);
+            this.ctx.stroke();
+        }
+    }
+
+    drawTreeTop(x, y) {
+        this.ctx.strokeStyle = '#654321';
+        this.ctx.fillStyle = '#228B22';
+        this.ctx.lineWidth = 2;
+
+        // Trunk
         this.ctx.beginPath();
-        this.ctx.moveTo(x + 15, adjY + headSize + 10);
-        this.ctx.lineTo(x + 35, adjY + headSize - 15);
+        this.ctx.moveTo(x, y + 20);
+        this.ctx.lineTo(x, y + 40);
         this.ctx.stroke();
 
+        // Foliage (circle)
         this.ctx.beginPath();
-        this.ctx.moveTo(x + 15, adjY + headSize + 10);
-        this.ctx.lineTo(x + 30, adjY + headSize + 20);
-        this.ctx.stroke();
-
-        this.ctx.beginPath();
-        this.ctx.moveTo(x + 15, adjY + headSize + 35);
-        this.ctx.lineTo(x + 25, adjY + headSize + 65);
-        this.ctx.stroke();
-
-        this.ctx.beginPath();
-        this.ctx.moveTo(x + 15, adjY + headSize + 35);
-        this.ctx.lineTo(x + 10, adjY + headSize + 70);
+        this.ctx.arc(x, y + 15, 18, 0, Math.PI * 2);
+        this.ctx.fill();
         this.ctx.stroke();
     }
 
@@ -471,45 +704,293 @@ class StickVidPlayer {
         );
 
         if (activeDialogue) {
-            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-            this.ctx.fillRect(0, this.canvas.height - 80, this.canvas.width, 80);
+            const pov = shot.camera?.pov || 'from-below';
+            let dialogueText = activeDialogue.text;
 
-            this.ctx.fillStyle = '#fff';
-            this.ctx.font = 'bold 14px sans-serif';
-            this.ctx.textAlign = 'center';
-            this.ctx.fillText(`${activeDialogue.speaker}:`, this.canvas.width / 2, this.canvas.height - 55);
+            if (this.captionRules.showSpeakerName) {
+                const speakerChar = this.manifest.characters.find(c => c.id === activeDialogue.speaker);
+                const speakerName = speakerChar?.name || activeDialogue.speaker;
+                dialogueText = `${speakerName}: ${dialogueText}`;
+            }
 
-            this.ctx.font = '12px sans-serif';
-            const words = activeDialogue.text.split(' ');
-            let line = '';
-            let y = this.canvas.height - 35;
+            if (pov === 'from-bridge') {
+                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+                this.ctx.fillRect(this.canvas.width - 210, 10, 200, this.canvas.height - 20);
 
-            words.forEach(word => {
-                const testLine = line + word + ' ';
-                if (this.ctx.measureText(testLine).width > this.canvas.width - 40) {
-                    this.ctx.fillText(line, this.canvas.width / 2, y);
-                    line = word + ' ';
-                    y += 20;
-                } else {
-                    line = testLine;
+                this.ctx.fillStyle = '#fff';
+                this.ctx.font = '11px sans-serif';
+                this.ctx.textAlign = 'left';
+                const words = dialogueText.split(' ');
+                let line = '';
+                let y = 30;
+
+                words.forEach(word => {
+                    const testLine = line + word + ' ';
+                    if (this.ctx.measureText(testLine).width > 190) {
+                        this.ctx.fillText(line, this.canvas.width - 200, y);
+                        line = word + ' ';
+                        y += 14;
+                    } else {
+                        line = testLine;
+                    }
+                });
+                if (line) {
+                    this.ctx.fillText(line, this.canvas.width - 200, y);
                 }
-            });
-            if (line) {
-                this.ctx.fillText(line, this.canvas.width / 2, y);
+            } else {
+                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+                this.ctx.fillRect(0, this.canvas.height - 90, this.canvas.width, 90);
+
+                this.ctx.fillStyle = '#fff';
+                this.ctx.font = '12px sans-serif';
+                this.ctx.textAlign = 'center';
+                const words = dialogueText.split(' ');
+                let line = '';
+                let y = this.canvas.height - 60;
+
+                words.forEach(word => {
+                    const testLine = line + word + ' ';
+                    if (this.ctx.measureText(testLine).width > this.canvas.width - 40) {
+                        this.ctx.fillText(line, this.canvas.width / 2, y);
+                        line = word + ' ';
+                        y += 18;
+                    } else {
+                        line = testLine;
+                    }
+                });
+                if (line) {
+                    this.ctx.fillText(line, this.canvas.width / 2, y);
+                }
+            }
+
+            if (this.isPlaying && shot.id !== this.lastShotId) {
+                this.lastShotId = shot.id;
+                const voiceId = activeDialogue.voice || 'voice1';
+                this.speak(activeDialogue.text, voiceId);
             }
         }
     }
 
-    renderCaptions(shot) {
-        if (!shot.captions || !shot.captions.text) return;
+    renderNarration(shot) {
+        if (!shot.narration) return;
 
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-        this.ctx.fillRect(0, 0, this.canvas.width, 60);
+        const narration = shot.narration;
+        const text = narration.text || narration.caption || '';
+        const voiceId = narration.voice || 'voice1';
+
+        if (!text) return;
+
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+        this.ctx.fillRect(0, 401, this.canvas.width, 40);
 
         this.ctx.fillStyle = '#fff';
         this.ctx.font = '14px sans-serif';
         this.ctx.textAlign = 'center';
-        this.ctx.fillText(shot.captions.text, this.canvas.width / 2, 35);
+        this.ctx.fillText(text, this.canvas.width / 2, 423);
+
+        if (this.isPlaying && shot.id !== this.lastShotId) {
+            this.lastShotId = shot.id;
+            this.speak(text, voiceId);
+        }
+    }
+
+    speak(text, voiceId = 'voice1') {
+        if (!this.synth || !text) return;
+
+        this.synth.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        const voiceConfig = this.voices[voiceId];
+
+        if (voiceConfig) {
+            utterance.pitch = voiceConfig.pitch === 'low' ? 0.8 : (voiceConfig.pitch === 'high' ? 1.2 : 1.0);
+            utterance.volume = voiceConfig.volume || 1.0;
+            utterance.rate = 0.9;
+        }
+
+        this.synth.speak(utterance);
+    }
+
+    renderCaptions(shot) {
+        if (!shot.captions) return;
+
+        const pov = shot.camera?.pov || 'from-below';
+        if (pov === 'cut-to-black') return;
+
+        if (shot.captions.text1 || shot.captions.text2) {
+            this.renderMultiTextCaptions(shot.captions);
+        } else if (shot.captions.text) {
+            const position = shot.captions.position || 'top';
+            const text = shot.captions.text;
+
+            if (position === 'none') return;
+
+            if (position === 'center') {
+                this.renderCenteredCaption(text);
+            } else if (position === 'top') {
+                this.renderTopCaption(text);
+            } else if (position === 'bottom') {
+                this.renderBottomCaption(text);
+            } else if (position === 'side') {
+                this.renderSideCaption(text);
+            }
+        }
+    }
+
+    renderMultiTextCaptions(captions) {
+        let yOffset = 60;
+
+        if (captions.text1) {
+            const align = captions.text1.align || 'center';
+            const content = captions.text1.content || '';
+            const lineCount = captions.text1.lines || null;
+            const preserveEmpty = captions.text1.emptyRowMode === 'keep';
+            yOffset = this.renderCaptionBlock(content, align, yOffset, preserveEmpty, lineCount);
+        }
+
+        if (captions.text2) {
+            const align = captions.text2.align || 'center';
+            const content = captions.text2.content || '';
+            const lineCount = captions.text2.lines || null;
+            const preserveEmpty = captions.text2.emptyRowMode === 'keep';
+            this.renderCaptionBlock(content, align, yOffset, preserveEmpty, lineCount);
+        }
+    }
+
+    renderCaptionBlock(text, align, startY, preserveEmpty = false, lineCount = null) {
+        const allLines = text.split('\n');
+        let lines = preserveEmpty ? allLines : allLines.filter(line => line.trim());
+
+        const numLines = lineCount !== null ? lineCount : lines.length;
+        const bgHeight = numLines * 18 + 4;
+        const bgY = startY;
+
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+        this.ctx.fillRect(0, bgY, this.canvas.width, bgHeight);
+
+        this.ctx.fillStyle = '#fff';
+        this.ctx.font = '12px monospace';
+        this.ctx.lineHeight = 18;
+
+        let y = bgY + 14;
+        for (let i = 0; i < numLines && i < lines.length; i++) {
+            const line = lines[i] || '';
+            if (align === 'left') {
+                this.ctx.textAlign = 'left';
+                this.ctx.fillText(line, 40, y);
+            } else if (align === 'center') {
+                this.ctx.textAlign = 'center';
+                this.ctx.fillText(line.trim(), this.canvas.width / 2, y);
+            }
+            y += 18;
+        }
+
+        return bgY + bgHeight;
+    }
+
+    renderCenteredCaption(text) {
+        const lines = text.split('\n');
+        const bgHeight = Math.max(100, lines.length * 25 + 20);
+        const bgY = (this.canvas.height - bgHeight) / 2;
+
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+        this.ctx.fillRect(50, bgY, this.canvas.width - 100, bgHeight);
+
+        this.ctx.fillStyle = '#fff';
+        this.ctx.font = 'bold 16px sans-serif';
+        this.ctx.textAlign = 'center';
+
+        let y = bgY + 30;
+        lines.forEach(line => {
+            this.ctx.fillText(line.trim(), this.canvas.width / 2, y);
+            y += 25;
+        });
+    }
+
+    renderTopCaption(text) {
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        this.ctx.fillRect(0, 0, this.canvas.width, 70);
+
+        this.ctx.fillStyle = '#fff';
+        this.ctx.font = '14px sans-serif';
+        this.ctx.textAlign = 'center';
+
+        const words = text.split(' ');
+        let line = '';
+        let y = 25;
+
+        words.forEach(word => {
+            const testLine = line + word + ' ';
+            if (this.ctx.measureText(testLine).width > this.canvas.width - 40) {
+                this.ctx.fillText(line, this.canvas.width / 2, y);
+                line = word + ' ';
+                y += 18;
+            } else {
+                line = testLine;
+            }
+        });
+        if (line) {
+            this.ctx.fillText(line, this.canvas.width / 2, y);
+        }
+    }
+
+    renderBottomCaption(text) {
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        this.ctx.fillRect(0, this.canvas.height - 70, this.canvas.width, 70);
+
+        this.ctx.fillStyle = '#fff';
+        this.ctx.font = '14px sans-serif';
+        this.ctx.textAlign = 'center';
+
+        const words = text.split(' ');
+        let line = '';
+        let y = this.canvas.height - 45;
+
+        words.forEach(word => {
+            const testLine = line + word + ' ';
+            if (this.ctx.measureText(testLine).width > this.canvas.width - 40) {
+                this.ctx.fillText(line, this.canvas.width / 2, y);
+                line = word + ' ';
+                y += 18;
+            } else {
+                line = testLine;
+            }
+        });
+        if (line) {
+            this.ctx.fillText(line, this.canvas.width / 2, y);
+        }
+    }
+
+    renderSideCaption(text) {
+        const boxWidth = 200;
+        const boxX = this.canvas.width - boxWidth - 10;
+        const padding = 10;
+
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+        this.ctx.fillRect(boxX, 10, boxWidth, this.canvas.height - 20);
+
+        this.ctx.fillStyle = '#fff';
+        this.ctx.font = '12px sans-serif';
+        this.ctx.textAlign = 'left';
+
+        const words = text.split(' ');
+        let line = '';
+        let y = 25;
+        const maxWidth = boxWidth - (padding * 2);
+
+        words.forEach(word => {
+            const testLine = line + word + ' ';
+            if (this.ctx.measureText(testLine).width > maxWidth) {
+                this.ctx.fillText(line, boxX + padding, y);
+                line = word + ' ';
+                y += 16;
+            } else {
+                line = testLine;
+            }
+        });
+        if (line) {
+            this.ctx.fillText(line, boxX + padding, y);
+        }
     }
 
     updateTimeline() {
@@ -528,6 +1009,7 @@ class StickVidPlayer {
 
     updatePlayPauseButton() {
         const btn = document.getElementById('playPauseBtn');
+        if (!btn) return;
         btn.textContent = this.isPlaying ? '⏸' : '▶';
         btn.title = this.isPlaying ? 'Pause' : 'Play';
     }

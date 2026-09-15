@@ -1,4 +1,4 @@
-// Filename: vid-loader.js v0.1.9
+// Filename: vid-loader.js v0.1.31
 // .vid File Parser and Loader for stickvid
 // Parses standardized YAML .vid manifests (self-contained, no external files)
 

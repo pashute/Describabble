@@ -1,4 +1,4 @@
-# surveyGuy.vid v0.1.9
+# surveyGuy.vid v0.1.39
 # Standardized YAML format for Describabble stick figure animation
 # Machine-readable and human-friendly structure
 
@@ -28,6 +28,29 @@ describs:
   meta_emotions: "meta.stick.emotions.md"
   meta_movement: "meta.stick.movement.md"
   meta_component_bridge: "meta.stick.component.bridge.md"
+
+meta:
+  gen:
+    captions:
+      showSpeakerName: false
+      audioFormat: "parentheses"
+      description: "Caption generation rules: do not display speaker names, show audio descriptions in (parentheses)"
+
+voices:
+  voice1:
+    id: "Male1"
+    name: "Deep Male"
+    pitch: "low"
+    volume: 1.0
+    narration: true
+    description: "Deep, low-pitched male voice for narration and Survey Guy"
+  voice2:
+    id: "Male2"
+    name: "Clear Male"
+    pitch: "medium"
+    volume: 1.0
+    narration: false
+    description: "Clear, medium-pitched male voice for Worried Man"
 
 characters:
   - id: "char1"
@@ -149,40 +172,57 @@ scenes:
         name: "credits"
         timeRange:
           start: 0.0
-          end: 2.0
+          end: 8.0
         camera:
           pov: "credits-screen"
           angle: "centered"
         characters: []
         dialogue: []
         captions:
-          position: "center"
-          text: |
-            The Survey Guy
+          text1:
+            align: "left"
+            lines: 9
+            emptyRowMode: "keep"
+            content: |
 
-            Starring:
-            Harold Purpleman - The Survey Guy
-            Juan Herstick - The Worried Man
 
-            Created and Edited by Moussa Yashir
-            Produced by Describabble
-            Released Unlicensed Sept 2026
-        audio:
-          - type: "ambient"
-            description: "continued traffic"
-            volume: 0.3
+
+              TTTTT H   H EEEEE   SSSS  U   U RRRRR V   V EEEEE Y   Y  GGGGG U   U Y   Y
+                T   H   H E      S     U   U R   R V   V E      Y Y   G     U   U  Y Y
+                T   HHHHH EEEEE   SSS  U   U RRRRR V   V EEEEE   Y    G  GG U   U   Y
+                T   H   H E           S U   U R   R  V V  E       Y    G   G U   U   Y
+                T   H   H EEEEE  SSSS  UUUUU R   R   V   EEEEE   Y    GGGGG UUUUU   Y
+          text2:
+            align: "center"
+            lines: 9
+            emptyRowMode: "keep"
+            content: |
+
+              Starring:
+              Harold Purpleman as The Survey Guy
+              Herman Herstick as The Worried Man
+
+              Created and Edited by Moussa Yashir
+              Produced by Describabble
+
+              Released Unlicensed Sept 2026
+        narration:
+          voice: "voice1"
+          caption: "(Heavy traffic heard)"
+          text: "(Heavy traffic heard)"
 
       - id: "shot2"
         number: 2
         name: "climbing"
         timeRange:
-          start: 0.0
-          end: 4.0
+          start: 8.0
+          end: 13.0
         camera:
           pov: "from-below"
           location: "loc_bridge_below"
         characters:
           - id: "char1"
+            location: "new"
             position: "fence-climbing"
             emotion: "distressed"
             posture: "climbing"
@@ -200,262 +240,417 @@ scenes:
         captions:
           position: "bottom"
           text: "EXT. SUSPENSION BRIDGE - DAY"
-        audio:
-          - type: "ambient"
-            description: "traffic sounds"
-            volume: 0.4
-          - type: "character"
-            description: "panting, breathing heavily"
-            volume: 0.6
-          - type: "foley"
-            description: "climbing sounds, hands gripping metal"
-            volume: 0.4
+        narration:
+          voice: "voice1"
+          caption: "(Heavy traffic heard)"
+          text: "(Heavy traffic heard)"
 
       - id: "shot3"
         number: 3
         name: "WM1_Wife"
         timeRange:
-          start: 9.0
-          end: 14.0
+          start: 13.0
+          end: 19.0
         camera:
           pov: "from-bridge"
           location: "loc_bridge_top"
+          perspective: "looking-down-at-char1-below"
+          scale: 0.5
+          environment:
+            description: "From-bridge overhead view: Grass areas on both left and right sides. Vertical blue river running through center under bridge midpoint. Vertical gray road running alongside river on right side. Worried Man positioned on road looking upward at bridge. Tree top partially covering road on grass-right side. Silver bridge ridge at bottom of frame."
+            layout:
+              - element: "grass-left"
+                position: "left-side"
+                size: "quarter"
+                color: "light-green"
+              - element: "river"
+                position: "center"
+                size: "quarter"
+                color: "light-blue"
+              - element: "road"
+                position: "right-of-river"
+                size: "narrow"
+                color: "gray"
+              - element: "grass-right"
+                position: "right-side"
+                size: "remaining"
+                color: "light-green"
+              - element: "bridge"
+                position: "bottom"
+                orientation: "horizontal"
+                color: "silver"
+              - element: "tree"
+                position: "grass-right-top"
+                coverage: "partial-over-road"
+                color: "dark-green"
         characters:
+          - id: "char1"
+            location: "continued"
+            position: "standing-on-fence"
+            emotion: "defensive"
+            posture: "standing"
           - id: "char2"
             position: "standing-on-bridge"
+            headSize: "LONG"
             emotion: "worried"
             posture: "standing"
             expression: "eyebrows-up"
         dialogue:
           - speaker: "char2"
+            voice: "voice2"
             text: "Think about your wife! Think about your children!"
-            startTime: 9.0
-            endTime: 14.0
+            startTime: 13.0
+            endTime: 18.0
             delivery: "shouting-urgent"
             tone: "emotional"
+            voiceCue: "(shouts)"
         captions:
-          position: "top"
-          text: "Worried Man: Think about your wife! Think about your children!"
-        audio:
-          - type: "character"
-            description: "shouting distance clarity"
-            volume: 0.8
+          position: "bottom"
+          text: "(shouts) Think about your wife! Think about your children!"
 
       - id: "shot4"
         number: 4
         name: "SG1_NoWife"
         timeRange:
-          start: 14.0
-          end: 19.0
+          start: 18.0
+          end: 23.0
         camera:
           pov: "from-below"
           location: "loc_bridge_below"
+          perspective: "looking-up-at-char1-on-fence"
         characters:
           - id: "char1"
+            location: "continued"
             position: "standing-on-fence"
             emotion: "defensive"
             posture: "standing"
-            expression: "eyes-wide"
+            expression: "eyebrows-down"
         dialogue:
           - speaker: "char1"
+            voice: "voice1"
             text: "I don't have a wife! I don't have kids!"
-            startTime: 14.0
-            endTime: 19.0
+            startTime: 18.0
+            endTime: 23.0
             delivery: "shouting-defensive"
             tone: "emphatic"
+            voiceCue: "(shouts back)"
         captions:
           position: "bottom"
-          text: "Survey Guy: I don't have a wife! I don't have kids!"
-        audio:
-          - type: "character"
-            description: "shouting back, defensive"
-            volume: 0.8
+          text: "(shouts back) I don't have a wife! I don't have kids!"
 
       - id: "shot5"
         number: 5
         name: "WM2_Parents"
         timeRange:
-          start: 19.0
-          end: 23.0
+          start: 23.0
+          end: 27.0
         camera:
           pov: "from-bridge"
           location: "loc_bridge_top"
+          perspective: "looking-down-at-char1-below"
+          scale: 0.5
+          environment:
+            description: "From-bridge overhead view: Grass areas on both left and right sides. Vertical blue river running through center under bridge midpoint. Vertical gray road running alongside river on right side. Worried Man positioned on road looking upward at bridge. Tree top partially covering road on grass-right side. Silver bridge ridge at bottom of frame."
+            layout:
+              - element: "grass-left"
+                position: "left-side"
+                size: "quarter"
+                color: "light-green"
+              - element: "river"
+                position: "center"
+                size: "quarter"
+                color: "light-blue"
+              - element: "road"
+                position: "right-of-river"
+                size: "narrow"
+                color: "gray"
+              - element: "grass-right"
+                position: "right-side"
+                size: "remaining"
+                color: "light-green"
+              - element: "bridge"
+                position: "bottom"
+                orientation: "horizontal"
+                color: "silver"
+              - element: "tree"
+                position: "grass-right-top"
+                coverage: "partial-over-road"
+                color: "dark-green"
         characters:
+          - id: "char1"
+            location: "continued"
+            position: "standing-on-fence"
+            emotion: "defensive"
+            posture: "standing"
           - id: "char2"
             position: "standing-on-bridge"
+            headSize: "LONG"
             emotion: "desperate"
             posture: "standing"
             expression: "eyebrows-down"
         dialogue:
           - speaker: "char2"
+            voice: "voice2"
             text: "Think about your parents!"
-            startTime: 19.0
-            endTime: 23.0
+            startTime: 23.0
+            endTime: 27.0
             delivery: "shouting-desperate"
             tone: "escalating"
+            voiceCue: "(shouts)"
         captions:
-          position: "top"
-          text: "Worried Man: Think about your parents!"
-        audio:
-          - type: "character"
-            description: "shouting, escalating intensity"
-            volume: 0.85
+          position: "bottom"
+          text: "(shouts) Think about your parents!"
 
       - id: "shot6"
         number: 6
         name: "SG2_NoParents"
         timeRange:
-          start: 23.0
-          end: 26.0
+          start: 27.0
+          end: 30.0
         camera:
           pov: "from-below"
           location: "loc_bridge_below"
+          perspective: "looking-up-at-char1-on-fence"
         characters:
           - id: "char1"
+            location: "continued"
             position: "standing-on-fence"
             emotion: "anguished"
             posture: "standing"
             expression: "mouth-open"
         dialogue:
           - speaker: "char1"
+            voice: "voice1"
             text: "I don't have parents!"
-            startTime: 23.0
-            endTime: 26.0
+            startTime: 27.0
+            endTime: 30.0
             delivery: "shouting-raw"
             tone: "emotional"
+            voiceCue: "(shouts back)"
         captions:
           position: "bottom"
-          text: "Survey Guy: I don't have parents!"
-        audio:
-          - type: "character"
-            description: "shouting, raw and honest"
-            volume: 0.8
+          text: "(shouts back) I don't have parents!"
 
       - id: "shot7"
         number: 7
         name: "WM3_Future"
         timeRange:
-          start: 26.0
-          end: 30.0
+          start: 30.0
+          end: 34.0
         camera:
           pov: "from-bridge"
           location: "loc_bridge_top"
+          perspective: "looking-down-at-char1-below"
+          scale: 0.5
+          environment:
+            description: "From-bridge overhead view: Grass areas on both left and right sides. Vertical blue river running through center under bridge midpoint. Vertical gray road running alongside river on right side. Worried Man positioned on road looking upward at bridge. Tree top partially covering road on grass-right side. Silver bridge ridge at bottom of frame."
+            layout:
+              - element: "grass-left"
+                position: "left-side"
+                size: "quarter"
+                color: "light-green"
+              - element: "river"
+                position: "center"
+                size: "quarter"
+                color: "light-blue"
+              - element: "road"
+                position: "right-of-river"
+                size: "narrow"
+                color: "gray"
+              - element: "grass-right"
+                position: "right-side"
+                size: "remaining"
+                color: "light-green"
+              - element: "bridge"
+                position: "bottom"
+                orientation: "horizontal"
+                color: "silver"
+              - element: "tree"
+                position: "grass-right-top"
+                coverage: "partial-over-road"
+                color: "dark-green"
         characters:
+          - id: "char1"
+            location: "continued"
+            position: "standing-on-fence"
+            emotion: "anguished"
+            posture: "standing"
           - id: "char2"
             position: "standing-on-bridge"
+            headSize: "LONG"
             emotion: "desperate"
             posture: "standing"
         dialogue:
           - speaker: "char2"
+            voice: "voice2"
             text: "Think about your future!"
-            startTime: 26.0
-            endTime: 30.0
+            startTime: 30.0
+            endTime: 34.0
             delivery: "shouting-peak"
             tone: "maximum-intensity"
+            voiceCue: "(shouts)"
         captions:
-          position: "top"
-          text: "Worried Man: Think about your future!"
-        audio:
-          - type: "character"
-            description: "shouting at maximum volume"
-            volume: 0.9
+          position: "bottom"
+          text: "(shouts) Think about your future!"
 
       - id: "shot8"
         number: 8
         name: "SG3_NoFuture"
         timeRange:
-          start: 30.0
-          end: 40.0
+          start: 34.0
+          end: 44.0
         camera:
           pov: "from-below"
           location: "loc_bridge_below"
+          perspective: "looking-up-at-char1-on-fence"
         characters:
           - id: "char1"
+            location: "continued"
             position: "standing-on-fence"
             emotion: "anguished"
             posture: "standing"
-            expression: "mouth-open"
+            expression: "eyebrows-down"
         dialogue:
           - speaker: "char1"
+            voice: "voice1"
             text: "What future?! I have no future. I'm a phone rep survey guy! Everybody hates surveys. They hear me talk and want to die!"
-            startTime: 30.0
-            endTime: 40.0
+            startTime: 34.0
+            endTime: 44.0
             delivery: "shouting-bitter"
             tone: "anguished-bitter"
+            voiceCue: "(shouts back)"
         captions:
           position: "bottom"
-          text: "Survey Guy: What future? I have no future..."
-        audio:
-          - type: "character"
-            description: "shouting with pain and irony"
-            volume: 0.85
+          text: "(shouts back) What future? I have no future..."
 
       - id: "shot9"
         number: 9
         name: "WM4_LogicPivot"
         timeRange:
-          start: 40.0
-          end: 46.0
+          start: 44.0
+          end: 50.0
         camera:
           pov: "from-bridge"
           location: "loc_bridge_top"
+          perspective: "looking-down-at-char1-below"
+          scale: 0.5
+          environment:
+            description: "From-bridge overhead view: Grass areas on both left and right sides. Vertical blue river running through center under bridge midpoint. Vertical gray road running alongside river on right side. Worried Man positioned on road looking upward at bridge. Tree top partially covering road on grass-right side. Silver bridge ridge at bottom of frame."
+            layout:
+              - element: "grass-left"
+                position: "left-side"
+                size: "quarter"
+                color: "light-green"
+              - element: "river"
+                position: "center"
+                size: "quarter"
+                color: "light-blue"
+              - element: "road"
+                position: "right-of-river"
+                size: "narrow"
+                color: "gray"
+              - element: "grass-right"
+                position: "right-side"
+                size: "remaining"
+                color: "light-green"
+              - element: "bridge"
+                position: "bottom"
+                orientation: "horizontal"
+                color: "silver"
+              - element: "tree"
+                position: "grass-right-top"
+                coverage: "partial-over-road"
+                color: "dark-green"
         characters:
+          - id: "char1"
+            location: "continued"
+            position: "standing-on-fence"
+            emotion: "contemplative"
+            posture: "standing"
           - id: "char2"
             position: "standing-on-bridge"
+            headSize: "LONG"
             emotion: "logical"
             posture: "standing"
             expression: "mouth-straight"
         dialogue:
           - speaker: "char2"
             text: "So change your job. You're not that stupid that you can't do anything else, right?"
-            startTime: 40.0
-            endTime: 46.0
+            startTime: 44.0
+            endTime: 50.0
             delivery: "shouting-measured"
             tone: "logical"
         captions:
-          position: "top"
-          text: "Worried Man: So change your job..."
-        audio:
-          - type: "character"
-            description: "shouting but with logical tone"
-            volume: 0.75
+          position: "bottom"
+          text: "So change your job..."
 
       - id: "shot10"
         number: 10
         name: "Punchline"
         timeRange:
-          start: 46.0
-          end: 51.0
+          start: 50.0
+          end: 56.0
         camera:
           pov: "from-bridge"
           location: "loc_bridge_top"
+          perspective: "looking-down-at-char1-below"
+          scale: 0.5
+          environment:
+            description: "From-bridge overhead view: Grass areas on both left and right sides. Vertical blue river running through center under bridge midpoint. Vertical gray road running alongside river on right side. Worried Man positioned on road looking upward at bridge. Tree top partially covering road on grass-right side. Silver bridge ridge at bottom of frame."
+            layout:
+              - element: "grass-left"
+                position: "left-side"
+                size: "quarter"
+                color: "light-green"
+              - element: "river"
+                position: "center"
+                size: "quarter"
+                color: "light-blue"
+              - element: "road"
+                position: "right-of-river"
+                size: "narrow"
+                color: "gray"
+              - element: "grass-right"
+                position: "right-side"
+                size: "remaining"
+                color: "light-green"
+              - element: "bridge"
+                position: "bottom"
+                orientation: "horizontal"
+                color: "silver"
+              - element: "tree"
+                position: "grass-right-top"
+                coverage: "partial-over-road"
+                color: "dark-green"
         characters:
+          - id: "char1"
+            location: "continued"
+            position: "standing-on-fence"
+            emotion: "accepting"
+            posture: "standing"
           - id: "char2"
             position: "standing-on-bridge"
+            headSize: "LONG"
             emotion: "cunning"
             posture: "standing"
             expression: "subtle-smile"
         dialogue:
           - speaker: "char2"
-            text: "Before you step down from the bridge, would you be willing to reply to a short survey?"
-            startTime: 46.0
-            endTime: 51.0
+            text: "Before you step down, would you reply to a short survey?"
+            startTime: 50.0
+            endTime: 52.5
             delivery: "clear-measured"
             tone: "dark-humor"
         captions:
-          position: "top"
-          text: "Worried Man: Before you step down... would you reply to a short survey?"
-        audio:
-          - type: "character"
-            description: "clarity wins over volume, measured delivery"
-            volume: 0.6
+          position: "bottom"
+          text: "Before you step down, would you reply to a short survey?"
 
       - id: "shot11"
         number: 11
         name: "Resolution"
         timeRange:
-          start: 51.0
-          end: 53.0
+          start: 56.0
+          end: 57.0
         camera:
           pov: "cut-to-black"
         characters: []
@@ -463,22 +658,17 @@ scenes:
         captions:
           position: "none"
           text: ""
-        audio:
-          - type: "foley"
-            description: "loud splash sound effect"
-            volume: 1.0
-          - type: "effect"
-            description: "water hitting, splash impact"
-            volume: 0.9
+        narration:
+          voice: "voice1"
+          caption: "(splash!)"
+          text: "(splash!)"
 
 status:
   ready: true
-  lastBuilt: "2025-09-14"
+  lastBuilt: "2026-09-15"
   buildTool: "stickmake v0.1.9"
-  player: "stickvid v0.1.9"
 
 notes:
-  - "Credits shot not visible in current player - placeholder for future"
   - "POV switches occur at speaker boundaries"
   - "Character never both visible simultaneously (alternating POVs)"
-  - "Ending (splash) implies ambiguous but comedic resolution"
+  - "Ending (splash) implies comedic resolution"
