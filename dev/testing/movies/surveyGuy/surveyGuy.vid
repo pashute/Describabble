@@ -1,10 +1,10 @@
-# surveyGuy.vid v0.1.53
+# surveyGuy.vid v0.1.55b
 # Standardized YAML format for Describabble stick figure animation
 # Machine-readable and human-friendly structure
 
 movie:
-  name: "The Survey Guy"
-  version: "0.1.9"
+  name: "The Survey Buy"
+  version: "0.2.45b"
   created: "2025-09-14"
   description: "A dark comedy stick figure short film about a phone survey guy contemplating a bridge jump"
   license: "Unlicense (Free and Open Source)"
@@ -12,102 +12,25 @@ movie:
   production: "Describabble with Anthropic Claude and Gemini Flash lite"
 
 specs:
-  totalDuration: 60.0
+  totalDuration: 65.0
   fps: 60
   canvasWidth: 960
   canvasHeight: 540
   aspectRatio: "16:9"
 
-describs:
-  characters: "desc.surveyGuy.characters.md"
-  scene1: "desc.surveyGuy.scene1.md"
-  dialogue: "desc.surveyGuy.dialogue.map.md"
-  locations: "desc.surveyGuy.locations.md"
-  emotions: "trans.surveyGuy.emotions.md"
-  component_bridge: "desc.surveyGuy.component.bridge.md"
-  meta_emotions: "meta.stick.emotions.md"
-  meta_movement: "meta.stick.movement.md"
-  meta_component_bridge: "meta.stick.component.bridge.md"
-
-meta:
-  gen:
-    captions:
-      showSpeakerName: false
-      audioFormat: "parentheses"
-      description: "Caption generation rules: do not display speaker names, show audio descriptions in (parentheses)"
-
-voices:
-  voice1:
-    id: "Male1"
-    name: "Deep Male"
-    pitch: "low"
-    volume: 1.0
-    narration: true
-    description: "Deep, low-pitched male voice for narration and Survey Guy"
-  voice2:
-    id: "Male2"
-    name: "Clear Male"
-    pitch: "medium"
-    volume: 1.0
-    narration: false
-    description: "Clear, medium-pitched male voice for Worried Man"
-  voice3:
-    id: "Male3"
-    name: "Deep Narrator"
-    pitch: "low"
-    volume: 1.0
-    narration: true
-    description: "Deep, resonant male voice for narrator and sound effects"
-
 characters:
   - id: "char1"
     name: "Survey Guy"
     aka: "SG"
-    role: "protagonist"
-    importance: 1
     headSize: "LARGE"
     headShape: "oval"
-    headVariants: "hair-line"
-    attire:
-      shirt: "blue-long-sleeve"
-      tie: "bent-diagonal"
-    voice:
-      gender: "male"
-      age: "30s"
-      quality: "slightly nasal"
-    emotionArc:
-      - timeRange: "0-4s"
-        emotion: "distressed"
-        posture: "climbing"
-        details: "climbing hesitantly, panting"
-      - timeRange: "4-14s"
-        emotion: "defensive"
-        posture: "standing-on-ledge"
-        details: "responding sharply, denying family"
-      - timeRange: "14-26s"
-        emotion: "raw"
-        posture: "standing-on-ledge"
-        details: "becoming honest, voice cracks"
-      - timeRange: "26-40s"
-        emotion: "anguished"
-        posture: "standing-on-ledge"
-        details: "bitter complaint about job"
-      - timeRange: "40-46s"
-        emotion: "contemplative"
-        posture: "standing-on-ledge"
-        details: "processing Worried Man's logic"
-      - timeRange: "46-53s"
-        emotion: "accepting"
-        posture: "standing-on-ledge"
-        details: "resigned, considers offer"
-
   - id: "char2"
     name: "Worried Man"
     aka: "WM"
     role: "support"
     importance: 1
-    headSize: "LONG"
-    headShape: "oval-elongated"
+    headSize: "TINY"
+    headShape: "square"
     headVariants: "none"
     attire:
       shirt: "casual"
@@ -115,28 +38,23 @@ characters:
     voice:
       gender: "male"
       age: "24"
-      quality: "clear, direct, urgent"
-    emotionArc:
-      - timeRange: "9-14s"
-        emotion: "worried"
-        posture: "standing"
-        details: "first plea about wife/children"
-      - timeRange: "19-23s"
-        emotion: "desperate"
-        posture: "standing"
-        details: "escalating second plea"
-      - timeRange: "26-30s"
-        emotion: "desperate"
-        posture: "standing"
-        details: "third plea, peak desperation"
-      - timeRange: "40-46s"
-        emotion: "logical"
-        posture: "standing"
-        details: "practical advice, reasoning pivot"
-      - timeRange: "46-51s"
-        emotion: "cunning"
-        posture: "standing"
-        details: "punchline delivery with clarity"
+    pov: "from-above"
+    size: "triple"
+    renderStyle:
+      lineWidth: 6
+      color: "#FFFFFF"
+      headDiameter: 120
+      footAngles: "sharp-angle"
+      eyesMouth: "upper-head"
+      neck: false
+      body: false
+      armLength: 45
+      armAnimation: "flailing-asymmetric"
+    animation:
+      arms: "asymmetric"
+      wavePattern: "diagonal-axis"
+    position: "standing-on-road"
+    positionDetail: "On road below bridge. Position: Almost under bridge to right (E6 Left)"
 
   - id: "char3"
     name: "Narrator"
@@ -184,7 +102,7 @@ scenes:
     name: "EXT. SUSPENSION BRIDGE - DAY"
     duration:
       start: 0.0
-      end: 53.0
+      end: 65.0
     location: "loc_bridge"
     shots:
       - id: "shot1"
@@ -196,6 +114,11 @@ scenes:
         camera:
           pov: "credits-screen"
           angle: "centered"
+        graphics:
+          - id: "bridge-icon-credits"
+            type: "bridge-small"
+            position: "left-of-text2"
+            description: "Small stick figure bridge image left of text2, height of 8 lines"
         characters: []
         dialogue: []
         captions:
@@ -247,23 +170,27 @@ scenes:
         name: "climbing"
         timeRange:
           start: 8.0
-          end: 13.0
+          end: 14.0
         camera:
           pov: "from-below"
           location: "loc_bridge_below"
         sky:
           color: "#87CEEB"
           cloud:
-            position: "left"
+            position: "far-left"
             size: "small"
             color: "white"
         characters:
           - id: "char1"
             location: "new"
             position: "fence-climbing"
+            size: "half"
             emotion: "distressed"
             posture: "climbing"
             details: "panting, hesitant motion"
+            renderStyle:
+              fillColor: "#FFE4B5"
+              description: "SG face has own fill color, not sky color"
             animation:
               bodyLean: "toggle"
               leanAngles:
@@ -272,37 +199,51 @@ scenes:
                 - direction: "right"
                   degrees: 15
               leanCycle: 0.5
+              mouthAnimation: "o-shape-to-flat"
         movement:
           character: "char1"
           type: "climbing"
-          description: "climbing up fence from bridge, hands gripping, legs bent, body toggling left-right lean"
+          description: "climbing up fence from bridge, hands gripping, legs bent, body toggling left-right lean, starts with feet on bridge floor, ends hanging on fence"
           keyframes:
             - time: 0.0
-              position: "fence-bottom"
-            - time: 4.0
-              position: "fence-top"
+              position: "standing-on-bridge-floor"
+              description: "feet on bridge floor"
+            - time: 6.0
+              position: "hanging-on-fence"
+              description: "reached end of climb, hanging on fence"
+        animationEvents:
+          climbEnd:
+            time: 5.0
+            description: "At climb end, activate clamp animation"
+            clampAnimation:
+              armSide: "alternate"
+              description: "Lower arm clamping fence rail - left arm 130 degrees or right arm 150 degrees"
         dialogue: []
         captions:
           position: "bottom"
-          text: "EXT. SUSPENSION BRIDGE - DAY"
+          text: "@narration"
         narration:
-          voice: "voice1"
-          caption: "(Heavy traffic heard)"
-          text: "(Heavy traffic heard)"
+          - speaker: "char1"
+            voice: "voice1"
+            text: "(man climbs, panting, clearly distressed)"
+            startTime: 8.0
+            endTime: 14.0
+            delivery: "description"
+            caption: "(man climbs, panting, clearly distressed)"
 
       - id: "shot3"
         number: 3
         name: "WM1_Wife"
         timeRange:
-          start: 13.0
-          end: 19.0
+          start: 14.0
+          end: 20.0
         camera:
           pov: "from-bridge"
           location: "loc_bridge_top"
           perspective: "looking-down-at-char1-below"
           scale: 0.5
           environment:
-            description: "From-bridge overhead view: Grass areas on both left and right sides. Vertical blue river running through center under bridge midpoint. Vertical gray road running alongside river on right side. Worried Man positioned on road looking upward at bridge. Tree top partially covering road on grass-right side. Silver bridge ridge at bottom of frame."
+            description: "From-bridge overhead view: Grass areas on both left and right sides. Vertical blue river running through center under bridge midpoint. Vertical gray road running alongside river on right side. Worried Man positioned on road below bridge, almost under it, looking upward. Silver bridge ridge at bottom of frame."
             layout:
               - element: "grass-left"
                 position: "left-side"
@@ -330,69 +271,63 @@ scenes:
                 color: "dark-green"
                 note: "NO TRUNK - foliage circle only"
         characters:
-          - id: "char1"
-            location: "continued"
-            position: "hanging-from-fence"
-            emotion: "defensive"
-            posture: "standing"
           - id: "char2"
-            position: "standing-on-road"
-            headSize: "XLARGE"
+            characterRef: "@characters/WM"
             emotion: "worried"
-            posture: "standing"
             expression: "eyebrows-up"
-            pov: "from-above"
-            renderStyle:
-              lineWidth: 6
-              color: "#FFFFFF"
-              bodyHeight: "short"
-              headDiameter: 20
-              handLength: 20
-              armAnimation: "flailing-extended"
         dialogue:
           - speaker: "char2"
             voice: "voice2"
-            text: "Think about your wife! Think about your children!"
-            startTime: 13.0
-            endTime: 18.0
+            text: "(shout heard) Hey! Think about your wife!"
+            startTime: 14.0
+            endTime: 16.5
             delivery: "shouting-urgent"
             tone: "emotional"
-            voiceCue: "(shouts)"
+            voiceCue: "(shout)"
+          - speaker: "char2"
+            voice: "voice2"
+            text: "Think about your children!"
+            startTime: 16.5
+            endTime: 19.0
+            delivery: "shouting-urgent"
+            tone: "emotional"
         captions:
           position: "bottom"
-          text: "(shouts) Think about your wife! Think about your children!"
-        narration:
-          - speaker: "char3"
-            voice: "voice3"
-            text: "(Man climbing and panting, his desperation clearly visible)"
-            startTime: 13.0
-            endTime: 19.0
-            delivery: "description"
-            caption: "(Man climbing and panting, his desperation clearly visible)"
+          text: |
+            (shouts) Think about your wife!
+            Think about your children!
 
       - id: "shot4"
         number: 4
         name: "SG1_NoWife"
         timeRange:
-          start: 19.0
-          end: 24.0
+          start: 20.0
+          end: 25.0
         camera:
           pov: "from-below"
           location: "loc_bridge_below"
           perspective: "looking-up-at-char1-on-fence"
+          zoom: "zoomed-out"
+          description: "Zoomed out to show more of bridge structure"
         sky:
           color: "#87CEEB"
           cloud:
-            position: "center-left"
+            position: "mid-left"
             size: "small"
             color: "white"
         characters:
           - id: "char1"
             location: "climbed"
-            position: "hanging-from-fence"
+            position: "hanging-on-fence"
+            positionDetail: "1 head down from fence top"
             emotion: "defensive"
             posture: "standing"
             expression: "eyebrows-down"
+            size: "slightly-smaller-than-shot2"
+            description: "SG appears slightly smaller than in shot 2"
+            renderStyle:
+              fillColor: "#FFE4B5"
+              mouthAnimation: "o-shape-to-flat"
             climbedPosition:
               bodyLean: "right"
               leanDegrees: 30
@@ -410,21 +345,25 @@ scenes:
             voiceCue: "(shouts back)"
         captions:
           position: "bottom"
+          yOffset: 50
+          fontSize: "small"
+          lineHeight: 16
+          description: "Thinner single-line caption bar, positioned at y=50"
           text: "(shouts back) I don't have a wife! I don't have kids!"
 
       - id: "shot5"
         number: 5
         name: "WM2_Parents"
         timeRange:
-          start: 24.0
-          end: 28.0
+          start: 25.0
+          end: 29.0
         camera:
           pov: "from-bridge"
           location: "loc_bridge_top"
           perspective: "looking-down-at-char1-below"
           scale: 0.5
           environment:
-            description: "From-bridge overhead view: Grass areas on both left and right sides. Vertical blue river running through center under bridge midpoint. Vertical gray road running alongside river on right side. Worried Man positioned on road looking upward at bridge. Tree top partially covering road on grass-right side. Silver bridge ridge at bottom of frame."
+            description: "From-bridge overhead view: Grass areas on both left and right sides. Vertical blue river running through center under bridge midpoint. Vertical gray road running alongside river on right side. Worried Man positioned on road looking upward at bridge. Silver bridge ridge at bottom of frame."
             layout:
               - element: "grass-left"
                 position: "left-side"
@@ -452,25 +391,10 @@ scenes:
                 color: "dark-green"
                 note: "NO TRUNK - foliage circle only"
         characters:
-          - id: "char1"
-            location: "continued"
-            position: "hanging-from-fence"
-            emotion: "defensive"
-            posture: "standing"
           - id: "char2"
-            position: "standing-on-road"
-            headSize: "XLARGE"
+            characterRef: "@characters/WM"
             emotion: "desperate"
-            posture: "standing"
             expression: "eyebrows-down"
-            pov: "from-above"
-            renderStyle:
-              lineWidth: 6
-              color: "#FFFFFF"
-              bodyHeight: "short"
-              headDiameter: 20
-              handLength: 20
-              armAnimation: "flailing-extended"
         dialogue:
           - speaker: "char2"
             voice: "voice2"
@@ -488,25 +412,33 @@ scenes:
         number: 6
         name: "SG2_NoParents"
         timeRange:
-          start: 28.0
-          end: 31.0
+          start: 29.0
+          end: 32.0
         camera:
           pov: "from-below"
           location: "loc_bridge_below"
           perspective: "looking-up-at-char1-on-fence"
+          zoom: "zoomed-out"
+          description: "Zoomed out to show more of bridge structure"
         sky:
           color: "#87CEEB"
           cloud:
-            position: "center-right"
+            position: "mid-right"
             size: "small"
             color: "white"
         characters:
           - id: "char1"
             location: "climbed"
-            position: "hanging-from-fence"
+            position: "hanging-on-fence"
+            positionDetail: "sitting on fence rail (good)"
             emotion: "anguished"
             posture: "standing"
             expression: "mouth-open"
+            size: "slightly-smaller-than-shot2"
+            description: "SG appears slightly smaller than in shot 2"
+            renderStyle:
+              fillColor: "#FFE4B5"
+              mouthAnimation: "o-shape-to-flat"
             climbedPosition:
               bodyLean: "left"
               leanDegrees: 30
@@ -524,21 +456,25 @@ scenes:
             voiceCue: "(shouts back)"
         captions:
           position: "bottom"
+          yOffset: 50
+          fontSize: "small"
+          lineHeight: 16
+          description: "Thinner single-line caption bar, positioned at y=50"
           text: "(shouts back) I don't have parents!"
 
       - id: "shot7"
         number: 7
         name: "WM3_Future"
         timeRange:
-          start: 31.0
-          end: 35.0
+          start: 32.0
+          end: 36.0
         camera:
           pov: "from-bridge"
           location: "loc_bridge_top"
           perspective: "looking-down-at-char1-below"
           scale: 0.5
           environment:
-            description: "From-bridge overhead view: Grass areas on both left and right sides. Vertical blue river running through center under bridge midpoint. Vertical gray road running alongside river on right side. Worried Man positioned on road looking upward at bridge. Tree top partially covering road on grass-right side. Silver bridge ridge at bottom of frame."
+            description: "From-bridge overhead view: Grass areas on both left and right sides. Vertical blue river running through center under bridge midpoint. Vertical gray road running alongside river on right side. Worried Man positioned on road looking upward at bridge. Silver bridge ridge at bottom of frame."
             layout:
               - element: "grass-left"
                 position: "left-side"
@@ -566,24 +502,9 @@ scenes:
                 color: "dark-green"
                 note: "NO TRUNK - foliage circle only"
         characters:
-          - id: "char1"
-            location: "continued"
-            position: "hanging-from-fence"
-            emotion: "anguished"
-            posture: "standing"
           - id: "char2"
-            position: "standing-on-road"
-            headSize: "XLARGE"
+            characterRef: "@characters/WM"
             emotion: "desperate"
-            posture: "standing"
-            pov: "from-above"
-            renderStyle:
-              lineWidth: 6
-              color: "#FFFFFF"
-              bodyHeight: "short"
-              headDiameter: 20
-              handLength: 20
-              armAnimation: "flailing-extended"
         dialogue:
           - speaker: "char2"
             voice: "voice2"
@@ -601,25 +522,33 @@ scenes:
         number: 8
         name: "SG3_NoFuture"
         timeRange:
-          start: 35.0
-          end: 45.0
+          start: 36.0
+          end: 46.0
         camera:
           pov: "from-below"
           location: "loc_bridge_below"
           perspective: "looking-up-at-char1-on-fence"
+          zoom: "zoomed-out"
+          description: "Zoomed out to show more of bridge structure"
         sky:
           color: "#87CEEB"
           cloud:
-            position: "right"
+            position: "far-right"
             size: "small"
             color: "white"
         characters:
           - id: "char1"
             location: "climbed"
-            position: "hanging-from-fence"
+            position: "hanging-on-fence"
+            positionDetail: "1 head down from fence top"
             emotion: "anguished"
             posture: "standing"
             expression: "eyebrows-down"
+            size: "slightly-smaller-than-shot2"
+            description: "SG appears slightly smaller than in shot 2"
+            renderStyle:
+              fillColor: "#FFE4B5"
+              mouthAnimation: "o-shape-to-flat"
             climbedPosition:
               bodyLean: "right"
               leanDegrees: 30
@@ -637,21 +566,25 @@ scenes:
             voiceCue: "(shouts back)"
         captions:
           position: "bottom"
+          yOffset: 50
+          fontSize: "small"
+          lineHeight: 16
+          description: "Thinner single-line caption bar, positioned at y=50"
           text: "(shouts back) What future? I have no future..."
 
       - id: "shot9"
         number: 9
         name: "WM4_LogicPivot"
         timeRange:
-          start: 45.0
-          end: 51.0
+          start: 46.0
+          end: 52.0
         camera:
           pov: "from-bridge"
           location: "loc_bridge_top"
           perspective: "looking-down-at-char1-below"
           scale: 0.5
           environment:
-            description: "From-bridge overhead view: Grass areas on both left and right sides. Vertical blue river running through center under bridge midpoint. Vertical gray road running alongside river on right side. Worried Man positioned on road looking upward at bridge. Tree top partially covering road on grass-right side. Silver bridge ridge at bottom of frame."
+            description: "From-bridge overhead view: Grass areas on both left and right sides. Vertical blue river running through center under bridge midpoint. Vertical gray road running alongside river on right side. Worried Man positioned on road looking upward at bridge. Silver bridge ridge at bottom of frame."
             layout:
               - element: "grass-left"
                 position: "left-side"
@@ -679,13 +612,10 @@ scenes:
                 color: "dark-green"
                 note: "NO TRUNK - foliage circle only"
         characters:
-          - id: "char1"
-            location: "continued"
-            position: "hanging-from-fence"
-            emotion: "contemplative"
-            posture: "standing"
           - id: "char2"
+            name: "WM from-above"
             position: "standing-on-road"
+            positionDetail: "mid-road, 3 arm-lengths from center"
             headSize: "XLARGE"
             emotion: "logical"
             posture: "standing"
@@ -694,10 +624,16 @@ scenes:
             renderStyle:
               lineWidth: 6
               color: "#FFFFFF"
-              bodyHeight: "short"
-              headDiameter: 20
-              handLength: 20
-              armAnimation: "flailing-extended"
+              headDiameter: 40
+              footAngles: "sharp-angle"
+              eyesMouth: "upper-head"
+              neck: false
+              body: false
+              armLength: 45
+              armAnimation: "flailing-asymmetric"
+            animation:
+              arms: "asymmetric"
+              wavePattern: "diagonal-axis"
         dialogue:
           - speaker: "char2"
             text: "So change your job. You're not that stupid that you can't do anything else, right?"
@@ -713,23 +649,35 @@ scenes:
         number: 10
         name: "SG_Contemplating"
         timeRange:
-          start: 51.0
-          end: 53.0
+          start: 52.0
+          end: 55.0
         camera:
           pov: "from-below"
           location: "loc_bridge_below"
           perspective: "looking-up-at-char1-on-fence"
+          zoom: "zoomed-out"
+          description: "Zoomed out to show more of bridge structure"
         sky:
           color: "#87CEEB"
-          cloud: null
+          description: "Bright light blue sky color"
+          cloud:
+            position: "far-right"
+            size: "small"
+            color: "white"
         characters:
           - id: "char1"
             location: "climbed"
-            position: "hanging-from-fence"
+            position: "hanging-on-fence"
+            positionDetail: "1 head down from fence top"
             emotion: "contemplative"
             posture: "standing"
             expression: "mouth-tilde"
             eyebrows: "slanting"
+            size: "slightly-smaller-than-shot2"
+            description: "SG appears slightly smaller than in shot 2"
+            renderStyle:
+              fillColor: "#FFE4B5"
+              mouthAnimation: "o-shape-to-flat"
             climbedPosition:
               bodyLean: "left"
               leanDegrees: 30
@@ -745,15 +693,15 @@ scenes:
         number: 11
         name: "WM_OffersSurvey"
         timeRange:
-          start: 53.0
-          end: 59.0
+          start: 55.0
+          end: 61.0
         camera:
           pov: "from-bridge"
           location: "loc_bridge_top"
           perspective: "looking-down-at-char1-below"
           scale: 0.5
           environment:
-            description: "From-bridge overhead view: Grass areas on both left and right sides. Vertical blue river running through center under bridge midpoint. Vertical gray road running alongside river on right side. Worried Man positioned on road looking upward at bridge. Tree top partially covering road on grass-right side. Silver bridge ridge at bottom of frame."
+            description: "From-bridge overhead view: Grass areas on both left and right sides. Vertical blue river running through center under bridge midpoint. Vertical gray road running alongside river on right side. Worried Man positioned on road looking upward at bridge. Silver bridge ridge at bottom of frame."
             layout:
               - element: "grass-left"
                 position: "left-side"
@@ -781,43 +729,45 @@ scenes:
                 color: "dark-green"
                 note: "NO TRUNK - foliage circle only"
         characters:
-          - id: "char1"
-            location: "continued"
-            position: "hanging-from-fence"
-            emotion: "accepting"
-            posture: "standing"
           - id: "char2"
+            name: "WM from-above"
             position: "standing-on-road"
+            positionDetail: "mid-road, 3 arm-lengths from center"
             headSize: "XLARGE"
             emotion: "cunning"
             posture: "standing"
             expression: "eyebrows-down"
             pov: "from-above"
+            renderStyle:
+              lineWidth: 6
+              color: "#FFFFFF"
+              headDiameter: 40
+              footAngles: "sharp-angle"
+              eyesMouth: "upper-head"
+              neck: false
+              body: false
+              armLength: 45
+              armAnimation: "flailing-asymmetric"
             animation:
+              arms: "asymmetric"
+              wavePattern: "diagonal-axis"
               expressionChange: "timed"
               changes:
                 - time: 0.0
                   expression: "eyebrows-down"
                 - time: 1.0
                   expression: "mouth-smile"
-            renderStyle:
-              lineWidth: 6
-              color: "#FFFFFF"
-              bodyHeight: "short"
-              headDiameter: 20
-              handLength: 20
-              armAnimation: "flailing-extended"
         dialogue:
           - speaker: "char2"
             text: "Before you step down, would you mind taking a short survey?"
-            startTime: 53.0
-            endTime: 58.0
+            startTime: 55.0
+            endTime: 60.0
             delivery: "clear-measured"
             tone: "dark-humor"
           - speaker: "char2"
             text: ""
-            startTime: 58.0
-            endTime: 59.0
+            startTime: 60.0
+            endTime: 61.0
             delivery: "pause"
             tone: "anticipation"
         captions:
@@ -828,19 +778,24 @@ scenes:
         number: 12
         name: "Resolution"
         timeRange:
-          start: 59.0
-          end: 60.0
+          start: 61.0
+          end: 65.0
         camera:
           pov: "cut-to-black"
         characters: []
         dialogue: []
         captions:
-          position: "none"
-          text: ""
+          position: "center"
+          text: "Splash!"
         narration:
-          voice: "voice1"
-          caption: "(splash!)"
-          text: "(splash!)"
+          - speaker: "char3"
+            voice: "voice3"
+            text: "[pause] Splash! [pause]"
+            startTime: 60.0
+            endTime: 64.0
+            delivery: "sound-effect"
+            caption: "Splash!"
+            pauseInstructions: "Pauses are instructions, not written or narrated"
 
 status:
   ready: true

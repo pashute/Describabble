@@ -28,3 +28,6 @@ build/
 # Logs
 logs/
 *.log
+
+# Backlog
+dev/docs/progress/backlog.md

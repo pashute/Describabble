@@ -147,3 +147,87 @@ To maintain zero infrastructure cost during development, external or paid AI/vid
 
 1. 
 
+## **Section 5: Reusability & Modular Architecture**
+
+The `.vid` file format and `player.js` must support **reusable components** to eliminate repetition:
+
+### 5.1 Reusable Environment Layouts
+**Problem:** Bridge scenes (shots 3, 5, 7, 9, 11) repeat identical environment definitions (grass-left, river, road, grass-right, bridge).
+
+**Solution:** Define environment layouts once, reference them by ID:
+```yaml
+environments:
+  bridge-from-above:
+    layout:
+      - element: "grass-left" ...
+      - element: "river" ...
+      - element: "road" ...
+      - element: "grass-right" ...
+      - element: "bridge" ...
+```
+
+Then in shots: `camera: { environment: "@bridge-from-above" }`
+
+### 5.2 Reusable Character Definitions
+**Problem:** Character POV and rendering styles (e.g., WM from-above, SG closeup) are hardcoded or repeated.
+
+**Solution:** Define character **looks** (POV profiles) once:
+```yaml
+characters:
+  WM:
+    looks:
+      from-above:
+        headSize: "XLARGE"
+        body: false
+        neck: false
+        footAngles: "sharp-angle"
+        armAnimation: "flailing-asymmetric"
+```
+
+Then reference in shots: `character: { id: "char2", look: "@from-above" }`
+
+### 5.3 Reusable Behaviors
+**Problem:** Actions (climbing, waving, talking) are described per-shot.
+
+**Solution:** Define behaviors once:
+```yaml
+behaviors:
+  climbing:
+    bodyLean: "toggle"
+    leanAngles: [15, 15]
+    clampAnimation: true
+```
+
+Then reference: `movement: { type: "@climbing" }`
+
+### 5.4 Text References (Captions, Narration, Dialogue)
+**Problem:** Caption text often duplicates narration text verbatim.
+
+**Solution:** Use `@reference` syntax to point captions to narration:
+```yaml
+narration:
+  - speaker: "char1"
+    text: "(man climbs, panting, clearly distressed)"
+
+captions:
+  text: "@narration[0]"  # Reference first narration entry
+```
+
+Or for simple cases: `text: "@narration"` (auto-resolves to combined text)
+
+`player.js` resolves all `@` references at render time.
+
+### 5.5 Descriptive Names (Not Color Codes)
+**Problem:** `.vid` hardcodes colors like `"#228B22"` (dark-green). These should be descriptive.
+
+**Solution:** `.vid` uses descriptive names, `player.js` interprets them:
+- `.vid`: `color: "dark-tree-foliage"` or `color: "contrasted-with-road"`
+- `player.js`: Maps `"dark-tree-foliage"` → `#228B22`
+
+This allows offline description editing without touching player code.
+
+### 5.5 Implementation Strategy
+1. **Phase 1 (Current):** Define reusable elements in `.vid`, reference with `@name` syntax
+2. **Phase 2:** Create a `.meta` file mapping descriptive names to visual properties
+3. **Phase 3:** Build a dynamic loader in `player.js` that resolves references and applies interpretations
+
