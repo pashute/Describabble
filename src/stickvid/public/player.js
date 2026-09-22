@@ -559,8 +559,14 @@ class StickVidPlayer {
     }
 
     drawStickFigure(x, y, charDef, charData, progress, shot, scale = 1) {
-        const headSizeType = charData.headSize || charDef.headSize;
-        const headSize = this.getHeadSize(headSizeType) * scale;
+        // Use renderStyle.headDiameter if available, otherwise use headSize type
+        let headSize;
+        if (charData.renderStyle?.headDiameter) {
+            headSize = charData.renderStyle.headDiameter * scale;
+        } else {
+            const headSizeType = charData.headSize || charDef.headSize;
+            headSize = this.getHeadSize(headSizeType) * scale;
+        }
         const isClimbing = charData.posture === 'climbing';
 
         const isWM = charData.id === 'char2';
