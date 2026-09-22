@@ -55,10 +55,10 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
 - beep.ps1
 - [v] Shot 10: change deep blue to bright light blue (#87CEEB)
 - [v] Fix missing clouds in SG shots (added to shots 2,4,6,8,10)
-- [?] Adjust WM size per user specs - needs specific target dimensions
+- [v] Adjust WM on road position (y=420 instead of y=351, scale 0.8 instead of 0.65)
 - [v] Adjust WM leg shape (sharp-angle already set across all WM shots)
-- [?] Adjust WM location (D4-E4 area, needs coordinate/rendering adjustment)
-- [?] Adjust SG size, location, direction - needs specific target values
+- [v] Adjust SG size application (added getSizeMultiplier for half/slightly-smaller-than-shot2)
+- [v] Add hanging-on-fence position support in player.js
 - callme.ps1
 
 
