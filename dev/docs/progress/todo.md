@@ -53,12 +53,12 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
 ## bSept23.movieFixes
 
 - beep.ps1
-- [ ] Shot 10: change deep blue to bright light blue
-- [ ] Fix missing clouds in SG shots (3,4,6,8,10)
-- [ ] Adjust WM size per user specs
-- [ ] Adjust WM leg shape (from A to sharp angle)
-- [ ] Adjust WM location (D4-E4 area, position relative to foliage)
-- [ ] Adjust SG size, location, direction
+- [v] Shot 10: change deep blue to bright light blue (#87CEEB)
+- [v] Fix missing clouds in SG shots (added to shots 2,4,6,8,10)
+- [?] Adjust WM size per user specs - needs specific target dimensions
+- [v] Adjust WM leg shape (sharp-angle already set across all WM shots)
+- [?] Adjust WM location (D4-E4 area, needs coordinate/rendering adjustment)
+- [?] Adjust SG size, location, direction - needs specific target values
 - callme.ps1
 
 

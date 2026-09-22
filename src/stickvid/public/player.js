@@ -510,7 +510,7 @@ class StickVidPlayer {
                 if (charData.position === 'fence-bottom') {
                     x = this.canvas.width / 2;
                     y = this.canvas.height - 140;
-                } else if (charData.position === 'fence-climbing' || charData.position === 'fence-top') {
+                } else if (charData.position === 'fence-climbing' || charData.position === 'fence-top' || charData.position === 'hanging-on-fence') {
                     x = this.canvas.width / 2;
                     y = this.canvas.height - 140;
                 } else if (charData.position === 'standing-on-fence') {
@@ -541,8 +541,8 @@ class StickVidPlayer {
                 } else if (charData.position === 'standing-on-road') {
                     // WM on road below bridge, positioned to the right
                     x = this.canvas.width * 0.65;  // standing-on-road: right side positioning
-                    y = this.canvas.height * 0.65; // visible middle-lower position
-                    scale = cameraScale * 0.65;
+                    y = this.canvas.height - 120; // lower on road, near bottom of visible area
+                    scale = cameraScale * 0.8;
                 } else {
                     x = this.canvas.width / 2;
                     y = this.canvas.height / 2 - 50;
@@ -553,7 +553,8 @@ class StickVidPlayer {
             }
 
             charData.pov = pov;
-            this.drawStickFigure(x, y, charDef, charData, progress, shot, scale);
+            const sizeMultiplier = this.getSizeMultiplier(charData.size);
+            this.drawStickFigure(x, y, charDef, charData, progress, shot, scale * sizeMultiplier);
         });
     }
 
@@ -960,6 +961,17 @@ class StickVidPlayer {
             'NONE': 0
         };
         return sizes[sizeType] || 15;
+    }
+
+    getSizeMultiplier(sizeSpec) {
+        if (!sizeSpec) return 1;
+        const multipliers = {
+            'half': 0.5,
+            'slightly-smaller-than-shot2': 0.45,
+            'triple': 3,
+            'double': 2
+        };
+        return multipliers[sizeSpec] || 1;
     }
 
     renderDialogue(shot) {
