@@ -60,8 +60,9 @@ class StickVidPlayer {
         if (debugCheckbox) {
             debugCheckbox.addEventListener('change', (e) => {
                 if (e.target.checked) {
-                    console.log('Debug mode enabled');
-                    console.log(window.__PLAYER__.getActiveElements());
+                    console.log('=== Debug Mode Enabled ===');
+                    console.log('Active elements:', window.__PLAYER__.getActiveElements());
+                    console.log('Click on canvas to inspect coordinates and characters');
                 }
             });
         }
@@ -70,6 +71,9 @@ class StickVidPlayer {
     }
 
     handleCanvasClick(e) {
+        const debugCheckbox = document.getElementById('debugCheckbox');
+        if (!debugCheckbox || !debugCheckbox.checked) return;
+
         const rect = this.canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
