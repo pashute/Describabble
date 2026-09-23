@@ -351,10 +351,145 @@ class StickVidPlayer {
         const cx = this.canvas.width / 2;
         const cy = this.canvas.height / 2;
 
+        // New schematic bridge rendering for shot 2
+        if (shot.number === 2) {
+            this.drawBridgeFromAfar(cx, cy);
+            return;
+        }
+
         if (pov === 'from-below') {
             this.drawBridgeFromBelow(cx, cy);
         } else if (pov === 'from-bridge') {
             this.drawBridgeFromEnvironment(shot.camera?.environment);
+        }
+    }
+
+    drawBridgeFromAfar(cx, cy) {
+        const w = this.canvas.width;
+        const h = this.canvas.height;
+
+        this.ctx.strokeStyle = '#333';
+        this.ctx.fillStyle = '#333';
+
+        // River - flowing lines under bridge
+        this.ctx.lineWidth = 2;
+        this.ctx.strokeStyle = '#4a90e2';
+        const riverTopY = h * 0.6;
+        const riverBottomY = h - 80;
+
+        // River flowing effect - curved lines
+        for (let i = 0; i < 3; i++) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(w * 0.2, riverTopY + i * 15);
+            this.ctx.quadraticCurveTo(w * 0.5, riverTopY + i * 15 + 30, w, riverBottomY + i * 15);
+            this.ctx.stroke();
+        }
+
+        // Left bank path - diagonal line
+        this.ctx.lineWidth = 3;
+        this.ctx.strokeStyle = '#8B7355';
+        this.ctx.beginPath();
+        this.ctx.moveTo(50, h * 0.55);
+        this.ctx.lineTo(w * 0.25, h - 80);
+        this.ctx.stroke();
+
+        // Right bank and hill
+        this.ctx.lineWidth = 2;
+        this.ctx.strokeStyle = '#666';
+        this.ctx.beginPath();
+        this.ctx.moveTo(w * 0.75, riverTopY);
+        this.ctx.lineTo(w * 0.8, h * 0.4);  // Hill slope
+        this.ctx.lineTo(w, h * 0.5);
+        this.ctx.stroke();
+
+        // Horizon - distant hills and lake
+        this.ctx.lineWidth = 1;
+        this.ctx.strokeStyle = '#999';
+        const horizonY = h * 0.3;
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, horizonY);
+        // Simple arc for distant hills
+        this.ctx.quadraticCurveTo(w * 0.3, horizonY - 20, w * 0.6, horizonY);
+        this.ctx.quadraticCurveTo(w * 0.8, horizonY - 15, w, horizonY);
+        this.ctx.stroke();
+
+        // Bridge towers - 2 tall thin rectangles
+        const leftTowerX = w * 0.25;
+        const rightTowerX = w * 0.75;
+        const towerWidth = 12;
+        const towerTopY = h * 0.2;
+        const towerBottomY = riverTopY;
+
+        this.ctx.lineWidth = 2;
+        this.ctx.strokeStyle = '#333';
+
+        // Left tower
+        this.ctx.beginPath();
+        this.ctx.rect(leftTowerX - towerWidth / 2, towerTopY, towerWidth, towerBottomY - towerTopY);
+        this.ctx.stroke();
+
+        // Right tower
+        this.ctx.beginPath();
+        this.ctx.rect(rightTowerX - towerWidth / 2, towerTopY, towerWidth, towerBottomY - towerTopY);
+        this.ctx.stroke();
+
+        // Bridge deck - single thick horizontal line
+        const deckY = riverTopY;
+        this.ctx.lineWidth = 6;
+        this.ctx.strokeStyle = '#8B4513';
+        this.ctx.beginPath();
+        this.ctx.moveTo(leftTowerX, deckY);
+        this.ctx.lineTo(rightTowerX, deckY);
+        this.ctx.stroke();
+
+        // Trusses - triangular zig-zag pattern on top of deck
+        this.ctx.lineWidth = 1;
+        this.ctx.strokeStyle = '#333';
+        const trussHeight = 20;
+        const trussSpacing = 30;
+
+        for (let x = leftTowerX; x < rightTowerX; x += trussSpacing) {
+            // Up triangle
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, deckY);
+            this.ctx.lineTo(x + trussSpacing / 2, deckY - trussHeight);
+            this.ctx.lineTo(x + trussSpacing, deckY);
+            this.ctx.stroke();
+        }
+
+        // Fence top rail - straight horizontal line above trusses
+        const railY = deckY - trussHeight - 3;
+        this.ctx.lineWidth = 2;
+        this.ctx.strokeStyle = '#FF0000';
+        this.ctx.beginPath();
+        this.ctx.moveTo(leftTowerX, railY);
+        this.ctx.lineTo(rightTowerX, railY);
+        this.ctx.stroke();
+
+        // Main suspension rope - smooth concave arc
+        this.ctx.lineWidth = 2;
+        this.ctx.strokeStyle = '#333';
+        this.ctx.beginPath();
+        this.ctx.moveTo(leftTowerX, towerTopY);
+        const ropeControlY = towerTopY + 60;
+        this.ctx.quadraticCurveTo(cx, ropeControlY, rightTowerX, towerTopY);
+        this.ctx.stroke();
+
+        // Vertical suspension cables - multiple evenly spaced lines
+        const cableCount = 6;
+        this.ctx.lineWidth = 1;
+        this.ctx.strokeStyle = '#333';
+
+        for (let i = 0; i <= cableCount; i++) {
+            const cableX = leftTowerX + (rightTowerX - leftTowerX) * (i / cableCount);
+            // Calculate Y position on arc
+            const t = i / cableCount;
+            const arcY = towerTopY + 60 * (4 * t * (1 - t));
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(cableX, arcY);
+            this.ctx.lineTo(cableX, deckY);
+            this.ctx.stroke();
         }
     }
 
