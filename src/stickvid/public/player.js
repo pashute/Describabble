@@ -227,7 +227,7 @@ class StickVidPlayer {
 
         this.currentTime += deltaTime;
         if (this.currentTime >= this.duration) {
-            <this className="c">    </this>urrentTime = this.duration;
+            this.currentTime = this.duration;
             this.isPlaying = false;
             console.log('Animation stopped. Duration:', this.duration, 'CurrentTime:', this.currentTime);
         }
