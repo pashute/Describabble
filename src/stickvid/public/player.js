@@ -23,10 +23,19 @@ class StickVidPlayer {
         this.lastSpokenTime = -1;
         this.isSpeaking = false;
         this.lastShotId = null;
+        this.bridgeImage = null;
 
         this.setupEventListeners();
         this.disableControls();
         this.initSpeechSynthesis();
+        this.loadBridgeImage();
+    }
+
+    loadBridgeImage() {
+        const img = new Image();
+        img.src = 'bridgeside.jpeg';
+        img.onload = () => { this.bridgeImage = img; };
+        img.onerror = () => { console.warn('Could not load bridge image'); };
     }
 
     initSpeechSynthesis() {
@@ -46,6 +55,26 @@ class StickVidPlayer {
 
         document.getElementById('timeline').addEventListener('click', (e) => this.seekToTime(e));
         document.getElementById('timelineLocator').addEventListener('mousedown', (e) => this.startScrubbing(e));
+
+        const debugBtn = document.getElementById('debugBtn');
+        if (debugBtn) {
+            debugBtn.addEventListener('click', () => console.log(window.__PLAYER__.getActiveElements()));
+        }
+
+        this.canvas.addEventListener('click', (e) => this.handleCanvasClick(e));
+    }
+
+    handleCanvasClick(e) {
+        const rect = this.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        console.log(`Canvas clicked at (${Math.round(x)}, ${Math.round(y)})`);
+
+        if (this.currentShot && this.currentShot.characters) {
+            this.currentShot.characters.forEach(char => {
+                console.log(`  - ${char.id}: ${char.position || 'unknown'} at estimated (${char.position})`);
+            });
+        }
     }
 
     disableControls() {
@@ -1326,6 +1355,13 @@ class StickVidPlayer {
         this.ctx.fillStyle = '#f5f5f5';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
+        // Draw bridge image on left side if available
+        if (this.bridgeImage && this.bridgeImage.complete) {
+            const imgHeight = 280;
+            const imgWidth = (this.bridgeImage.width / this.bridgeImage.height) * imgHeight;
+            this.ctx.drawImage(this.bridgeImage, 10, this.canvas.height - imgHeight - 10, imgWidth, imgHeight);
+        }
+
         const captions = shot.captions;
         if (captions) {
             if (captions.text1?.content) {
@@ -1360,6 +1396,25 @@ class StickVidPlayer {
         this.renderNarration(shot);
     }
 
+    getActiveElements() {
+        if (!this.manifest || !this.currentShot) return [];
+        const elements = [];
+        if (this.currentShot.characters) {
+            this.currentShot.characters.forEach(char => {
+                elements.push({
+                    type: 'character',
+                    id: char.id,
+                    position: char.position || 'unknown',
+                    emotion: char.emotion || 'neutral',
+                    pov: this.currentShot.camera?.pov,
+                    currentTime: this.currentTime
+                });
+            });
+        }
+        return elements;
+    }
+
 }
 
 const player = new StickVidPlayer('animationCanvas');
+window.__PLAYER__ = player;
