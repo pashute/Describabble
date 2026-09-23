@@ -56,9 +56,14 @@ class StickVidPlayer {
         document.getElementById('timeline').addEventListener('click', (e) => this.seekToTime(e));
         document.getElementById('timelineLocator').addEventListener('mousedown', (e) => this.startScrubbing(e));
 
-        const debugBtn = document.getElementById('debugBtn');
-        if (debugBtn) {
-            debugBtn.addEventListener('click', () => console.log(window.__PLAYER__.getActiveElements()));
+        const debugCheckbox = document.getElementById('debugCheckbox');
+        if (debugCheckbox) {
+            debugCheckbox.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    console.log('Debug mode enabled');
+                    console.log(window.__PLAYER__.getActiveElements());
+                }
+            });
         }
 
         this.canvas.addEventListener('click', (e) => this.handleCanvasClick(e));
