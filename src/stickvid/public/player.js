@@ -275,6 +275,9 @@ class StickVidPlayer {
         if (currentShot.camera?.pov === 'credits-screen') {
             this.renderCreditsScreen(currentShot);
         } else {
+            const overlay = document.getElementById('creditsText2Overlay');
+            if (overlay) overlay.style.display = 'none';
+
             this.renderBackground(currentShot);
             this.renderCharacters(currentShot);
             this.renderNarration(currentShot);
@@ -1183,8 +1186,7 @@ class StickVidPlayer {
     }
 
     renderMultiTextCaptions(captions, pov = 'from-below') {
-        let yOffset = pov === 'credits-screen' ? 120 : 300; // Pushed down to clear Load button 
-        // was 5 changing to 10. had two bottom lines of ascii art
+        let yOffset = pov === 'credits-screen' ? 120 : 495; // Credits at top, regular captions very close to navigation buttons
 
         if (captions.text1) {
             const align = captions.text1.align || 'center';
@@ -1364,15 +1366,9 @@ class StickVidPlayer {
         this.ctx.fillStyle = '#f5f5f5';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Draw bridge image on left side if available
-        if (this.bridgeImage && this.bridgeImage.complete) {
-            const imgHeight = 280;
-            const imgWidth = (this.bridgeImage.width / this.bridgeImage.height) * imgHeight;
-            this.ctx.drawImage(this.bridgeImage, 10, this.canvas.height - imgHeight - 10, imgWidth, imgHeight);
-        }
-
         const captions = shot.captions;
         if (captions) {
+            // Render text1 (ASCII art title) at TOP
             if (captions.text1?.content) {
                 this.ctx.fillStyle = '#333';
                 this.ctx.font = 'bold 12px monospace';
@@ -1385,20 +1381,43 @@ class StickVidPlayer {
                 });
             }
 
-            if (captions.text2?.content) {
-                this.ctx.fillStyle = '#333';
-                this.ctx.font = '11px sans-serif';
-                this.ctx.textAlign = 'center';
+            // Draw bridge image on left side BELOW text1 (1/3 of canvas width)
+            if (this.bridgeImage && this.bridgeImage.complete) {
+                const maxWidth = this.canvas.width / 3;  // Limit to 1/3 width
+                const maxHeight = this.canvas.height - 220;  // Leave space for text1 and nav buttons
+                let imgWidth = this.bridgeImage.width;
+                let imgHeight = this.bridgeImage.height;
+
+                // Scale to fit within bounds without cropping
+                if (imgWidth > maxWidth || imgHeight > maxHeight) {
+                    const scaleW = maxWidth / imgWidth;
+                    const scaleH = maxHeight / imgHeight;
+                    const scale = Math.min(scaleW, scaleH);
+                    imgWidth *= scale;
+                    imgHeight *= scale;
+                }
+
+                // Draw image at left side, below text1
+                const x = 10;
+                const y = 200;
+                this.ctx.drawImage(this.bridgeImage, x, y, imgWidth, imgHeight);
+            }
+
+            // Render text2 in HTML overlay div (right side, below text1, next to image)
+            // Remove empty lines above "Starring" for compact display
+            const overlay = document.getElementById('creditsText2Overlay');
+            if (overlay && captions.text2?.content) {
+                overlay.style.display = 'block';
                 const lines = captions.text2.content.split('\n');
-                let y = 280;
-                lines.forEach(line => {
-                    if (line.trim()) {
-                        this.ctx.fillText(line, this.canvas.width / 2, y);
-                        y += 14;
-                    } else {
-                        y += 7;
-                    }
-                });
+                // Remove leading empty lines
+                while (lines.length > 0 && !lines[0].trim()) {
+                    lines.shift();
+                }
+                overlay.innerHTML = lines
+                    .map(line => `<p style="margin: 4px 0; font-size: 16px; font-weight: bold; color: #333; line-height: 1.4;">${line.trim() ? line : '&nbsp;'}</p>`)
+                    .join('');
+            } else if (overlay) {
+                overlay.style.display = 'none';
             }
         }
 

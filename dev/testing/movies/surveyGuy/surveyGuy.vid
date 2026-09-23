@@ -1,4 +1,4 @@
-# surveyGuy.vid v0.1.57
+# surveyGuy.vid v0.1.58
 # Standardized YAML format for Describabble stick figure animation
 # Machine-readable and human-friendly structure
 
@@ -118,7 +118,11 @@ scenes:
           - id: "bridge-icon-credits"
             type: "bridge-small"
             position: "left-of-text2"
-            description: "Small stick figure bridge image left of text2, height of 8 lines"
+            description: "Bridge image (bridgeside.jpeg) left 1/3 of screen, scaled without cropping. Text2 (cast/credits) in separate HTML div on right 2/3. No overlap. Text2 rendered large and bold."
+            layout:
+              imageWidth: "33%"
+              textWidth: "67%"
+              textFormat: "bold-html-overlay"
         characters: []
         dialogue: []
         captions:
