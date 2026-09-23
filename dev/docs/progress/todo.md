@@ -19,9 +19,9 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
 ## bSept23.gitignore
 
 - beep.ps1
-- [>] Remove backlog.md from git cache
-- [ ] Add backlog.md to .gitignore
-- [ ] Commit "stop tracking backlog.md"
+- [v] Remove backlog.md from git cache
+- [v] Add backlog.md to .gitignore
+- [v] Commit "stop tracking backlog.md"
 - callme.ps1
 
 ## bSept23.deletePins
@@ -40,14 +40,23 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
 - [v] Remove side caption rendering code
 - callme.ps1
 
+## bSept23.debuggingFacilities
+
+- beep.ps1
+- [v] Expose window.__PLAYER__ for console access
+- [v] Add getActiveElements() method to list characters
+- [v] Add Debug button to trigger console.log
+- [v] Add canvas click diagnostic logging
+- callme.ps1
+
 ## bSept23.creditsScreen
 
 - beep.ps1
-- [>] Build HTML background-screen element for credits
-- [ ] Create credits scroller for shot 1 text (text1 + text2)
-- [ ] Add bridge image (bridgeside.jpeg) left of credits
-- [ ] Keep narration: "The Survey Guy" + traffic sound effects
-- [ ] Show credits only in shot 1, hide in other shots
+- [v] Build renderCreditsScreen() method for shot 1
+- [v] Display credits text (text1 ASCII art + text2 cast info)
+- [v] Add bridge image (bridgeside.jpeg) at bottom-left
+- [v] Keep narration: "The Survey Guy" + traffic sound effects
+- [v] Credits only appear in shot 1 (credits-screen POV)
 - callme.ps1
 
 ## bSept23.movieFixes
@@ -55,10 +64,11 @@ Do not touch this file before re-reading the `todo.instructions.md`. Follow thos
 - beep.ps1
 - [v] Shot 10: change deep blue to bright light blue (#87CEEB)
 - [v] Fix missing clouds in SG shots (added to shots 2,4,6,8,10)
-- [v] Adjust WM on road position (y=420 instead of y=351, scale 0.8 instead of 0.65)
-- [v] Adjust WM leg shape (sharp-angle already set across all WM shots)
-- [v] Adjust SG size application (added getSizeMultiplier for half/slightly-smaller-than-shot2)
-- [v] Add hanging-on-fence position support in player.js
+- [v] Adjust WM on road position (y=420, scale 0.8)
+- [v] Adjust WM leg shape (sharp-angle correct)
+- [v] Use renderStyle.headDiameter for WM head size (48px visible)
+- [v] Adjust SG size application (getSizeMultiplier system)
+- [v] Add hanging-on-fence position support
 - callme.ps1
 
 
