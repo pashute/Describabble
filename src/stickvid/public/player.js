@@ -1,4 +1,4 @@
-// Filename: player.js v0.1.54
+// Filename: player.js v0.1.63
 // stickvid - Stick figure animation player with full control set
 // Renders complex animations from standardized YAML .vid manifest files
 
@@ -272,18 +272,26 @@ class StickVidPlayer {
         const currentShot = this.getCurrentShot();
         if (!currentShot) return;
 
-        if (currentShot.camera?.pov === 'credits-screen') {
-            this.renderCreditsScreen(currentShot);
+        if (currentShot.number === 1) {
+            // Shot 1: render billboard (visual credits)
+            this.renderBillboard(currentShot);
+            // Shot 1 also has narration and captions
+            this.renderNarration(currentShot);
+            this.renderCaptions(currentShot);
         } else {
-            const overlay = document.getElementById('creditsText2Overlay');
-            if (overlay) overlay.style.display = 'none';
-
+            // All other shots: cleanup billboard, render full scene
+            this.leaveBillboard();
             this.renderBackground(currentShot);
             this.renderCharacters(currentShot);
             this.renderNarration(currentShot);
             this.renderDialogue(currentShot);
             this.renderCaptions(currentShot);
         }
+    }
+
+    leaveBillboard() {
+        const overlay = document.getElementById('creditsText2Overlay');
+        if (overlay) overlay.style.display = 'none';
     }
 
     getCurrentShot() {
@@ -368,130 +376,203 @@ class StickVidPlayer {
         const w = this.canvas.width;
         const h = this.canvas.height;
 
-        this.ctx.strokeStyle = '#333';
-        this.ctx.fillStyle = '#333';
+        // Key coordinate system
+        const bridgeLeftX = w * 0.25;
+        const bridgeRightX = w * 0.75;
+        const bridgeY = h * 0.55;
+        const streamBottomY = h - 60;
+        const streamTopY = bridgeY;
+        const towerTopY = bridgeY - 200;
 
-        // River - flowing lines under bridge
-        this.ctx.lineWidth = 2;
-        this.ctx.strokeStyle = '#4a90e2';
-        const riverTopY = h * 0.6;
-        const riverBottomY = h - 80;
-
-        // River flowing effect - curved lines
-        for (let i = 0; i < 3; i++) {
-            this.ctx.beginPath();
-            this.ctx.moveTo(w * 0.2, riverTopY + i * 15);
-            this.ctx.quadraticCurveTo(w * 0.5, riverTopY + i * 15 + 30, w, riverBottomY + i * 15);
-            this.ctx.stroke();
-        }
-
-        // Left bank path - diagonal line
-        this.ctx.lineWidth = 3;
-        this.ctx.strokeStyle = '#8B7355';
+        // Stream (trapeze constrained by towers, NOT extending beyond)
+        this.ctx.fillStyle = '#ADD8E6';
         this.ctx.beginPath();
-        this.ctx.moveTo(50, h * 0.55);
-        this.ctx.lineTo(w * 0.25, h - 80);
-        this.ctx.stroke();
+        this.ctx.moveTo(bridgeLeftX - 40, streamBottomY);
+        this.ctx.lineTo(bridgeRightX + 40, streamBottomY);
+        // Slightly curved non-symmetric right side
+        this.ctx.quadraticCurveTo(bridgeRightX + 60, streamTopY + (streamBottomY - streamTopY) * 0.5, bridgeRightX + 80, streamTopY);
+        // Slightly curved non-symmetric left side
+        this.ctx.quadraticCurveTo(bridgeLeftX - 50, streamTopY + (streamBottomY - streamTopY) * 0.5, bridgeLeftX - 40, streamTopY);
+        this.ctx.closePath();
+        this.ctx.fill();
 
-        // Right bank and hill
+        // Distant hills (4 non-symmetric) - convex arcs ABOVE lake
         this.ctx.lineWidth = 2;
         this.ctx.strokeStyle = '#666';
+
+        // Hill 1 (left)
         this.ctx.beginPath();
-        this.ctx.moveTo(w * 0.75, riverTopY);
-        this.ctx.lineTo(w * 0.8, h * 0.4);  // Hill slope
-        this.ctx.lineTo(w, h * 0.5);
+        this.ctx.moveTo(0, bridgeY - 100);
+        this.ctx.quadraticCurveTo(w * 0.15, bridgeY - 140, w * 0.3, bridgeY - 80);
         this.ctx.stroke();
 
-        // Horizon - distant hills and lake
+        // Hill 2 (left-center)
+        this.ctx.beginPath();
+        this.ctx.moveTo(w * 0.25, bridgeY - 110);
+        this.ctx.quadraticCurveTo(w * 0.4, bridgeY - 160, w * 0.5, bridgeY - 95);
+        this.ctx.stroke();
+
+        // Hill 3 (right-center)
+        this.ctx.beginPath();
+        this.ctx.moveTo(w * 0.5, bridgeY - 100);
+        this.ctx.quadraticCurveTo(w * 0.65, bridgeY - 130, w * 0.75, bridgeY - 75);
+        this.ctx.stroke();
+
+        // Hill 4 (right, extending off edge)
+        this.ctx.beginPath();
+        this.ctx.moveTo(w * 0.75, bridgeY - 85);
+        this.ctx.quadraticCurveTo(w * 0.9, bridgeY - 120, w + 50, bridgeY - 60);
+        this.ctx.stroke();
+
+        // Oval lake (behind bridge, at hill feet, full width, extends past right)
         this.ctx.lineWidth = 1;
         this.ctx.strokeStyle = '#999';
-        const horizonY = h * 0.3;
         this.ctx.beginPath();
-        this.ctx.moveTo(0, horizonY);
-        // Simple arc for distant hills
-        this.ctx.quadraticCurveTo(w * 0.3, horizonY - 20, w * 0.6, horizonY);
-        this.ctx.quadraticCurveTo(w * 0.8, horizonY - 15, w, horizonY);
+        // Ellipse positioned BEHIND bridge/hills, not above them
+        this.ctx.ellipse(w * 0.6, bridgeY - 56, w * 0.55, 40, 0, 0, Math.PI * 2);
         this.ctx.stroke();
 
-        // Bridge towers - 2 tall thin rectangles
-        const leftTowerX = w * 0.25;
-        const rightTowerX = w * 0.75;
-        const towerWidth = 12;
-        const towerTopY = h * 0.2;
-        const towerBottomY = riverTopY;
-
+        // Side bank hills (connecting bridge road to stream)
+        // Left hill: peak at (48, 210), reaching down to (372, 359), then out left
         this.ctx.lineWidth = 2;
-        this.ctx.strokeStyle = '#333';
-
-        // Left tower
+        this.ctx.strokeStyle = '#8B7355';
         this.ctx.beginPath();
-        this.ctx.rect(leftTowerX - towerWidth / 2, towerTopY, towerWidth, towerBottomY - towerTopY);
+        this.ctx.moveTo(0, 272);  // Start left out of frame
+        this.ctx.quadraticCurveTo(48, 210, 372, 359);  
         this.ctx.stroke();
 
-        // Right tower
+        // Right hill: mirror left, 
+        // down from (680, 350), peak at (720, 180), then out right
+        this.ctx.lineWidth = 2;
+        this.ctx.strokeStyle = '#8B7355';
         this.ctx.beginPath();
-        this.ctx.rect(rightTowerX - towerWidth / 2, towerTopY, towerWidth, towerBottomY - towerTopY);
+        this.ctx.moveTo(680, 350);  // Down point on right
+        this.ctx.quadraticCurveTo(720, 180, w + 50, 200);
         this.ctx.stroke();
 
-        // Bridge deck - single thick horizontal line
-        const deckY = riverTopY;
-        this.ctx.lineWidth = 6;
+        // Bridge road extending onto left hillside (mostly horizontal)
+        this.ctx.lineWidth = 2;
         this.ctx.strokeStyle = '#8B4513';
         this.ctx.beginPath();
-        this.ctx.moveTo(leftTowerX, deckY);
-        this.ctx.lineTo(rightTowerX, deckY);
+        this.ctx.moveTo(0, bridgeY);
+        
+        let cp1x = bridgeLeftX * 0.33; 
+        let cp1y = bridgeY + 20; // slightly up
+        let cp2x = bridgeLeftX * 0.66;
+        let cp2y = bridgeY - 15;  // slightly down
+        this.ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, bridgeLeftX, bridgeY);
         this.ctx.stroke();
 
-        // Trusses - triangular zig-zag pattern on top of deck
+        // Bridge road extending onto right hillside (mostly horizontal)
+        // this.ctx.lineWidth = 2;
+        // this.ctx.strokeStyle = '#8B4513';
+        this.ctx.beginPath();
+        this.ctx.moveTo(bridgeRightX, bridgeY);
+        cp1x = bridgeRightX + (w - bridgeRightX) * 0.33; 
+        cp2x = bridgeRightX + (w - bridgeRightX) * 0.66;
+        this.ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, w + 50, bridgeY);
+        this.ctx.stroke();
+
+        // Path (left bank, narrowing with perspective, passes under bridge, merges into lake)
+        const pathLeftX = bridgeLeftX - 45;
+        const pathRightX = bridgeLeftX - 15;
+        const pathBottomY = streamBottomY;
+        const pathTopY = bridgeY;
+        const pathBridgeX = bridgeLeftX - 10;  // Passes under bridge near left tower
+
+        // Path left edge (subtle dashed)
+        this.ctx.lineWidth = 1;
+        this.ctx.strokeStyle = '#999';
+        this.ctx.setLineDash([5, 5]);
+        this.ctx.beginPath();
+        this.ctx.moveTo(pathLeftX, pathBottomY);
+        // Narrows and goes under bridge using perspective
+        this.ctx.quadraticCurveTo((pathLeftX + pathBridgeX) / 2, pathBottomY - (streamBottomY - pathTopY) * 0.3, pathBridgeX - 8, pathTopY);
+        this.ctx.stroke();
+
+        // Path right edge (subtle dashed)
+        this.ctx.beginPath();
+        this.ctx.moveTo(pathRightX, pathBottomY);
+        this.ctx.quadraticCurveTo((pathRightX + pathBridgeX) / 2, pathBottomY - (streamBottomY - pathTopY) * 0.3, pathBridgeX + 8, pathTopY);
+        this.ctx.stroke();
+        this.ctx.setLineDash([]);
+
+        // Bridge towers (filled rectangles)
+        const towerWidth = 12;
+        const towerBottomY = 382;  // Reach to caption line, not stream bottom
+
+        this.ctx.fillStyle = '#333';
+        this.ctx.fillRect(bridgeLeftX - towerWidth / 2, towerTopY, towerWidth, towerBottomY - towerTopY);
+        this.ctx.fillRect(bridgeRightX - towerWidth / 2, towerTopY, towerWidth, towerBottomY - towerTopY);
+
+        // Bridge road
+        this.ctx.lineWidth = 8;
+        this.ctx.strokeStyle = '#8B4513';
+        this.ctx.beginPath();
+        this.ctx.moveTo(bridgeLeftX, bridgeY);
+        this.ctx.lineTo(bridgeRightX, bridgeY);
+        this.ctx.stroke();
+
+        // Trusses (triangular shapes)
         this.ctx.lineWidth = 1;
         this.ctx.strokeStyle = '#333';
         const trussHeight = 20;
         const trussSpacing = 30;
-
-        for (let x = leftTowerX; x < rightTowerX; x += trussSpacing) {
-            // Up triangle
+        for (let x = bridgeLeftX; x < bridgeRightX; x += trussSpacing) {
             this.ctx.beginPath();
-            this.ctx.moveTo(x, deckY);
-            this.ctx.lineTo(x + trussSpacing / 2, deckY - trussHeight);
-            this.ctx.lineTo(x + trussSpacing, deckY);
+            this.ctx.moveTo(x, bridgeY);
+            this.ctx.lineTo(x + trussSpacing / 2, bridgeY - trussHeight);
+            this.ctx.lineTo(x + trussSpacing, bridgeY);
             this.ctx.stroke();
         }
 
-        // Fence top rail - straight horizontal line above trusses
-        const railY = deckY - trussHeight - 3;
+        // Rail-top
+        const railY = bridgeY - trussHeight - 3;
         this.ctx.lineWidth = 2;
         this.ctx.strokeStyle = '#FF0000';
         this.ctx.beginPath();
-        this.ctx.moveTo(leftTowerX, railY);
-        this.ctx.lineTo(rightTowerX, railY);
+        this.ctx.moveTo(bridgeLeftX, railY);
+        this.ctx.lineTo(bridgeRightX, railY);
         this.ctx.stroke();
 
-        // Main suspension rope - smooth concave arc
-        this.ctx.lineWidth = 2;
+        // Suspension rope (concave arc)
+        this.ctx.lineWidth = 3;
         this.ctx.strokeStyle = '#333';
         this.ctx.beginPath();
-        this.ctx.moveTo(leftTowerX, towerTopY);
-        const ropeControlY = towerTopY + 60;
-        this.ctx.quadraticCurveTo(cx, ropeControlY, rightTowerX, towerTopY);
+        this.ctx.moveTo(bridgeLeftX, towerTopY);
+        this.ctx.quadraticCurveTo(cx, towerTopY + 80, bridgeRightX, towerTopY);
         this.ctx.stroke();
 
-        // Vertical suspension cables - multiple evenly spaced lines
+        // Vertical cables (exactly 6, connecting rope to road with proper arc math)
         const cableCount = 6;
         this.ctx.lineWidth = 1;
         this.ctx.strokeStyle = '#333';
-
         for (let i = 0; i <= cableCount; i++) {
-            const cableX = leftTowerX + (rightTowerX - leftTowerX) * (i / cableCount);
-            // Calculate Y position on arc
             const t = i / cableCount;
-            const arcY = towerTopY + 60 * (4 * t * (1 - t));
-
+            const cableX = bridgeLeftX + (bridgeRightX - bridgeLeftX) * t;
+            // Arc equation: y = towerTopY + 80 * (4 * t * (1-t))
+            // Cables START 15px above rope and go DOWN to bridge road
+            const arcY = towerTopY + 80 * (4 * t * (1 - t));
             this.ctx.beginPath();
-            this.ctx.moveTo(cableX, arcY);
-            this.ctx.lineTo(cableX, deckY);
+            this.ctx.moveTo(cableX, arcY - 15);  // START 15px above rope
+            this.ctx.lineTo(cableX, bridgeY);  // END at road
             this.ctx.stroke();
         }
+
+        // Store bridge reference
+        this.bridgeRefPoints = {
+            bridgeLeftX: bridgeLeftX,
+            bridgeRightX: bridgeRightX,
+            bridgeY: bridgeY,
+            streamTopLeftX: bridgeLeftX - 40,
+            streamTopRightX: bridgeRightX + 80
+        };
     }
+
+    getRoadRefPoint() {
+        return this.bridgeRefPoints || { roadCenterX: this.canvas.width * 0.5, roadCenterY: this.canvas.height * 0.55 };
+    }
+
 
     drawBridgeFromEnvironment(environment) {
         if (!environment || !environment.layout) {
@@ -729,7 +810,35 @@ class StickVidPlayer {
             }
 
             charData.pov = pov;
-            const sizeMultiplier = this.getSizeMultiplier(charData.size);
+            let sizeMultiplier = this.getSizeMultiplier(charData.size);
+
+            // Special handling for shot 2: stickman climbs fence with proper sizing
+            if (shot.number === 2 && charData.id === 'char1' && charData.position === 'fence-climbing') {
+                const riverTopY = this.canvas.height * 0.55;
+                const fenceHeight = 200;
+                const deckY = riverTopY;
+                const fenceTopY = deckY - fenceHeight;
+
+                // Make stickman tiny (scale to match new taller fence)
+                sizeMultiplier = 1.0;
+
+                // Stickman feet position: start at deck (y=deckY), climb up (decreasing y) to fence top
+                const climbDistance = fenceHeight * 0.85;
+                const feetY = deckY - (climbDistance * progress);
+
+                // y is head position in drawClimbingFigure, so calculate from feet
+                // For drawing purposes: headSize is typically 18 for LARGE, bodyHeight is 40*scale
+                // With scale=1.0: headSize≈18, bodyHeight≈40, so y = feetY - (18+40) = feetY - 58
+                const figureTotalHeight = 58;
+                x = this.canvas.width / 2;
+                y = feetY - figureTotalHeight;
+
+                // Store final climbing position for next shots
+                if (progress >= 0.95) {
+                    this.sgClimbEndPosition = { x: x, y: feetY, feetY: feetY, climbComplete: true };
+                }
+            }
+
             this.drawStickFigure(x, y, charDef, charData, progress, shot, scale * sizeMultiplier);
         });
     }
@@ -1019,7 +1128,9 @@ class StickVidPlayer {
     }
 
     drawClimbingFigure(x, y, headSize, charData, progress, scale = 1) {
-        const climbHeight = Math.min(progress * 200 * scale, 120 * scale);
+        // For shot 2, climbing is handled externally in renderCharacters, so don't add extra climb height
+        const isShot2Climb = charData.position === 'fence-climbing' && this.currentShot?.number === 2;
+        const climbHeight = isShot2Climb ? 0 : Math.min(progress * 200 * scale, 120 * scale);
         const adjY = y - climbHeight;
         const bodyHeight = 40 * scale;
         const bodyAngle = 25; // degrees for diagonal pose
@@ -1297,11 +1408,10 @@ class StickVidPlayer {
         if (!shot.captions) return;
 
         const pov = shot.camera?.pov || 'from-below';
-        if (pov === 'cut-to-black') return;
+        
+        // if (pov === 'cut-to-black') return;  // Why?!  There's the `(Splash!)` caption!
 
-        if (shot.captions.text1 || shot.captions.text2) {
-            this.renderMultiTextCaptions(shot.captions, pov);
-        } else if (shot.captions.text) {
+        if (shot.captions.text) {
             const position = shot.captions.position || 'top';
             let text = this.resolveReference(shot.captions.text, shot);
             text = this.stripInstructions(text);
@@ -1320,27 +1430,33 @@ class StickVidPlayer {
         }
     }
 
-    renderMultiTextCaptions(captions, pov = 'from-below') {
-        let yOffset = pov === 'credits-screen' ? 120 : 495; // Credits at top, regular captions very close to navigation buttons
+    renderCaptionsTemp(){
+        // height: 495?
+        // regular captions very close to navigation buttons
+        throw new Error('Not implemented yet');
+    }
 
-        if (captions.text1) {
-            const align = captions.text1.align || 'center';
-            const content = captions.text1.content || '';
-            const lineCount = captions.text1.lines || null;
-            const preserveEmpty = captions.text1.emptyRowMode === 'keep';
-            yOffset = this.renderCaptionBlock(content, align, yOffset, preserveEmpty, lineCount);
+    renderBillboard(billbrd) {
+        let yOffset = 120; 
+
+        if (billbrd.text1) {
+            const align = billbrd.text1.align || 'center';
+            const content = billbrd.text1.content || '';
+            const lineCount = billbrd.text1.lines || null;
+            const preserveEmpty = billbrd.text1.emptyRowMode === 'keep';
+            yOffset = this.renderBillbrdBlock(content, align, yOffset, preserveEmpty, lineCount);
         }
 
-        if (captions.text2) {
-            const align = captions.text2.align || 'center';
-            const content = captions.text2.content || '';
-            const lineCount = captions.text2.lines || null;
-            const preserveEmpty = captions.text2.emptyRowMode === 'keep';
-            this.renderCaptionBlock(content, align, yOffset, preserveEmpty, lineCount);
+        if (billbrd.text2) {
+            const align = billbrd.text2.align || 'center';
+            const content = billbrd.text2.content || '';
+            const lineCount = billbrd.text2.lines || null;
+            const preserveEmpty = billbrd.text2.emptyRowMode === 'keep';
+            this.renderBillbrdBlock(content, align, yOffset, preserveEmpty, lineCount);
         }
     }
 
-    renderCaptionBlock(text, align, startY, preserveEmpty = false, lineCount = null) {
+    renderBillbrdBlock(text, align, startY, preserveEmpty = false, lineCount = null) {
         const allLines = text.split('\n');
         let lines = preserveEmpty ? allLines : allLines.filter(line => line.trim());
 
@@ -1504,11 +1620,11 @@ class StickVidPlayer {
         const captions = shot.captions;
         if (captions) {
             // Render text1 (ASCII art title) at TOP
-            if (captions.text1?.content) {
+            if (billboard.text1?.content) {
                 this.ctx.fillStyle = '#333';
                 this.ctx.font = 'bold 12px monospace';
                 this.ctx.textAlign = 'left';
-                const lines = captions.text1.content.split('\n');
+                const lines = billboard.text1.content.split('\n');
                 let y = 40;
                 lines.forEach(line => {
                     this.ctx.fillText(line, 50, y);
@@ -1541,7 +1657,7 @@ class StickVidPlayer {
             // Render text2 in HTML overlay div (right side, below text1, next to image)
             // Remove empty lines above "Starring" for compact display
             const overlay = document.getElementById('creditsText2Overlay');
-            if (overlay && captions.text2?.content) {
+            if (overlay && bill.text2?.content) {
                 overlay.style.display = 'block';
                 const lines = captions.text2.content.split('\n');
                 // Remove leading empty lines

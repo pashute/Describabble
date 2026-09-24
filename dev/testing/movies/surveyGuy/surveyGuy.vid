@@ -1,9 +1,9 @@
-# surveyGuy.vid v0.1.58
+# surveyGuy.vid v0.1.61
 # Standardized YAML format for Describabble stick figure animation
 # Machine-readable and human-friendly structure
 
 movie:
-  name: "The Survey Buy"
+  name: "The Survey Guy"
   version: "0.2.45b"
   created: "2025-09-14"
   description: "A dark comedy stick figure short film about a phone survey guy contemplating a bridge jump"
@@ -125,7 +125,7 @@ scenes:
               textFormat: "bold-html-overlay"
         characters: []
         dialogue: []
-        captions:
+        billboard:
           text1:
             align: "left"
             lines: 10
@@ -154,20 +154,22 @@ scenes:
               Produced by Describabble
 
               Released Unlicensed Sept 2026
+        
         narration:
           - speaker: "char3"
             voice: "voice3"
-            text: "The Survey Guy"
+            text: "The Survey Guy - a generated movie...  "
             startTime: 0.0
             endTime: 1.0
             delivery: "title-reading"
+            caption: "The Survey Guy - a generated movie...  "
           - speaker: "char3"
             voice: "voice3"
-            text: "(Heavy traffic heard)"
+            text: "(Heavy traffic heard, honking, radio blaring, unclear music)"
             startTime: 2.0
             endTime: 3.0
             delivery: "sound-effect"
-            caption: "(Heavy traffic heard)"
+            caption: "(Heavy traffic heard, honking, radio blaring, unclear music)"
 
       - id: "shot2"
         number: 2
@@ -178,6 +180,8 @@ scenes:
         camera:
           pov: "from-below"
           location: "loc_bridge_below"
+        environment:
+          description: "Wide landscape view from camera position on left bank. Stream flows from foreground toward distant lake. Four non-symmetric distant hills above bridge, oval lake behind them spanning full width extending past right edge. Stream bed as light blue trapeze with slightly curved non-symmetric sides. Bridge road spans middle two quarters of screen width, with two tall towers anchoring into land on both sides of stream. Suspension rope concave arc above road, six vertical cables connecting rope to road, triangular trusses on road with red rail-top. Path on left bank of stream with subtle dashed side lines, passes under left side of bridge. Hills slope from bridge road down to stream on both sides."
         sky:
           color: "#87CEEB"
           cloud:
@@ -282,19 +286,12 @@ scenes:
         dialogue:
           - speaker: "char2"
             voice: "voice2"
-            text: "(shout heard) Hey! Think about your wife!"
+            text: "Hey! Think about your wife! Think about your children!"
             startTime: 14.0
-            endTime: 16.5
-            delivery: "shouting-urgent"
-            tone: "emotional"
-            voiceCue: "(shout)"
-          - speaker: "char2"
-            voice: "voice2"
-            text: "Think about your children!"
-            startTime: 16.5
             endTime: 19.0
             delivery: "shouting-urgent"
             tone: "emotional"
+            voiceCue: "(shout heard)"
         captions:
           position: "bottom"
           text: |
