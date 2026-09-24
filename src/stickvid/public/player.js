@@ -274,7 +274,10 @@ class StickVidPlayer {
 
         if (currentShot.number === 1) {
             // Shot 1: render billboard (visual credits)
-            this.renderBillboard(currentShot);
+            const overlay = document.getElementById('creditsText2Overlay');
+            if (overlay) overlay.style.display = 'block';
+            this.renderBillboard(currentShot.billboard);
+            this.renderBillboardOverlay(currentShot.billboard);
             // Shot 1 also has narration and captions
             this.renderNarration(currentShot);
             this.renderCaptions(currentShot);
@@ -1135,10 +1138,41 @@ class StickVidPlayer {
         const bodyHeight = 40 * scale;
         const bodyAngle = 25; // degrees for diagonal pose
         const limbPhase = Math.sin(progress * Math.PI * 4) > 0; // alternates limbs
+        const isLookingUp = charData.emotion === 'distressed' && charData.details?.includes('hesitant');
 
         this.ctx.beginPath();
         this.ctx.arc(x, adjY, headSize, 0, Math.PI * 2);
         this.ctx.stroke();
+
+        // Looking up pose: arms flail from sides of head, no body visible
+        if (isLookingUp) {
+            const armLength = 35 * scale;
+            const armYoffset = headSize * 0.3;
+            if (limbPhase) {
+                // Right arm up, left arm down
+                this.ctx.beginPath();
+                this.ctx.moveTo(x + headSize, adjY - armYoffset);
+                this.ctx.lineTo(x + headSize + armLength, adjY - armLength);
+                this.ctx.stroke();
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(x - headSize, adjY + armYoffset);
+                this.ctx.lineTo(x - headSize - armLength, adjY + armLength * 0.5);
+                this.ctx.stroke();
+            } else {
+                // Left arm up, right arm down
+                this.ctx.beginPath();
+                this.ctx.moveTo(x - headSize, adjY - armYoffset);
+                this.ctx.lineTo(x - headSize - armLength, adjY - armLength);
+                this.ctx.stroke();
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(x + headSize, adjY + armYoffset);
+                this.ctx.lineTo(x + headSize + armLength, adjY + armLength * 0.5);
+                this.ctx.stroke();
+            }
+            return;
+        }
 
         // Diagonal body with body lean animation
         let bodyLeanAngle = 0;
@@ -1437,7 +1471,8 @@ class StickVidPlayer {
     }
 
     renderBillboard(billbrd) {
-        let yOffset = 120; 
+        if (!billbrd) return;
+        let yOffset = 120;
 
         if (billbrd.text1) {
             const align = billbrd.text1.align || 'center';
@@ -1446,14 +1481,28 @@ class StickVidPlayer {
             const preserveEmpty = billbrd.text1.emptyRowMode === 'keep';
             yOffset = this.renderBillbrdBlock(content, align, yOffset, preserveEmpty, lineCount);
         }
+    }
 
-        if (billbrd.text2) {
-            const align = billbrd.text2.align || 'center';
-            const content = billbrd.text2.content || '';
-            const lineCount = billbrd.text2.lines || null;
-            const preserveEmpty = billbrd.text2.emptyRowMode === 'keep';
-            this.renderBillbrdBlock(content, align, yOffset, preserveEmpty, lineCount);
-        }
+    renderBillboardOverlay(billbrd) {
+        if (!billbrd || !billbrd.text2) return;
+
+        const overlay = document.getElementById('creditsText2Overlay');
+        if (!overlay) return;
+
+        const align = billbrd.text2.align || 'center';
+        const content = billbrd.text2.content || '';
+
+        // Clean and format text2 for overlay display
+        const lines = content.split('\n').filter(line => line.trim());
+        let html = lines.map(line => {
+            if (align === 'center') {
+                return `<div style="text-align: center; margin-bottom: 8px; font-weight: bold; font-size: 14px;">${line.trim()}</div>`;
+            } else {
+                return `<div style="margin-bottom: 8px; font-weight: bold; font-size: 14px;">${line.trim()}</div>`;
+            }
+        }).join('');
+
+        overlay.innerHTML = html;
     }
 
     renderBillbrdBlock(text, align, startY, preserveEmpty = false, lineCount = null) {

@@ -1,6 +1,6 @@
 {
   "name": "stickvid",
-  "version": "0.1.61",
+  "version": "0.1.62",
   "description": "HTML5 Canvas animation player for Describabble stick figure movies",
   "type": "module",
   "main": "server.js",
