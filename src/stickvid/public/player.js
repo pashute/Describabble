@@ -274,10 +274,7 @@ class StickVidPlayer {
 
         if (currentShot.number === 1) {
             // Shot 1: render billboard (visual credits)
-            const overlay = document.getElementById('creditsText2Overlay');
-            if (overlay) overlay.style.display = 'block';
             this.renderBillboard(currentShot.billboard);
-            this.renderBillboardOverlay(currentShot.billboard);
             // Shot 1 also has narration and captions
             this.renderNarration(currentShot);
             this.renderCaptions(currentShot);
@@ -293,8 +290,11 @@ class StickVidPlayer {
     }
 
     leaveBillboard() {
-        const overlay = document.getElementById('creditsText2Overlay');
-        if (overlay) overlay.style.display = 'none';
+        const overlay = document.getElementById('billboardOverlay');
+        if (overlay) {
+            overlay.style.display = 'none';
+            this.canvas.style.display = 'block';
+        }
     }
 
     getCurrentShot() {
@@ -1472,14 +1472,35 @@ class StickVidPlayer {
 
     renderBillboard(billbrd) {
         if (!billbrd) return;
-        let yOffset = 120;
 
+        const overlay = document.getElementById('billboardOverlay');
+        if (!overlay) return;
+
+        // Show billboard overlay, hide canvas
+        overlay.style.display = 'block';
+        this.canvas.style.display = 'none';
+
+        // Populate header (text1)
         if (billbrd.text1) {
-            const align = billbrd.text1.align || 'center';
-            const content = billbrd.text1.content || '';
-            const lineCount = billbrd.text1.lines || null;
-            const preserveEmpty = billbrd.text1.emptyRowMode === 'keep';
-            yOffset = this.renderBillbrdBlock(content, align, yOffset, preserveEmpty, lineCount);
+            const headerPre = overlay.querySelector('#billboardHeader pre');
+            if (headerPre) {
+                headerPre.textContent = billbrd.text1.content || '';
+            }
+        }
+
+        // Populate image (1/3 left)
+        const imageDiv = overlay.querySelector('#billboardImage img');
+        if (imageDiv) {
+            imageDiv.src = 'bridgeside.jpeg';
+            imageDiv.alt = 'Bridge';
+        }
+
+        // Populate credits (text2, 2/3 right)
+        if (billbrd.text2) {
+            const creditsPre = overlay.querySelector('#billboardCredits pre');
+            if (creditsPre) {
+                creditsPre.textContent = billbrd.text2.content || '';
+            }
         }
     }
 
