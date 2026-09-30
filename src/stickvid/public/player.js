@@ -1,4 +1,4 @@
-// Filename: player.js v0.1.63
+// Filename: player.js v0.1.65
 // stickvid - Stick figure animation player with full control set
 // Renders complex animations from standardized YAML .vid manifest files
 
@@ -275,9 +275,8 @@ class StickVidPlayer {
         if (currentShot.number === 1) {
             // Shot 1: render billboard (visual credits)
             this.renderBillboard(currentShot.billboard);
-            // Shot 1 also has narration and captions
-            this.renderNarration(currentShot);
-            this.renderCaptions(currentShot);
+            // Shot 1 dialogue for voice/audio
+            this.renderDialogue(currentShot);
         } else {
             // All other shots: cleanup billboard, render full scene
             this.leaveBillboard();
@@ -387,15 +386,16 @@ class StickVidPlayer {
         const streamTopY = bridgeY;
         const towerTopY = bridgeY - 200;
 
-        // Stream (trapeze constrained by towers, NOT extending beyond)
+        // Stream (trapeze: wide at bottom, passes under bridge on both sides)
         this.ctx.fillStyle = '#ADD8E6';
         this.ctx.beginPath();
-        this.ctx.moveTo(bridgeLeftX - 40, streamBottomY);
-        this.ctx.lineTo(bridgeRightX + 40, streamBottomY);
-        // Slightly curved non-symmetric right side
-        this.ctx.quadraticCurveTo(bridgeRightX + 60, streamTopY + (streamBottomY - streamTopY) * 0.5, bridgeRightX + 80, streamTopY);
-        // Slightly curved non-symmetric left side
-        this.ctx.quadraticCurveTo(bridgeLeftX - 50, streamTopY + (streamBottomY - streamTopY) * 0.5, bridgeLeftX - 40, streamTopY);
+        // Bottom: wide, spanning most of screen width
+        this.ctx.moveTo(30, streamBottomY);
+        this.ctx.lineTo(w - 30, streamBottomY);
+        // Right side: passes under bridge with slight curve
+        this.ctx.quadraticCurveTo(bridgeRightX + 40, streamTopY + (streamBottomY - streamTopY) * 0.5, bridgeRightX + 25, streamTopY);
+        // Left side: passes under bridge with slight curve
+        this.ctx.quadraticCurveTo(bridgeLeftX - 40, streamTopY + (streamBottomY - streamTopY) * 0.5, bridgeLeftX - 25, streamTopY);
         this.ctx.closePath();
         this.ctx.fill();
 
@@ -476,27 +476,37 @@ class StickVidPlayer {
         this.ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, w + 50, bridgeY);
         this.ctx.stroke();
 
-        // Path (left bank, narrowing with perspective, passes under bridge, merges into lake)
-        const pathLeftX = bridgeLeftX - 45;
-        const pathRightX = bridgeLeftX - 15;
+        // Path (left bank, wavy sway, narrowing with perspective, passes under bridge near left tower)
         const pathBottomY = streamBottomY;
         const pathTopY = bridgeY;
-        const pathBridgeX = bridgeLeftX - 10;  // Passes under bridge near left tower
 
-        // Path left edge (subtle dashed)
+        // Path bottom width (at our viewpoint)
+        const pathBottomLeftX = bridgeLeftX - 50;
+        const pathBottomRightX = bridgeLeftX - 15;
+
+        // Path top width (at bridge level, passing under bridge to the right of left tower)
+        const pathTopLeftX = bridgeLeftX + 20;
+        const pathTopRightX = bridgeLeftX + 45;
+
+        // Path left edge (subtle dashed, sways slightly)
         this.ctx.lineWidth = 1;
         this.ctx.strokeStyle = '#999';
         this.ctx.setLineDash([5, 5]);
         this.ctx.beginPath();
-        this.ctx.moveTo(pathLeftX, pathBottomY);
-        // Narrows and goes under bridge using perspective
-        this.ctx.quadraticCurveTo((pathLeftX + pathBridgeX) / 2, pathBottomY - (streamBottomY - pathTopY) * 0.3, pathBridgeX - 8, pathTopY);
+        this.ctx.moveTo(pathBottomLeftX, pathBottomY);
+        // Sway left edge: bulges slightly left in middle, then narrows to bridge
+        const swayAmount = 8;
+        const swayMidY = pathBottomY - (pathBottomY - pathTopY) * 0.5;
+        const swayMidX = pathBottomLeftX - swayAmount;
+        this.ctx.quadraticCurveTo(swayMidX, swayMidY, pathTopLeftX, pathTopY);
         this.ctx.stroke();
 
-        // Path right edge (subtle dashed)
+        // Path right edge (subtle dashed, sways slightly)
         this.ctx.beginPath();
-        this.ctx.moveTo(pathRightX, pathBottomY);
-        this.ctx.quadraticCurveTo((pathRightX + pathBridgeX) / 2, pathBottomY - (streamBottomY - pathTopY) * 0.3, pathBridgeX + 8, pathTopY);
+        this.ctx.moveTo(pathBottomRightX, pathBottomY);
+        // Sway right edge: bulges slightly right in middle, then narrows to bridge
+        const swayMidXRight = pathBottomRightX + swayAmount * 0.5;
+        this.ctx.quadraticCurveTo(swayMidXRight, swayMidY, pathTopRightX, pathTopY);
         this.ctx.stroke();
         this.ctx.setLineDash([]);
 

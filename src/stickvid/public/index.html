@@ -238,7 +238,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>stickvid v0.1.63 - Stick Figure Animation Player</h1>
+        <h1>stickvid v0.1.65 - Stick Figure Animation Player</h1>
 
         <div class="player-wrapper">
             <div class="load-section">
@@ -252,9 +252,9 @@
             </div>
 
             <div class="canvas-container">
-                <div style="position: relative; width: 960px; height: 540px; background: #fff;">
+                <div style="position: relative; width: 960px; height: 540px; background: #fff; overflow: hidden;">
                     <canvas id="animationCanvas" width="960" height="540"></canvas>
-                    <div id="billboardOverlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 50; overflow: hidden;">
+                    <div id="billboardOverlay" style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #fff;">
                         <div style="height: 100%; display: flex; flex-direction: column;">
                             <div id="billboardHeader" style="flex: 0 0 auto; padding: 20px; background: #fff; border-bottom: 2px solid #ddd;">
                                 <pre style="margin: 0; font-family: monospace; font-size: 11px; line-height: 1.2; white-space: pre-wrap; word-wrap: break-word;"></pre>

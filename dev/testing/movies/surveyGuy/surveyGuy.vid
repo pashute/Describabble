@@ -1,4 +1,4 @@
-# surveyGuy.vid v0.1.63
+# surveyGuy.vid v0.1.65
 # Standardized YAML format for Describabble stick figure animation
 # Machine-readable and human-friendly structure
 
@@ -124,7 +124,19 @@ scenes:
               textWidth: "67%"
               textFormat: "bold-html-overlay"
         characters: []
-        dialogue: []
+        dialogue:
+          - id: "d1"
+            speaker: "char3"
+            voice: "voice3"
+            text: "The Survey Guy - a generated movie with a happy ending"
+            startTime: 0.0
+            endTime: 1.0
+          - id: "d2"
+            speaker: "char3"
+            voice: "voice3"
+            text: "(Heavy traffic heard, honking, radio blaring unrecognized music)"
+            startTime: 2.0
+            endTime: 3.0
         billboard:
           text1:
             align: "left"
@@ -154,22 +166,6 @@ scenes:
               Produced by Describabble
 
               Released Unlicensed Sept 2026
-        
-        narration:
-          - speaker: "char3"
-            voice: "voice3"
-            text: "The Survey Guy - a generated movie...  "
-            startTime: 0.0
-            endTime: 1.0
-            delivery: "title-reading"
-            caption: "The Survey Guy - a generated movie...  "
-          - speaker: "char3"
-            voice: "voice3"
-            text: "(Heavy traffic heard, honking, radio blaring, unclear music)"
-            startTime: 2.0
-            endTime: 3.0
-            delivery: "sound-effect"
-            caption: "(Heavy traffic heard, honking, radio blaring, unclear music)"
 
       - id: "shot2"
         number: 2
